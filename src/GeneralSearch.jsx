@@ -1,34 +1,45 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function GeneralSearch() {
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState([]);
 
   const url = "https://www.googleapis.com/books/v1/volumes?q=";
-  const key = "AIzaSyDCgsTYsvF-4GZXcxKv-CL9w8IOEtgqxJg";
+  const key = process.env.REACT_APP_GOOGLE_BOOKS_API_KEY;
 
   const fetchResults = () => {
-    fetch(url + search + key);
-    console
-      .log(url + search + key)
-
+    fetch(url + search + "&key=" + key)
       .then((response) => response.json())
       .then((data) => {
         if (data.items) {
-          setResults(data.items);
-        } else setResults([]);
+          const bookResults = data.items.map((item) => ({
+            title: item.volumeInfo.title,
+            authors: item.volumeInfo.authors,
+            rating: item.volumeInfo.averageRating,
+          }));
+          console.log(data);
+        }
       })
       .catch((error) => {
         console.error("Error fetching results", error);
-        setResults([]);
       });
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      fetchResults();
-    }
+  const handleClick = () => {
+    fetchResults();
+    console.log("Searching");
   };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search for books"
+      />
+      <button onClick={handleClick}>Search</button>
+    </div>
+  );
 }
 
 export default GeneralSearch;
