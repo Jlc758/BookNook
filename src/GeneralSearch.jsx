@@ -1,8 +1,10 @@
 import { useState } from "react";
+// import {useOpenAI} from "./useOpenAI"
 
 function GeneralSearch() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
+  // const openAI = useOpenAI();
 
   const url = "https://www.googleapis.com/books/v1/volumes?q=";
   const key = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
