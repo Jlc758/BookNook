@@ -1,25 +1,23 @@
-import { useState } from "react";
-import UseOpenAI from "./UseOpenAI";
+import { useEffect, useState } from "react";
+import useOpenAI from "./useOpenAI";
 import GeneralQuery from "./GeneralQuery";
 
 function App() {
-  const [searchResults, setSearchResults] = useState(null);
   const [userInput, setUserInput] = useState("");
+  const [debouncedInput, setDebouncedInput] = useState("");
+  const { keywords, loading, error } = useOpenAI(debouncedInput);
 
-  const handleSearch = async () => {
-    try {
-      // Get structured search parameters from OpenAI
-      const params = await UseOpenAI({ userInput });
+  const googleAPIKey = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
 
-      // Perform the book search using the structured parameters
-      const results = await GeneralQuery(params);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedInput(userInput);
+    }, 500);
 
-      // Update the state with the search results
-      setSearchResults(results);
-    } catch (error) {
-      console.error("Error during search:", error);
-    }
-  };
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [userInput]);
 
   return (
     <div className="App">
@@ -29,16 +27,17 @@ function App() {
         for, and we&apos;ll find the perfect book for you!
       </h5>
       <input
-        type="text"
+        type="textarea"
         value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
+        onChange={(e) => setUserInput(e.target.value)} //look into debouncing
         placeholder="Enter your search query"
       />
-      <button onClick={handleSearch}>Search</button>
-      {searchResults && (
+
+      {loading && <div>Loading...</div>}
+      {error && <div>Error: {error}</div>}
+      {keywords && (
         <div>
-          <h2>Search Results</h2>
-          <pre>{JSON.stringify(searchResults, null, 2)}</pre>
+          <GeneralQuery keywords={keywords} apiKey={googleAPIKey} />
         </div>
       )}
     </div>
