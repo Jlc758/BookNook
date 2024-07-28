@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+// import BookCard from "./BookCard";
 
-const GeneralQuery = ({ keywords, apiKey }) => {
-  const [books, setBooks] = useState([]);
+const GeneralQuery = ({ keywords, apiKey, setBooks }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -10,9 +10,12 @@ const GeneralQuery = ({ keywords, apiKey }) => {
 
     const handleSearch = async () => {
       try {
-        const { title, author, mainCategory, pageCount } = keywords || {};
+        const { title, author, mainCategory, pageCount, ...restKeywords } =
+          keywords || {};
 
         let queryParts = [];
+
+        let stopwords = ["and", "the", "or"];
 
         if (title) {
           queryParts.push(`intitle:"${encodeURIComponent(title)}"`);
@@ -24,15 +27,18 @@ const GeneralQuery = ({ keywords, apiKey }) => {
           queryParts.push(`subject:"${encodeURIComponent(mainCategory)}"`);
         }
 
-        // If no specific parts, use mainCategory as a general search term
-        if (queryParts.length === 0 && mainCategory) {
-          queryParts.push(encodeURIComponent(mainCategory));
-        }
-
-        // Ensure we have at least one search term
         if (queryParts.length === 0) {
-          setError("No search criteria provided");
-          return;
+          // Combine remaining keywords into a single query string
+          const remainingKeywords = Object.values(restKeywords)
+            .filter(
+              (keyword) => keyword && !stopwords.includes(keyword.toLowerCase())
+            )
+            .map(encodeURIComponent)
+            .join("+");
+
+          if (remainingKeywords) {
+            queryParts.push(remainingKeywords);
+          }
         }
 
         let query = `https://www.googleapis.com/books/v1/volumes?q=${queryParts.join(
@@ -49,6 +55,8 @@ const GeneralQuery = ({ keywords, apiKey }) => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+
+        console.log(data);
 
         if (!data.items) {
           setBooks([]);
@@ -69,29 +77,9 @@ const GeneralQuery = ({ keywords, apiKey }) => {
     };
 
     handleSearch();
-  }, [keywords, apiKey]);
+  }, [keywords, apiKey, setBooks]);
 
   if (error) return <div>Error: {error}</div>;
-
-  return (
-    <div>
-      <h1>Google Books Search</h1>
-      {books.length === 0 ? (
-        <p>No books found matching your criteria.</p>
-      ) : (
-        <div>
-          {books.map((book, index) => (
-            <div key={index}>
-              <h2>{book.volumeInfo.title}</h2>
-              <p>Author: {book.volumeInfo.authors?.join(", ")}</p>
-              <p>Page Count: {book.volumeInfo.pageCount}</p>
-              <p>Category: {book.volumeInfo.categories?.join(", ")}</p>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
 };
 
 GeneralQuery.propTypes = {
@@ -102,6 +90,8 @@ GeneralQuery.propTypes = {
     pageCount: PropTypes.number,
   }),
   apiKey: PropTypes.string.isRequired,
+  cover: PropTypes.string,
+  setBooks: PropTypes.func.isRequired,
 };
 
 export default GeneralQuery;
