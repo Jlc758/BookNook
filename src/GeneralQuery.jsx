@@ -1,185 +1,108 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect } from "react";
+import propTypes from "prop-types";
 
-const GeneralQuery = ({ keywords, apiKey, setBooks }) => {
-  const [error, setError] = useState(null);
+const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
+  const baseUrl = "https://www.googleapis.com/books/v1/volumes?q=";
 
   useEffect(() => {
     if (!keywords) return;
 
-    const fetchAllBooks = async (initialQuery) => {
-      let allBooks = [];
-      let query = initialQuery;
-
-      while (query) {
+    const fetchBooks = async (query) => {
+      try {
         const response = await fetch(query);
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-
-        if (data.items) {
-          allBooks = [...allBooks, ...data.items];
-        }
-
-        if (data.nextPageToken) {
-          query = `${initialQuery}&pageToken=${data.nextPageToken}`;
-        } else {
-          query = null;
-        }
+        return data.items || [];
+      } catch (error) {
+        console.error("Error fetching books: ", error);
+        return [];
       }
-
-      return allBooks;
     };
 
     const handleSearch = async () => {
       try {
-        const { title, author, mainCategory, pageCount, ...restKeywords } =
-          keywords || {};
+        const {
+          title,
+          author,
+          mainCategory,
+          pageCount,
+          keywords: additionalKeywords,
+        } = keywords || {};
 
         let queryParts = [];
 
-        let stopwords = ["and", "the", "or"];
-
-        if (title) {
-          queryParts.push(`intitle:"${encodeURIComponent(title)}"`);
-        }
-        if (author) {
-          queryParts.push(`inauthor:"${encodeURIComponent(author)}"`);
-        }
-        if (mainCategory) {
+        if (title) queryParts.push(`intitle:"${encodeURIComponent(title)}"`);
+        if (author) queryParts.push(`inauthor:"${encodeURIComponent(author)}"`);
+        if (mainCategory)
           queryParts.push(`subject:"${encodeURIComponent(mainCategory)}"`);
+
+        // Process additional keywords
+        if (additionalKeywords) {
+          const keywordArray = additionalKeywords
+            .split(",")
+            .map((k) => k.trim());
+          const uniqueKeywords = keywordArray.filter(
+            (keyword) =>
+              keyword.toLowerCase() !== mainCategory?.toLowerCase() &&
+              !keyword
+                .toLowerCase()
+                .split(" ")
+                .every((word) => mainCategory?.toLowerCase().includes(word))
+          );
+          queryParts.push(...uniqueKeywords.map(encodeURIComponent));
         }
 
-        if (queryParts.length === 0) {
-          // Combine remaining keywords into a single query string
-          const remainingKeywords = Object.values(restKeywords)
-            .filter(
-              (keyword) => keyword && !stopwords.includes(keyword.toLowerCase())
-            )
-            .map(encodeURIComponent)
-            .join("+");
-
-          if (remainingKeywords) {
-            queryParts.push(remainingKeywords);
-          }
-        }
-
-        let query = `https://www.googleapis.com/books/v1/volumes?q=${queryParts.join(
+        let query = `${baseUrl}${queryParts.join(
           "+"
-        )}&maxResults=40`;
+        )}&orderBy=relevance&maxResults=40&key=${apiKey}`;
 
-        // Append the API key
-        query += `&key=${apiKey}`;
+        console.log("Google Books Query: ", query);
+        console.log(keywords);
 
-        console.log("Query URL:", query); // For debugging
+        const books = await fetchBooks(query);
 
-        const response = await fetch(query);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        console.log("API Response: ", books);
 
-        console.log("API Response:", data);
-
-        if (!data.items || data.items.length === 0) {
+        if (!books || books.length === 0) {
           console.log("No items returned from API");
           setBooks([]);
           return;
         }
 
-        const keywordsArray = [
-          ...Object.values(restKeywords),
-          title,
-          author,
-          mainCategory,
-        ]
-          .filter(Boolean)
-          .flatMap((keyword) => keyword.split(" "))
-          .filter(
-            (keyword) =>
-              keyword.trim() !== "" &&
-              !stopwords.includes(keyword.toLowerCase())
-          );
-
-        console.log("Keywords Array:", keywordsArray);
-        console.log("Total books before filtering:", data.items.length);
-
-        // Filter results based on pageCount and description containing keywords
-        const filteredBooks = data.items.filter((book) => {
+        const filteredBooks = books.filter((book) => {
           const bookPageCount = book.volumeInfo?.pageCount;
-          const bookDescription = book.volumeInfo?.description || "";
-          const bookTitle = book.volumeInfo?.title || "";
 
           const pageCountCheck =
             !pageCount || (bookPageCount && bookPageCount <= pageCount);
 
-          const keywordCheck =
-            keywordsArray.length === 0 ||
-            keywordsArray.some(
-              (keyword) =>
-                bookDescription.toLowerCase().includes(keyword.toLowerCase()) ||
-                bookTitle.toLowerCase().includes(keyword.toLowerCase())
-            );
-
-          console.log(`Book: ${bookTitle}`);
-          console.log(
-            `  Page Count: ${bookPageCount}, Required: ${pageCount}, Pass: ${pageCountCheck}`
-          );
-          console.log(`  Keyword Check: ${keywordCheck}`);
-          console.log(
-            `  Keywords found:`,
-            keywordsArray.filter(
-              (keyword) =>
-                bookDescription.toLowerCase().includes(keyword.toLowerCase()) ||
-                bookTitle.toLowerCase().includes(keyword.toLowerCase())
-            )
-          );
-          console.log(`  Description: ${bookDescription.slice(0, 100)}...`);
-
-          return pageCountCheck && keywordCheck;
+          return pageCountCheck;
         });
 
-        console.log("Filtered books:", filteredBooks.length);
-        console.log(
-          "Filtered books details:",
-          filteredBooks.map((book) => ({
-            title: book.volumeInfo?.title,
-            pageCount: book.volumeInfo?.pageCount,
-            keywordsFound: keywordsArray.filter(
-              (keyword) =>
-                (book.volumeInfo?.description || "")
-                  .toLowerCase()
-                  .includes(keyword.toLowerCase()) ||
-                (book.volumeInfo?.title || "")
-                  .toLowerCase()
-                  .includes(keyword.toLowerCase())
-            ),
-          }))
-        );
+        setBooks(filteredBooks);
       } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("Failed to fetch books. Please try again.");
+        console.error("Error fetching data: ", error);
         setBooks([]);
       }
     };
 
     handleSearch();
-  }, [keywords, apiKey, setBooks]);
+  }, [apiKey, keywords, setBooks]);
 
-  if (error) return <div>Error: {error}</div>;
+  return;
 };
 
 GeneralQuery.propTypes = {
-  keywords: PropTypes.shape({
-    title: PropTypes.string,
-    author: PropTypes.string,
-    mainCategory: PropTypes.string,
-    pageCount: PropTypes.number,
+  keywords: propTypes.shape({
+    title: propTypes.string,
+    author: propTypes.string,
+    mainCategory: propTypes.string,
+    pageCount: propTypes.number,
+    keywords: propTypes.string,
   }),
-  apiKey: PropTypes.string.isRequired,
-  cover: PropTypes.string,
-  setBooks: PropTypes.func.isRequired,
+  apiKey: propTypes.string.isRequired,
+  setBooks: propTypes.func.isRequired,
 };
 
 export default GeneralQuery;

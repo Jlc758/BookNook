@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useOpenAI from "./useOpenAI";
 import GeneralQuery from "./GeneralQuery";
 import BookCard from "./BookCard";
+import { v4 as uuidv4 } from "uuid";
 
 function SearchOptions() {
   const [userInput, setUserInput] = useState("");
@@ -29,10 +30,7 @@ function SearchOptions() {
   return (
     <>
       <div className="GeneralQuery">
-        <h5>
-          Not sure what to read next? <br /> Describe what you&apos;re looking
-          for, and we&apos;ll find the perfect book for you!
-        </h5>
+        <h5>What vibe are you looking for in your next read?</h5>
         <input
           type="textarea"
           value={userInput}
@@ -52,7 +50,7 @@ function SearchOptions() {
             <div className="bookCards">
               {books.map((book) => (
                 <BookCard
-                  key={book.id}
+                  key={uuidv4()}
                   title={book.volumeInfo.title}
                   authors={book.volumeInfo.authors?.join(", ")}
                   pageCount={book.volumeInfo.pageCount}

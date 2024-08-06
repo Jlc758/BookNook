@@ -23,7 +23,9 @@ function useOpenAI(userInput) {
           {
             role: "system",
             content: `You are an expert at extracting key words from natural language input by users and converting it to valid JSON format. Key words will be used to search for books in the Google Books API database.
-                  Example for System: Prompt -- Looking for a true crime novel with a female detective less than 500 pages in length set in the 1930s. Response -- {
+            Always prioritize placing genre or category-related terms (like "true crime", "science fiction", etc.) in the 'mainCategory' field. Do not duplicate these terms in the 'keywords' field.
+            Only use the 'keywords' field for additional search terms that are not the main category or genre.
+            Example:  Prompt -- Looking for a true crime novel with a female detective less than 500 pages in length set in the 1930s. Response -- {
                     'title': null,
                     'author': null,
                     'mainCategory': 'true crime',
