@@ -2,8 +2,7 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Shelf from "./Shelf";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function BasicMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -13,14 +12,6 @@ export default function BasicMenu() {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const linkToShelves = () => {
-    <Router>
-      <Routes>
-        <Route path="/shelf" element={<Shelf />} />
-      </Routes>
-    </Router>;
   };
 
   return (
@@ -43,9 +34,15 @@ export default function BasicMenu() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={linkToShelves}>My Shelves</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Link to="/">Main</Link>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Link to="/search">Search</Link>
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <Link to="/shelf">Shelves</Link>
+        </MenuItem>
       </Menu>
     </div>
   );

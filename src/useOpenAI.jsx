@@ -23,12 +23,12 @@ function useOpenAI(userInput) {
           {
             role: "system",
             content: `You are an expert at extracting key words from natural language input by users and converting it to valid JSON format. Key words will be used to search for books in the Google Books API database.
-                  Example for System: Prompt -- Looking for a true crime novel less than 500 pages in length set in the 1930s. Response -- {
+                  Example for System: Prompt -- Looking for a true crime novel with a female detective less than 500 pages in length set in the 1930s. Response -- {
                     'title': null,
                     'author': null,
                     'mainCategory': 'true crime',
                     'pageCount': 500,
-                    'keywords': '1930s'
+                    'keywords': '1930s', 'female+detective',
                   }`,
           },
           {
