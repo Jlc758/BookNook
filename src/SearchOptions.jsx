@@ -3,6 +3,7 @@ import useOpenAI from "./useOpenAI";
 import GeneralQuery from "./GeneralQuery";
 import BookCard from "./BookCard";
 import { v4 as uuidv4 } from "uuid";
+// input
 
 function SearchOptions() {
   const [userInput, setUserInput] = useState("");
@@ -31,7 +32,7 @@ function SearchOptions() {
     <>
       <div className="GeneralQuery">
         <h5>What vibe are you looking for in your next read?</h5>
-        <input
+        <Input
           type="textarea"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
