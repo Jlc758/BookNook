@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import useOpenAI from "./useOpenAI";
-import GeneralQuery from "./GeneralQuery";
-import BookCard from "./BookCard";
+import useOpenAI from "../hooks/useOpenAI";
+import GeneralQuery from "../components/GeneralQuery";
+import BookCard from "../components/BookCard";
 import { v4 as uuidv4 } from "uuid";
-// input
+import { TextInput } from "@mantine/core";
 
 function SearchOptions() {
   const [userInput, setUserInput] = useState("");
@@ -31,12 +31,12 @@ function SearchOptions() {
   return (
     <>
       <div className="GeneralQuery">
-        <h5>What vibe are you looking for in your next read?</h5>
-        <Input
-          type="textarea"
-          value={userInput}
+        <TextInput
+          size="md"
+          radius="xl"
+          label="What vibe are you looking for in your next read?"
+          placeholder="enter search query"
           onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Enter your search query"
         />
 
         {loading && <div>Loading...</div>}
