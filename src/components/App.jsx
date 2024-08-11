@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { MantineProvider, useMantineTheme } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 
 import Layout from "../context/Layout";
 import LandingPage from "../pages/LandingPage";
@@ -8,6 +8,7 @@ import SearchOptions from "../pages/SearchOptions";
 import Shelves from "../pages/Shelves";
 import Profile from "../pages/Profile";
 import "@mantine/core/styles.css";
+import { useLocalStorage } from "@mantine/hooks";
 
 const router = createBrowserRouter([
   {
@@ -24,8 +25,14 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+  const { colorScheme, setColorScheme } = useLocalStorage({
+    key: "mantine-color-scheme",
+    defaultValue: "dark",
+    getInitialValueInEffect: true,
+  });
+
   return (
-    <MantineProvider theme={useMantineTheme}>
+    <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalCSS>
       <RouterProvider router={router} />
     </MantineProvider>
   );

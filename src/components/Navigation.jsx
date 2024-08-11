@@ -10,7 +10,6 @@ import { IconSun, IconMoonStars } from "@tabler/icons-react";
 
 function Navigation() {
   const navigate = useNavigate();
-
   const theme = useMantineTheme();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
@@ -52,7 +51,7 @@ function Navigation() {
         <Tabs.Tab value="theme">
           <Switch
             size="md"
-            color={colorScheme === "dark" ? "light" : "dark"}
+            color={colorScheme === "dark" ? "gray" : "dark"}
             onLabel={sunIcon}
             offLabel={moonIcon}
             checked={colorScheme === "dark"}
