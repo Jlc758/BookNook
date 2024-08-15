@@ -1,0 +1,11 @@
+.grid {
+  justify-items: center;
+}
+
+.column {
+  column-span: 3;
+  height: rem(80);
+
+  padding: 20px;
+  flex-direction: column;
+}

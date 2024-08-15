@@ -7,6 +7,8 @@ import {
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { IconSun, IconMoonStars } from "@tabler/icons-react";
+// import NavCSS from "../css/Navigation.module.css";
+import "@mantine/core/styles.css";
 
 function Navigation() {
   const navigate = useNavigate();

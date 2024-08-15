@@ -1,7 +1,12 @@
-// Shelves
+import ShelfDisplay from "../components/ShelfDisplay";
 
 const Shelves = () => {
-  <h5>Shelves</h5>;
+  return (
+    <>
+      <h5>Shelves</h5>
+      <ShelfDisplay />
+    </>
+  );
 };
 
 export default Shelves;

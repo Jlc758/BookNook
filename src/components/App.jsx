@@ -7,7 +7,6 @@ import SelectionQuery from "./SelectionQuery";
 import SearchOptions from "../pages/SearchOptions";
 import Shelves from "../pages/Shelves";
 import Profile from "../pages/Profile";
-import "@mantine/core/styles.css";
 import { useLocalStorage } from "@mantine/hooks";
 
 const router = createBrowserRouter([
@@ -25,7 +24,7 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  const { colorScheme, setColorScheme } = useLocalStorage({
+  const { colorScheme } = useLocalStorage({
     key: "mantine-color-scheme",
     defaultValue: "dark",
     getInitialValueInEffect: true,
