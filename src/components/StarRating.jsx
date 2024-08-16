@@ -1,7 +1,10 @@
 import { Rating } from "@mantine/core";
+import { useState } from "react";
 
 function StarRating() {
-  return <Rating fractions={2} />;
+  const [value, setValue] = useState(0);
+
+  return <Rating value={value} onChange={setValue} fractions={2} />;
 }
 
 export default StarRating;
