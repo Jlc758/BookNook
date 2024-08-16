@@ -12,3 +12,13 @@
   padding: 20px;
   flex-basis: auto;
 }
+
+@media (min-width: em(750px)) {
+  .column {
+    --col-flex-basis: unset;
+    column-count: "3";
+    height: max-content;
+    padding: 20px;
+    flex-basis: auto;
+  }
+}
