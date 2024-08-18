@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import useOpenAI from "../hooks/useOpenAI";
 import GeneralQuery from "../components/GeneralQuery";
-import BookCard from "../components/BookCard";
-import { v4 as uuidv4 } from "uuid";
 import { TextInput } from "@mantine/core";
+import { ShelfDisplay } from "../components/ShelfDisplay";
 
 function SearchOptions() {
   const [userInput, setUserInput] = useState("");
@@ -44,18 +43,8 @@ function SearchOptions() {
               apiKey={googleAPIKey}
               setBooks={setBooks} // Ensure setBooks is passed as a prop
             />
-            <div className="bookCards">
-              {books.map((book) => (
-                <BookCard
-                  key={uuidv4()}
-                  title={book.volumeInfo.title}
-                  authors={book.volumeInfo.authors?.join(", ")}
-                  pageCount={book.volumeInfo.pageCount}
-                  categories={book.volumeInfo.categories?.join(", ")}
-                  cover={book.volumeInfo.imageLinks?.thumbnail}
-                />
-              ))}
-            </div>
+
+            {books.length > 0 && <ShelfDisplay books={books} />}
           </div>
         )}
       </div>

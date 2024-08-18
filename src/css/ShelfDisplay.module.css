@@ -1,24 +1,33 @@
+/* ShelfDisplay.module.css */
 .grid {
-  --grid-justify: unset;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row; /* Ensure that the direction is set to row */
-  justify-content: center; /*Adjust alignment as needed*/
+  justify-content: center;
 }
 
 .column {
-  --col-flex-basis: unset;
-  height: max-content;
-  padding: 20px;
-  flex-basis: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  width: 100%; /* This ensures full width on smallest screens */
+  box-sizing: border-box;
 }
 
-@media (min-width: em(750px)) {
+@media (max-width: 576px) {
   .column {
-    --col-flex-basis: unset;
-    column-count: "3";
-    height: max-content;
-    padding: 20px;
-    flex-basis: auto;
+    width: 50%; /* 2 columns on small screens */
+  }
+}
+
+@media (min-width: 576px) {
+  .column {
+    width: 33.333%; /* 3 columns on medium screens */
+  }
+}
+
+@media (min-width: 768px) {
+  .column {
+    width: 25%; /* 4 columns on large screens */
   }
 }

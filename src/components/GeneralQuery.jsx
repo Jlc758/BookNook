@@ -77,7 +77,7 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
 
         let query = `${baseUrl}${queryParts.join(
           ""
-        )}&orderBy=relevance&maxResults=40&key=${apiKey}`;
+        )}&orderBy=relevance&maxResults=10&key=${apiKey}`;
 
         console.log("Google Books Query: ", query);
 
