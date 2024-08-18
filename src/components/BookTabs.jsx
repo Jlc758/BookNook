@@ -1,7 +1,8 @@
-import { GridSetup } from "./ShelfDisplay";
+import { ShelfDisplay } from "./ShelfDisplay";
 import { Tabs } from "@mantine/core";
+import PropTypes from "prop-types";
 
-const BookTabs = () => {
+const BookTabs = ({ books }) => {
   return (
     <Tabs defaultValue="CurrentRead" orientation="vertical">
       <Tabs.List>
@@ -15,7 +16,7 @@ const BookTabs = () => {
 
       <Tabs.Panel value="CurrentRead">Currently Reading tab content</Tabs.Panel>
       <Tabs.Panel value="AllBooks">
-        <GridSetup />
+        <ShelfDisplay books={books} />
       </Tabs.Panel>
       <Tabs.Panel value="TopTen">TopTen tab content</Tabs.Panel>
       <Tabs.Panel value="TBR">TBR tab content</Tabs.Panel>
@@ -23,6 +24,10 @@ const BookTabs = () => {
       <Tabs.Panel value="DNF">DNF tab content</Tabs.Panel>
     </Tabs>
   );
+};
+
+BookTabs.propTypes = {
+  books: PropTypes.array.isRequired,
 };
 
 export default BookTabs;
