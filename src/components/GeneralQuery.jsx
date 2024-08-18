@@ -40,9 +40,19 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
 
         // Process additional keywords
         if (additionalKeywords) {
-          const keywordArray = additionalKeywords
-            .split(",")
-            .map((k) => k.trim());
+          let keywordArray;
+          if (Array.isArray(additionalKeywords)) {
+            keywordArray = additionalKeywords;
+          } else if (typeof additionalKeywords === "string") {
+            keywordArray = additionalKeywords.split(",").map((k) => k.trim());
+          } else {
+            console.error(
+              "Unexpected type for additionalKeywords:",
+              typeof additionalKeywords
+            );
+            keywordArray = [];
+          }
+
           const uniqueKeywords = keywordArray.filter(
             (keyword) =>
               keyword.toLowerCase() !== mainCategory?.toLowerCase() &&
@@ -51,15 +61,25 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
                 .split(" ")
                 .every((word) => mainCategory?.toLowerCase().includes(word))
           );
-          queryParts.push(...uniqueKeywords.map(encodeURIComponent));
+          queryParts.push(
+            ...uniqueKeywords.map(
+              (keyword) => `+${encodeURIComponent(keyword)}`
+            )
+          );
+        }
+
+        // Ensure queryParts is not empty
+        if (queryParts.length === 0) {
+          console.error("No valid query parts found.");
+          setBooks([]);
+          return;
         }
 
         let query = `${baseUrl}${queryParts.join(
-          "+"
+          ""
         )}&orderBy=relevance&maxResults=40&key=${apiKey}`;
 
         console.log("Google Books Query: ", query);
-        console.log(keywords);
 
         const books = await fetchBooks(query);
 
@@ -73,10 +93,9 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
 
         const filteredBooks = books.filter((book) => {
           const bookPageCount = book.volumeInfo?.pageCount;
-
           const pageCountCheck =
-            !pageCount || (bookPageCount && bookPageCount <= pageCount);
-
+            bookPageCount !== 0 &&
+            (!pageCount || (bookPageCount && bookPageCount <= pageCount));
           return pageCountCheck;
         });
 
@@ -90,7 +109,7 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
     handleSearch();
   }, [apiKey, keywords, setBooks]);
 
-  return;
+  return null; // No UI to render
 };
 
 GeneralQuery.propTypes = {
@@ -99,7 +118,10 @@ GeneralQuery.propTypes = {
     author: propTypes.string,
     mainCategory: propTypes.string,
     pageCount: propTypes.number,
-    keywords: propTypes.string,
+    keywords: propTypes.oneOfType([
+      propTypes.string,
+      propTypes.arrayOf(propTypes.string),
+    ]),
   }),
   apiKey: propTypes.string.isRequired,
   setBooks: propTypes.func.isRequired,

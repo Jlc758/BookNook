@@ -24,10 +24,6 @@ function SearchOptions() {
     };
   }, [userInput]);
 
-  useEffect(() => {
-    console.log("Books state updated: ", books);
-  }, [books]);
-
   return (
     <>
       <div className="GeneralQuery">
