@@ -1,7 +1,7 @@
-import useKeenFlip from "../hooks/useKeenFlip";
+// import useKeenFlip from "./KeenFlip";
 
-const FlipThrough = () => {
-  return useKeenFlip();
-};
+// const FlipThrough = () => {
+//   return useKeenFlip();
+// };
 
-export default FlipThrough;
+// export default FlipThrough;

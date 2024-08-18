@@ -1,6 +1,7 @@
-import { RingProgress, SimpleGrid, Container } from "@mantine/core";
-
+import { Container, Flex, RingProgress } from "@mantine/core";
+import { MainTitle } from "../components/Title";
 import { PieChart, Pie } from "recharts";
+import KeenFlip from "../components/KeenFlip";
 
 const data = [
   { name: "Group A", value: 400 },
@@ -41,22 +42,16 @@ function LandingPage() {
     </PieChart>
   );
 
-  const grid = (
-    <SimpleGrid cols={3} spacing="sm" verticalSpacing="sm">
-      <div>1</div>
-      <div>2</div>
-      <div>3</div>
-      <div>4</div>
-      <div>5</div>
-    </SimpleGrid>
-  );
-
   return (
     <>
-      <h1>Landing Page</h1>
+      <MainTitle>{"Welcome to your BookNook"}</MainTitle>
       <div>{ring}</div>
       <div>{pieChart}</div>
-      <Container>{grid}</Container>
+      <div>
+        <Container display={Flex}>
+          <KeenFlip />
+        </Container>
+      </div>
     </>
   );
 }

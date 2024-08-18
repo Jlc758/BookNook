@@ -25,4 +25,22 @@ Title.propTypes = {
   children: propTypes.string.isRequired,
 };
 
+export const MainTitle = ({ children }) => {
+  return (
+    <Text
+      size="30px"
+      variant="gradient"
+      fw={600}
+      gradient={{ from: "pink", to: "yellow", deg: 200 }}
+      ta={"center"}
+    >
+      {children}
+    </Text>
+  );
+};
+
+MainTitle.propTypes = {
+  children: propTypes.string.isRequired,
+};
+
 export default Title;

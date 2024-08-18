@@ -14,14 +14,41 @@ const BookTabs = ({ books }) => {
         <Tabs.Tab value="DNF">DNF</Tabs.Tab>
       </Tabs.List>
 
-      <Tabs.Panel value="CurrentRead">Currently Reading tab content</Tabs.Panel>
+      <Tabs.Panel value="CurrentRead">
+        Currently Reading tab content{" "}
+        <div>
+          <ShelfDisplay books={books} />
+        </div>
+      </Tabs.Panel>
       <Tabs.Panel value="AllBooks">
+        {" "}
+        All Books
         <ShelfDisplay books={books} />
       </Tabs.Panel>
-      <Tabs.Panel value="TopTen">TopTen tab content</Tabs.Panel>
-      <Tabs.Panel value="TBR">TBR tab content</Tabs.Panel>
-      <Tabs.Panel value="Loved">Loved tab content</Tabs.Panel>
-      <Tabs.Panel value="DNF">DNF tab content</Tabs.Panel>
+      <Tabs.Panel value="TopTen">
+        TopTen tab content{" "}
+        <div>
+          <ShelfDisplay books={books} />
+        </div>
+      </Tabs.Panel>
+      <Tabs.Panel value="TBR">
+        TBR tab content{" "}
+        <div>
+          <ShelfDisplay books={books} />
+        </div>
+      </Tabs.Panel>
+      <Tabs.Panel value="Loved">
+        Loved tab content{" "}
+        <div>
+          <ShelfDisplay books={books} />
+        </div>
+      </Tabs.Panel>
+      <Tabs.Panel value="DNF">
+        DNF tab content{" "}
+        <div>
+          <ShelfDisplay books={books} />
+        </div>
+      </Tabs.Panel>
     </Tabs>
   );
 };
