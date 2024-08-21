@@ -1,6 +1,7 @@
-import { Container, Flex, RingProgress } from "@mantine/core";
+import { RingProgress } from "@mantine/core";
 import { MainTitle } from "../components/Title";
-import { PieChart, Pie } from "recharts";
+import { PieChart } from "recharts/es6/chart/PieChart";
+import { Pie } from "recharts/es6/polar/Pie";
 import KeenFlip from "../components/KeenFlip";
 
 const data = [
@@ -48,9 +49,7 @@ function LandingPage() {
       <div>{ring}</div>
       <div>{pieChart}</div>
       <div>
-        <Container display={Flex}>
-          <KeenFlip />
-        </Container>
+        <KeenFlip />
       </div>
     </>
   );

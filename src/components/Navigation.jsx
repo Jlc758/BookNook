@@ -36,7 +36,7 @@ function Navigation() {
   );
 
   return (
-    <Tabs>
+    <Tabs defaultValue={"home"}>
       <Tabs.List>
         <Tabs.Tab value="home" onClick={() => handleClick("/")}>
           Home

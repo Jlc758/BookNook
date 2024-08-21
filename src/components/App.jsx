@@ -4,7 +4,7 @@ import "../css/index.css";
 import Layout from "../context/Layout";
 import LandingPage from "../pages/LandingPage";
 import SelectionQuery from "./SelectionQuery";
-import SearchOptions from "../pages/SearchOptions";
+import SearchOptions from "../pages/SearchOptionsPage";
 import Shelves from "../pages/Shelves";
 import Profile from "../pages/Profile";
 import Theme from "../css/theme";

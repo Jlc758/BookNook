@@ -26,14 +26,12 @@ const KeenFlip = () => {
   return (
     <>
       <div>Drag to view more books</div>
+
       <div
         style={{
           backgroundImage: `linear-gradient(${rotation}deg, black 0px, black 50%, white 50%, white 100%)`,
           height: "180px",
-          width: "50%",
-          display: "flex",
-          justifyContent: "center",
-          position: "relative",
+          width: "100%",
         }}
         className="background-rotation"
         ref={sliderRef}
@@ -45,9 +43,6 @@ const KeenFlip = () => {
             height: "100%",
             width: "100%",
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
           }}
         >
           <img
@@ -55,7 +50,7 @@ const KeenFlip = () => {
             height="180px"
             alt="Placeholder"
             style={{
-              position: "absolute",
+              position: "relative",
               opacity: 1 - imageOpacity,
               transition: "opacity 0.3s",
             }}
@@ -65,7 +60,7 @@ const KeenFlip = () => {
             height="180px"
             alt="Cover"
             style={{
-              position: "absolute",
+              position: "relative",
               opacity: imageOpacity,
               transition: "opacity 0.3s",
             }}

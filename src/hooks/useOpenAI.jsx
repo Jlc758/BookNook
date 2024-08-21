@@ -1,7 +1,5 @@
 import OpenAI from "openai";
 import { useState, useEffect } from "react";
-import { z } from "zod";
-import { zodResponseFormat } from "openai/helpers/zod";
 
 function useOpenAI(userInput) {
   const [keywords, setKeywords] = useState(null);
@@ -69,42 +67,119 @@ function useOpenAI(userInput) {
         return expandedInput;
       };
 
-      const ResponseSchema = z.object({
-        title: z.string().nullable(),
-        author: z.string().nullable(),
-        mainCategory: z.string().nullable(),
-        pageCount: z.number().nullable(),
-        keywords: z.array(z.string()).nullable(),
-      });
+      const ResponseSchema = {
+        type: "json_schema",
+        json_schema: {
+          name: "book_metadata",
+          strict: true,
+          schema: {
+            type: "object",
+            properties: {
+              keywords: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+                description:
+                  "List of common words found in the description of a book. If value cannot be determined, return empty string",
+              },
+              mainCategory: {
+                type: "string",
+                items: {
+                  type: "string",
+                },
+                description:
+                  "Common categories for book genres, such as:  True Crime, Fantasy, Science Fiction, Mystery, Thriller, Romance, Horror, etc. If a common category is not requested, do not return a category matching one of the results; instead, return an empty string",
+              },
+              title: {
+                type: "string",
+                items: {
+                  type: "string",
+                },
+                description:
+                  "If value cannot be determined, return empty string",
+              },
+            },
+
+            required: ["keywords", "mainCategory", "title"],
+            additionalProperties: false,
+          },
+        },
+      };
+
+      const aiPromptExamples = {
+        examples: [
+          {
+            role: "user",
+            content: "throne of glass",
+          },
+
+          {
+            role: "assistant",
+            content: `{
+                    'title': "throne of glass",
+                    'author': null,
+                    'mainCategory': null,
+                    'pageCount': null,
+                    'keywords': null,
+                  }`,
+          },
+          {
+            role: "user",
+            content:
+              "looking for a true crime novel with a female detective with less than 300 pages",
+          },
+
+          {
+            role: "assistant",
+            content: `{
+                    'title': null,
+                    'author': null,
+                    'mainCategory': "true crime",
+                    'pageCount': "300",
+                    'keywords': "female", "detective",
+                  }`,
+          },
+          {
+            role: "user",
+            content: "dahmer",
+          },
+
+          {
+            role: "assistant",
+            content: `{
+                    'title': null,
+                    'author': null,
+                    'mainCategory': null,
+                    'pageCount': null,
+                    'keywords': "dahmer",
+                  }`,
+          },
+        ],
+      };
+
+      const createPromptWithExamples = (userInput) => {
+        return [
+          {
+            role: "system",
+            content: `You are an expert at extracting key words from natural language input by users and converting it to valid JSON format. Key words will be used to search for books in the Google Books API database.
+            Always prioritize placing genre or category-related terms (like "true crime", "science fiction", etc.) in the 'mainCategory' field. Do not duplicate these terms in the 'keywords' field.
+            Only use the 'keywords' field for additional search terms that are not the main category or genre. Do not link any fields with prior search criteria.  Leave any non-explicit terms out results.`,
+          },
+          ...aiPromptExamples.examples,
+          {
+            role: "user",
+            content: expandInput(userInput),
+          },
+        ];
+      };
 
       try {
         const completion = await openai.beta.chat.completions.parse({
           model: "gpt-4o-2024-08-06",
-          messages: [
-            {
-              role: "system",
-              content: `You are an expert at extracting key words from natural language input by users and converting it to valid JSON format. Key words will be used to search for books in the Google Books API database.
-            Always prioritize placing genre or category-related terms (like "true crime", "science fiction", etc.) in the 'mainCategory' field. Do not duplicate these terms in the 'keywords' field.
-            Only use the 'keywords' field for additional search terms that are not the main category or genre.
-            Example:  Prompt -- Looking for a true crime novel with a female detective less than 500 pages in length set in the 1930s. Response -- {
-                    'title': null,
-                    'author': null,
-                    'mainCategory': 'true crime',
-                    'pageCount': 500,
-                    'keywords': '1930s', 'female+detective',
-                  }`,
-            },
-            {
-              role: "user",
-              content: `Prompt -- ${expandInput(userInput)}`,
-            },
-          ],
+          messages: createPromptWithExamples(userInput),
           temperature: 0,
-          max_tokens: 256,
-          top_p: 1,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-          response_format: zodResponseFormat(ResponseSchema, "api-response"),
+          response_format: ResponseSchema,
         });
 
         const responseMessage = completion.choices[0].message;

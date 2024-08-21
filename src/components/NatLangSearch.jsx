@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import useOpenAI from "../hooks/useOpenAI";
 import GeneralQuery from "../components/GeneralQuery";
-import { TextInput } from "@mantine/core";
+import { Space, TextInput } from "@mantine/core";
 import { ShelfDisplay } from "../components/ShelfDisplay";
 
-function SearchOptions() {
+const NatLangSearch = () => {
   const [userInput, setUserInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
   const [books, setBooks] = useState([]);
@@ -25,6 +25,7 @@ function SearchOptions() {
 
   return (
     <>
+      <Space h="md" />
       <div className="GeneralQuery">
         <TextInput
           size="md"
@@ -50,6 +51,6 @@ function SearchOptions() {
       </div>
     </>
   );
-}
+};
 
-export default SearchOptions;
+export default NatLangSearch;
