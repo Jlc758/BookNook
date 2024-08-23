@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { useState, useEffect } from "react";
+import { shorthandMapping, tropeMapping } from "../context/searchCriteria";
 
 function useOpenAI(userInput) {
   const [keywords, setKeywords] = useState(null);
@@ -17,31 +18,6 @@ function useOpenAI(userInput) {
         apiKey: import.meta.env.VITE_OPENAI_API_KEY,
         dangerouslyAllowBrowser: true,
       });
-
-      // Trope & shorthand definitions
-      const shorthandMapping = {
-        "w/w": "woman on woman",
-        "m/m": "man on man",
-        "m/f": "man and woman",
-        "reverse harem": "reverse harem",
-        "m/m/w": "reverse harem",
-        harem: "harem",
-        lgbtq: "LGBTQ",
-        sapphic: "sapphic",
-      };
-
-      const tropeMapping = {
-        "enemies to lovers": "enemies to lovers",
-        "second chance": "second chance",
-        "meet-cute": "meet-cute",
-        "forced proximity": "forced proximity",
-        "forbidden love": "forbidden love",
-        "love triangle": "love triangle",
-        "fake relationship": "fake relationship",
-        "slow burn": "slow burn",
-        "opposites attract": "opposites attract",
-        "friends to lovers": "friends to lovers",
-      };
 
       const expandInput = (input) => {
         let expandedInput = input;

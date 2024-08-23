@@ -1,5 +1,6 @@
 import { Space, Tabs } from "@mantine/core";
-import NatLangSearch from "../components/NatLangSearch";
+import NatLangSearch from "./NatLangSearch";
+import SelectSearch from "./SelectSearch";
 
 const SearchOptions = () => {
   return (
@@ -15,7 +16,9 @@ const SearchOptions = () => {
           <NatLangSearch />
         </Tabs.Panel>
 
-        <Tabs.Panel value="criteria">Messages tab content</Tabs.Panel>
+        <Tabs.Panel value="criteria">
+          <SelectSearch />
+        </Tabs.Panel>
       </Tabs>
     </>
   );
