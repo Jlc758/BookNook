@@ -77,7 +77,7 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
 
         let query = `${baseUrl}${queryParts.join(
           ""
-        )}&orderBy=relevance&maxResults=10&key=${apiKey}`;
+        )}&orderBy=relevance&maxResults=40&key=${apiKey}`;
 
         console.log("Google Books Query: ", query);
 
@@ -93,10 +93,22 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
 
         const filteredBooks = books.filter((book) => {
           const bookPageCount = book.volumeInfo?.pageCount;
-          const pageCountCheck =
-            bookPageCount !== 0 &&
-            (!pageCount || (bookPageCount && bookPageCount <= pageCount));
-          return pageCountCheck;
+          if (!bookPageCount || bookPageCount <= 0) return false;
+
+          const minPageCount = pageCount?.min ?? null;
+          const maxPageCount = pageCount?.max ?? null;
+
+          // This logic works for all cases:
+          // - "less than X pages": only maxPageCount is set
+          // - "more than X pages": only minPageCount is set
+          // - "around X pages": both minPageCount and maxPageCount are set
+          // - exact page count: minPageCount equals maxPageCount
+          if (minPageCount !== null && bookPageCount < minPageCount)
+            return false;
+          if (maxPageCount !== null && bookPageCount > maxPageCount)
+            return false;
+
+          return true;
         });
 
         setBooks(filteredBooks);
@@ -117,7 +129,10 @@ GeneralQuery.propTypes = {
     title: propTypes.string,
     author: propTypes.string,
     mainCategory: propTypes.string,
-    pageCount: propTypes.number,
+    pageCount: propTypes.shape({
+      min: propTypes.number,
+      max: propTypes.number,
+    }),
     keywords: propTypes.oneOfType([
       propTypes.string,
       propTypes.arrayOf(propTypes.string),

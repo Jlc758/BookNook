@@ -140,7 +140,12 @@ function useOpenAI(userInput) {
             role: "system",
             content: `You are an expert at extracting key words from natural language input by users and converting it to valid JSON format. Key words will be used to search for books in the Google Books API database.
             Always prioritize placing genre or category-related terms (like "true crime", "science fiction", etc.) in the 'mainCategory' field. Do not duplicate these terms in the 'keywords' field.
-            Only use the 'keywords' field for additional search terms that are not the main category or genre. Do not link any fields with prior search criteria.  Leave any non-explicit terms out results.`,
+            Only use the 'keywords' field for additional search terms that are not the main category or genre. Do not link any fields with prior search criteria.  Leave any non-explicit terms out results.
+            For page count, interpret phrases as follows:
+            - "less than X pages" as {max: X, min: null}
+            - "more than X pages" as {min: X, max: null}
+            - "around X pages" as {min: X - 50, max: X + 50}
+            - exact page counts as {min: X, max: X}`,
           },
           ...aiPromptExamples.examples,
           {
