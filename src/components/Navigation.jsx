@@ -62,16 +62,6 @@ function Navigation() {
             <Tabs.Tab value="profile" onClick={() => handleClick("/profile")}>
               <h3>Profile</h3>
             </Tabs.Tab>
-            <Tabs.Tab value="theme">
-              <Switch
-                size="md"
-                color={colorScheme === "dark" ? "gray" : "dark"}
-                onLabel={sunIcon}
-                offLabel={moonIcon}
-                checked={colorScheme === "dark"}
-                onChange={() => toggleColorScheme()}
-              />
-            </Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value="home"></Tabs.Panel>
@@ -79,7 +69,16 @@ function Navigation() {
           <Tabs.Panel value="search"></Tabs.Panel>
           <Tabs.Panel value="profile"></Tabs.Panel>
         </Tabs>
-        <div className="EmptySpace"></div>
+        <div className="DarkLight">
+          <Switch
+            size="md"
+            color={colorScheme === "dark" ? "gray" : "dark"}
+            onLabel={sunIcon}
+            offLabel={moonIcon}
+            checked={colorScheme === "dark"}
+            onChange={() => toggleColorScheme()}
+          />
+        </div>
       </div>
     </>
   );

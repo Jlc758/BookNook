@@ -1,5 +1,8 @@
 .MainContent {
   padding-top: 15%;
+  background-color: #111111;
+  padding-left: 10vw;
+  padding-right: 10vw;
 }
 
 .NavContainer {
@@ -10,7 +13,10 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(11, 118, 123, 0.18);
-  padding: 15px 0;
+  padding-top: 15px;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  padding-bottom: 2px;
   position: fixed;
   margin: 0 auto;
   top: 0;
@@ -26,8 +32,17 @@
   justify-content: center;
 }
 
-.Tabs.Tab {
-  color: black;
+.TabsList .mantine-Tabs-tab {
+  transition: all 0.3s ease;
+}
+
+.TabsList .mantine-Tabs-tab:hover h3 {
+  text-shadow: 0 0 5px #faf9f9, 0 0 10px #ffc0b3, 0 0 20px #ffc0b3;
+}
+
+/* Multi-layer glow effect for dark theme */
+[data-mantine-color-scheme="dark"] .TabsList .mantine-Tabs-tab:hover h3 {
+  text-shadow: 0 0 5px #080301, 0 0 10px #ffc0b3, 0 0 20px #ffc0b3;
 }
 
 .LogoContainer {
@@ -52,12 +67,13 @@
   width: auto; /* Maintain aspect ratio */
   display: block;
   border: 0px;
-  border-radius: 50% 0;
+  border-radius: 50% 50% 0 0;
   object-fit: contain; /* Ensure logo fits within the container */
 }
 
-.EmptySpace {
+.DarkLight {
   flex: 1;
+  justify-content: flex-end;
 }
 
 .LogoWrapper::after {
@@ -67,4 +83,38 @@
   right: 0;
   bottom: 0;
   height: 100%;
+}
+
+.main {
+  display: grid;
+  height: 100vh;
+  width: 100%;
+  grid-template-columns: 1fr 0.5fr 1fr;
+  grid-template-rows: 1fr 0.5fr;
+  gap: 2% 2%;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "second first first"
+    "footer footer footer";
+}
+
+.first {
+  grid-area: first;
+  height: 100%;
+  width: 100%;
+  background-color: pink;
+}
+
+.footer {
+  grid-area: footer;
+  height: 100%;
+  width: 100%;
+  background-color: greenyellow;
+}
+
+.second {
+  grid-area: second;
+  height: 100%;
+  width: 100%;
+  background-color: lavender;
 }

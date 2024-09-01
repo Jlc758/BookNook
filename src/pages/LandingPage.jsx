@@ -1,4 +1,4 @@
-import { RingProgress } from "@mantine/core";
+import { RingProgress, Box } from "@mantine/core";
 import { MainTitle } from "../components/Title";
 import { PieChart } from "recharts/es6/chart/PieChart";
 import { Pie } from "recharts/es6/polar/Pie";
@@ -43,14 +43,15 @@ function LandingPage() {
     </PieChart>
   );
 
+  const currentReadContainer = <Box />;
+
   return (
     <>
       <div className="MainContent">
-        <MainTitle>{"Welcome to yours BookNook"}</MainTitle>
-        <div>{ring}</div>
-        <div>{pieChart}</div>
-        <div>
-          <KeenFlip />
+        <div className="main">
+          <div className="first" />
+          <div className="second" />
+          <div className="footer" />
         </div>
       </div>
     </>
