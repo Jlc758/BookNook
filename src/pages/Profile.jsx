@@ -1,5 +1,12 @@
 function Profile() {
-  return <h2>Profile</h2>;
+  return (
+    <>
+      <div className="MainContent">
+        <h2>Profile</h2>
+      </div>
+      ;
+    </>
+  );
 }
 
 export default Profile;

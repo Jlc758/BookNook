@@ -7,7 +7,8 @@ import {
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { IconSun, IconMoonStars } from "@tabler/icons-react";
-// import NavCSS from "../css/Navigation.module.css";
+import LogoDark from "../images/Logo-Dark.png";
+import LogoLight from "../images/Logo-Light.png";
 import "@mantine/core/styles.css";
 
 function Navigation() {
@@ -23,7 +24,7 @@ function Navigation() {
     <IconSun
       style={{ width: rem(16), height: rem(16) }}
       stroke={2.5}
-      color={theme.colors.yellow[4]}
+      color={theme.colors.rose[2]}
     />
   );
 
@@ -31,42 +32,56 @@ function Navigation() {
     <IconMoonStars
       style={{ width: rem(16), height: rem(16) }}
       stroke={2.5}
-      color={theme.colors.blue[6]}
+      color={theme.colors.rose[2]}
     />
   );
 
   return (
-    <Tabs defaultValue={"home"}>
-      <Tabs.List>
-        <Tabs.Tab value="home" onClick={() => handleClick("/")}>
-          Home
-        </Tabs.Tab>
-        <Tabs.Tab value="shelves" onClick={() => handleClick("/shelves")}>
-          Shelves
-        </Tabs.Tab>
-        <Tabs.Tab value="search" onClick={() => handleClick("/search")}>
-          Search
-        </Tabs.Tab>
-        <Tabs.Tab value="profile" onClick={() => handleClick("/profile")}>
-          Profile
-        </Tabs.Tab>
-        <Tabs.Tab value="theme">
-          <Switch
-            size="md"
-            color={colorScheme === "dark" ? "gray" : "dark"}
-            onLabel={sunIcon}
-            offLabel={moonIcon}
-            checked={colorScheme === "dark"}
-            onChange={() => toggleColorScheme()}
-          />
-        </Tabs.Tab>
-      </Tabs.List>
+    <>
+      <div className="NavContainer">
+        <div className="LogoContainer">
+          <div className="LogoWrapper">
+            <img
+              src={colorScheme === "dark" ? LogoDark : LogoLight}
+              alt="Logo"
+              className="Logo"
+            />
+          </div>
+        </div>
+        <Tabs defaultValue={"home"} className="TabsContainer">
+          <Tabs.List className="TabsList">
+            <Tabs.Tab value="home" onClick={() => handleClick("/")}>
+              <h3>Home</h3>
+            </Tabs.Tab>
+            <Tabs.Tab value="shelves" onClick={() => handleClick("/shelves")}>
+              <h3>Shelves</h3>
+            </Tabs.Tab>
+            <Tabs.Tab value="search" onClick={() => handleClick("/search")}>
+              <h3>Search</h3>
+            </Tabs.Tab>
+            <Tabs.Tab value="profile" onClick={() => handleClick("/profile")}>
+              <h3>Profile</h3>
+            </Tabs.Tab>
+            <Tabs.Tab value="theme">
+              <Switch
+                size="md"
+                color={colorScheme === "dark" ? "gray" : "dark"}
+                onLabel={sunIcon}
+                offLabel={moonIcon}
+                checked={colorScheme === "dark"}
+                onChange={() => toggleColorScheme()}
+              />
+            </Tabs.Tab>
+          </Tabs.List>
 
-      <Tabs.Panel value="home"></Tabs.Panel>
-      <Tabs.Panel value="shelves"></Tabs.Panel>
-      <Tabs.Panel value="search"></Tabs.Panel>
-      <Tabs.Panel value="profile"></Tabs.Panel>
-    </Tabs>
+          <Tabs.Panel value="home"></Tabs.Panel>
+          <Tabs.Panel value="shelves"></Tabs.Panel>
+          <Tabs.Panel value="search"></Tabs.Panel>
+          <Tabs.Panel value="profile"></Tabs.Panel>
+        </Tabs>
+        <div className="EmptySpace"></div>
+      </div>
+    </>
   );
 }
 

@@ -45,11 +45,13 @@ function LandingPage() {
 
   return (
     <>
-      <MainTitle>{"Welcome to your BookNook"}</MainTitle>
-      <div>{ring}</div>
-      <div>{pieChart}</div>
-      <div>
-        <KeenFlip />
+      <div className="MainContent">
+        <MainTitle>{"Welcome to yours BookNook"}</MainTitle>
+        <div>{ring}</div>
+        <div>{pieChart}</div>
+        <div>
+          <KeenFlip />
+        </div>
       </div>
     </>
   );

@@ -6,7 +6,7 @@ const Layout = () => {
     <div>
       <Navigation />
 
-      <Outlet style={{ display: "flex" }} />
+      <Outlet />
     </div>
   );
 };

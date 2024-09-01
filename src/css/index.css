@@ -1,5 +1,70 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Slabo+27px&display=swap");
+.MainContent {
+  padding-top: 15%;
+}
 
-body {
-  font-family: "Slabo 27px", serif;
-} */
+.NavContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Changed from flex-end to center */
+  background: #02020040;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(11, 118, 123, 0.18);
+  padding: 15px 0;
+  position: fixed;
+  margin: 0 auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.NavTabs {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.Tabs.Tab {
+  color: black;
+}
+
+.LogoContainer {
+  height: 7rem;
+  flex: 1;
+  display: flex;
+  align-items: center; /* Changed from flex-end to center */
+  padding-bottom: 0;
+  margin-bottom: 0;
+  overflow: visible; /* Changed from hidden to visible */
+}
+
+.LogoWrapper {
+  position: relative;
+  display: inline-block;
+  height: 100%; /* Ensure wrapper takes full height of container */
+}
+
+.Logo {
+  flex: 1;
+  height: 110%;
+  width: auto; /* Maintain aspect ratio */
+  display: block;
+  border: 0px;
+  border-radius: 50% 0;
+  object-fit: contain; /* Ensure logo fits within the container */
+}
+
+.EmptySpace {
+  flex: 1;
+}
+
+.LogoWrapper::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+}

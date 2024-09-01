@@ -25,29 +25,31 @@ const NatLangSearch = () => {
 
   return (
     <>
-      <Space h="md" />
-      <div className="GeneralQuery">
-        <TextInput
-          size="md"
-          radius="xl"
-          label="What vibe are you looking for in your next read?"
-          placeholder="enter search query"
-          onChange={(e) => setUserInput(e.target.value)}
-        />
+      <div className="MainContent">
+        <Space h="md" />
+        <div className="GeneralQuery">
+          <TextInput
+            size="md"
+            radius="xl"
+            label="What vibe are you looking for in your next read?"
+            placeholder="enter search query"
+            onChange={(e) => setUserInput(e.target.value)}
+          />
 
-        {loading && <div>Loading...</div>}
-        {error && <div>Error: {error}</div>}
-        {keywords && (
-          <div>
-            <GeneralQuery
-              keywords={keywords}
-              apiKey={googleAPIKey}
-              setBooks={setBooks} // Ensure setBooks is passed as a prop
-            />
+          {loading && <div>Loading...</div>}
+          {error && <div>Error: {error}</div>}
+          {keywords && (
+            <div>
+              <GeneralQuery
+                keywords={keywords}
+                apiKey={googleAPIKey}
+                setBooks={setBooks} // Ensure setBooks is passed as a prop
+              />
 
-            {books.length > 0 && <ShelfDisplay books={books} />}
-          </div>
-        )}
+              {books.length > 0 && <ShelfDisplay books={books} />}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

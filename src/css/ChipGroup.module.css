@@ -1,0 +1,40 @@
+.allChips {
+  display: grid;
+  justify-content: center;
+  width: 80vw;
+  border: 2px solid orange;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.chipGroup {
+  display: grid;
+  align-items: flex-start;
+  border: 2px black solid;
+  padding: 15px;
+}
+
+/* Media queries for responsive column layout */
+@media (min-width: 576px) {
+  .allChips {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on small screens */
+  }
+}
+
+@media (min-width: 768px) {
+  .allChips {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
+  }
+}
+
+@media (min-width: 992px) {
+  .allChips {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns on large screens */
+  }
+}
+
+/* Optional: Adjust chip layout within each group */
+.chipGroup .mantine-Group-root {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}

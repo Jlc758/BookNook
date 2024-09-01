@@ -1,6 +1,14 @@
 import OpenAI from "openai";
 import { useState, useEffect } from "react";
-import { shorthandMapping, tropeMapping } from "../context/searchCriteria";
+import {
+  extendedBookSearchShorthand,
+  romanceTropeOptions,
+  trueCrimeTropeOptions,
+  thrillerTropeOptions,
+  sciFiTropeOptions,
+  fantasyTropeOptions,
+  genres,
+} from "../context/searchCriteria";
 
 function useOpenAI(userInput) {
   const [keywords, setKeywords] = useState(null);
@@ -23,22 +31,36 @@ function useOpenAI(userInput) {
         let expandedInput = input;
 
         // Expand shorthand terms
-        for (const shorthand in shorthandMapping) {
-          const expandedTerm = shorthandMapping[shorthand];
+        extendedBookSearchShorthand.forEach(({ value, label }) => {
           expandedInput = expandedInput.replace(
-            new RegExp(`\\b${shorthand}\\b`, "gi"),
-            expandedTerm
+            new RegExp(`\\b${value}\\b`, "gi"),
+            label
           );
-        }
+        });
 
         // Expand tropes
-        for (const trope in tropeMapping) {
-          const expandedTrope = tropeMapping[trope];
+        const allTropes = [
+          ...romanceTropeOptions,
+          ...trueCrimeTropeOptions,
+          ...thrillerTropeOptions,
+          ...sciFiTropeOptions,
+          ...fantasyTropeOptions,
+        ];
+
+        allTropes.forEach(({ value, label }) => {
           expandedInput = expandedInput.replace(
-            new RegExp(`\\b${trope}\\b`, "gi"),
-            expandedTrope
+            new RegExp(`\\b${value}\\b`, "gi"),
+            label
           );
-        }
+        });
+
+        // Expand genres
+        genres.forEach(({ value, label }) => {
+          expandedInput = expandedInput.replace(
+            new RegExp(`\\b${value}\\b`, "gi"),
+            label
+          );
+        });
 
         return expandedInput;
       };
@@ -61,11 +83,9 @@ function useOpenAI(userInput) {
               },
               mainCategory: {
                 type: "string",
-                items: {
-                  type: "string",
-                },
+                enum: genres.map((genre) => genre.label),
                 description:
-                  "Common categories for book genres, such as:  True Crime, Fantasy, Science Fiction, Mystery, Thriller, Romance, Horror, etc. If a common category is not requested, do not return a category matching one of the results; instead, return an empty string",
+                  "Main category or genre of the book. If a common category is not requested, return an empty string",
               },
               title: {
                 type: "string",

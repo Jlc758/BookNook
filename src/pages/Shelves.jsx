@@ -39,7 +39,9 @@ const Shelves = () => {
 
   return (
     <>
-      <BookTabs books={books} />
+      <div className="MainContent">
+        <BookTabs books={books} />
+      </div>
     </>
   );
 };

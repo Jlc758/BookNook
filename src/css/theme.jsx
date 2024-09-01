@@ -1,9 +1,10 @@
 const Theme = {
-  focusRing: "auto", // or 'always', 'never'
-  scale: 1, // Adjust as needed
-  fontSmoothing: true, // Adjust as needed
-  white: "#ffffff", // Set your specific color
-  black: "#000000", // Set your specific color
+  colorScheme: "light",
+  focusRing: "auto",
+  scale: 1,
+  fontSmoothing: true,
+  white: "#ffffff",
+  black: "#000000",
   colors: {
     "faded-green": [
       "#f3f7f4",
@@ -17,53 +18,125 @@ const Theme = {
       "#537a5e",
       "#446a4f",
     ],
-    yellow: [
-      "#fdfce5",
-      "#f8f6d3",
-      "#f0ecaa",
-      "#e7e17c",
-      "#e0d957",
-      "#dbd33e",
-      "#d9d02f",
-      "#c0b820",
-      "#aaa316",
-      "#938c03",
+    rose: [
+      "#ffeae5",
+      "#ffc0b3",
+      "#ff9680",
+      "#ff6c4d",
+      "#ff421a",
+      "#e62800",
+      "#b31f00",
+      "#801600",
+      "#4d0d00",
+      "#1a0500",
     ],
-  }, // Define your MantineThemeColors here
-  primaryShade: { light: 6, dark: 8 }, // or a single number, e.g., 6
-  primaryColor: "yellow", // Default color
-  variantColorResolver: function () {}, // Implement the function as needed
-  autoContrast: false, // Adjust as needed
-  luminanceThreshold: 0.3, // Adjust as needed
-  fontFamily: "Roboto, sans-serif", // Adjust as needed
-  fontFamilyMonospace: "Monaco, monospace", // Adjust as needed
+    // Add standard Mantine color scales
+    blue: [
+      "#E7F5FF",
+      "#D0EBFF",
+      "#A5D8FF",
+      "#74C0FC",
+      "#4DABF7",
+      "#339AF0",
+      "#228BE6",
+      "#1C7ED6",
+      "#1971C2",
+      "#1864AB",
+    ],
+    gray: [
+      "#F8F9FA",
+      "#F1F3F5",
+      "#E9ECEF",
+      "#DEE2E6",
+      "#CED4DA",
+      "#ADB5BD",
+      "#868E96",
+      "#495057",
+      "#343A40",
+      "#212529",
+    ],
+    red: [
+      "#FFF5F5",
+      "#FFE3E3",
+      "#FFC9C9",
+      "#FFA8A8",
+      "#FF8787",
+      "#FF6B6B",
+      "#FA5252",
+      "#F03E3E",
+      "#E03131",
+      "#C92A2A",
+    ],
+    // Add more color scales as needed
+  },
+  primaryShade: { light: 6, dark: 3 },
+  primaryColor: "gray",
+  autoContrast: false,
+  luminanceThreshold: 0.3,
+  fontFamily: "Roboto, sans-serif",
+  fontFamilyMonospace: "Monaco, monospace",
   headings: {
-    fontFamily: "Roboto, sans-serif", // Adjust as needed
-    fontWeight: "normal", // Adjust as needed
-    textWrap: "wrap", // or 'nowrap', 'balance', etc.
+    fontFamily: "Roboto, sans-serif",
+    fontWeight: "normal",
     sizes: {
-      h1: {}, // Define HeadingStyle
-      h2: {}, // Define HeadingStyle
-      h3: {}, // Define HeadingStyle
-      h4: {}, // Define HeadingStyle
-      h5: {}, // Define HeadingStyle
-      h6: {}, // Define HeadingStyle
+      h1: { fontSize: "2.25rem", lineHeight: 1.3 },
+      h2: { fontSize: "1.75rem", lineHeight: 1.35 },
+      h3: { fontSize: "1.5rem", lineHeight: 1.4 },
+      h4: { fontSize: "1.25rem", lineHeight: 1.45 },
+      h5: { fontSize: "1rem", lineHeight: 1.5 },
+      h6: { fontSize: "0.875rem", lineHeight: 1.5 },
     },
   },
-  radius: {}, // Define MantineRadiusValues
-  defaultRadius: "sm", // or any valid CSS value
-  spacing: {}, // Define MantineSpacingValues
-  fontSizes: {}, // Define MantineFontSizesValues
-  lineHeights: {}, // Define MantineLineHeightValues
-  breakpoints: {}, // Define MantineBreakpointsValues
-  shadows: {}, // Define MantineShadowsValues
-  respectReducedMotion: false, // Adjust as needed
-  cursorType: "default", // or 'pointer'
-  defaultGradient: {}, // Define MantineGradient
-  activeClassName: "active-class", // Adjust as needed
-  focusClassName: "focus-class", // Adjust as needed
-  components: {}, // Define MantineThemeComponents
-  other: {}, // Define MantineThemeOther as needed
+  radius: {
+    xs: "0.125rem",
+    sm: "0.25rem",
+    md: "0.5rem",
+    lg: "1rem",
+    xl: "2rem",
+  },
+  spacing: {
+    xs: "0.625rem",
+    sm: "0.75rem",
+    md: "1rem",
+    lg: "1.25rem",
+    xl: "1.5rem",
+  },
+  fontSizes: {
+    xs: "0.75rem",
+    sm: "0.875rem",
+    md: "1rem",
+    lg: "1.125rem",
+    xl: "1.25rem",
+  },
+  lineHeights: {
+    xs: 1.4,
+    sm: 1.45,
+    md: 1.55,
+    lg: 1.6,
+    xl: 1.65,
+  },
+  breakpoints: {
+    xs: "36em",
+    sm: "48em",
+    md: "62em",
+    lg: "75em",
+    xl: "88em",
+  },
+  shadows: {
+    xs: "0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)",
+    sm: "0 1px 3px rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 0px 10px 15px -5px, rgba(0, 0, 0, 0.04) 0px 7px 7px -5px",
+    md: "0 1px 3px rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px",
+    lg: "0 1px 3px rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 0px 28px 23px -7px, rgba(0, 0, 0, 0.04) 0px 12px 12px -7px",
+    xl: "0 1px 3px rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 0px 36px 28px -7px, rgba(0, 0, 0, 0.04) 0px 17px 17px -7px",
+  },
+  defaultRadius: "sm",
+  respectReducedMotion: false,
+  cursorType: "default",
+  defaultGradient: { from: "indigo", to: "cyan", deg: 45 },
+  activeClassName: "active-class",
+  focusClassName: "focus-class",
+  components: {},
+  other: {},
 };
 
 export default Theme;
