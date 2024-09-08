@@ -154,6 +154,23 @@
   height: 100%;
   width: 100%;
   background-color: lavender;
+  padding-top: 10px;
+}
+
+.landingSearch {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.searchButton {
+  background-color: transparent;
+  color: #2c2c2c;
+  border: none;
+}
+
+.second .mantine-TextInput-input {
+  background-color: var(--mantine-color-rose-1);
 }
 
 .NextThree {

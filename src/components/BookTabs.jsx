@@ -15,36 +15,35 @@ const BookTabs = ({ books }) => {
       </Tabs.List>
 
       <Tabs.Panel value="CurrentRead">
-        Currently Reading tab content{" "}
+        Currently Reading tab content
         <div>
           <ShelfDisplay books={books} />
         </div>
       </Tabs.Panel>
       <Tabs.Panel value="AllBooks">
-        {" "}
         All Books
         <ShelfDisplay books={books} />
       </Tabs.Panel>
       <Tabs.Panel value="TopTen">
-        TopTen tab content{" "}
+        TopTen tab content
         <div>
           <ShelfDisplay books={books} />
         </div>
       </Tabs.Panel>
       <Tabs.Panel value="TBR">
-        TBR tab content{" "}
+        TBR tab content
         <div>
           <ShelfDisplay books={books} />
         </div>
       </Tabs.Panel>
       <Tabs.Panel value="Loved">
-        Loved tab content{" "}
+        Loved tab content
         <div>
           <ShelfDisplay books={books} />
         </div>
       </Tabs.Panel>
       <Tabs.Panel value="DNF">
-        DNF tab content{" "}
+        DNF tab content
         <div>
           <ShelfDisplay books={books} />
         </div>

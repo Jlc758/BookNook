@@ -7,6 +7,7 @@ import SearchOptions from "../pages/SearchOptionsPage";
 import Shelves from "../pages/Shelves";
 import Profile from "../pages/Profile";
 import Theme from "../css/theme";
+import SearchProvider from "../context/SearchContext";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,9 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <MantineProvider theme={Theme}>
-      <RouterProvider router={router} />
+      <SearchProvider>
+        <RouterProvider router={router} />
+      </SearchProvider>
     </MantineProvider>
   );
 };
