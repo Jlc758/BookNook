@@ -8,6 +8,46 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/Index.jsx"></script>
+    <script type="module" src="/src/Index.jsx">
+
+              function calculateBreakpoint() {
+        const navContainer = document.querySelector('.NavContainer');
+        const tabsList = document.querySelector('.TabsList');
+        const tabs = tabsList.querySelectorAll('.mantine-Tabs-tab');
+        const logo = document.querySelector('.LogoContainer');
+        const darkLight = document.querySelector('.DarkLight');
+
+        let totalWidth = logo.offsetWidth + darkLight.offsetWidth;
+        let tabsWidth = 0;
+
+        tabs.forEach(tab => {
+          tabsWidth += tab.offsetWidth;
+        });
+
+        totalWidth += tabsWidth;
+
+        // Add some buffer (e.g., 20px) to account for margins and padding
+        const breakpoint = totalWidth + 20;
+
+        // Set the CSS variable
+        document.documentElement.style.setProperty('--breakpoint', `${breakpoint}px`);
+      }
+
+      function updateNavContainerHeight() {
+        const navContainer = document.querySelector('.NavContainer');
+        const navHeight = navContainer.offsetHeight;
+        document.documentElement.style.setProperty('--navContainer-height', `${navHeight}px`);
+      }
+
+      // Run on load and resize
+      window.addEventListener('load', () => {
+        calculateBreakpoint();
+        updateNavContainerHeight();
+      });
+      window.addEventListener('resize', () => {
+        calculateBreakpoint();
+        updateNavContainerHeight();
+      });
+    </script>
   </body>
 </html>

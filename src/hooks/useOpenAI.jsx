@@ -151,6 +151,18 @@ function useOpenAI(userInput) {
                     'keywords': "dahmer",
                   }`,
           },
+
+          {
+            role: "user",
+            content: "harry potter",
+          },
+
+          {
+            role: "assistant",
+            content: `{
+                    'title': harry potter
+                  }`,
+          },
         ],
       };
 
@@ -158,14 +170,22 @@ function useOpenAI(userInput) {
         return [
           {
             role: "system",
-            content: `You are an expert at extracting key words from natural language input by users and converting it to valid JSON format. Key words will be used to search for books in the Google Books API database.
-            Always prioritize placing genre or category-related terms (like "true crime", "science fiction", etc.) in the 'mainCategory' field. Do not duplicate these terms in the 'keywords' field.
-            Only use the 'keywords' field for additional search terms that are not the main category or genre. Do not link any fields with prior search criteria.  Leave any non-explicit terms out results.
-            For page count, interpret phrases as follows:
-            - "less than X pages" as {max: X, min: null}
-            - "more than X pages" as {min: X, max: null}
-            - "around X pages" as {min: X - 50, max: X + 50}
-            - exact page counts as {min: X, max: X}`,
+            content: `Convert user input to JSON format for book search, adhering strictly to these rules:
+
+            1. ONLY use words and phrases EXACTLY as provided by the user. Do not add, infer, or search for ANY additional terms.
+            2. Do not categorize, classify, or interpret the user's input in any way.
+            3. 'keywords' field: Include ALL user-provided terms that are not explicitly labeled as a category.
+            4. 'mainCategory' field: ONLY fill if the user explicitly states a category or genre. Otherwise, omit this field.
+            5. Page count: Only include if explicitly mentioned by the user:
+              - 'less than X pages': {max: X, min: null}
+              - 'more than X pages': {min: X, max: null}
+              - 'around X pages': {min: X - 50, max: X + 50}
+              - exact page count: {min: X, max: X}
+
+            6. Omit any fields that would be empty.
+            7. Do NOT perform any additional searches or lookups based on the user's input.
+
+            Output the JSON result only. If the user's input doesn't fit these criteria, return an empty JSON object {}.`,
           },
           ...aiPromptExamples.examples,
           {

@@ -81,7 +81,7 @@ ChipGroup.propTypes = {
 const SelectSearch = ({ apiKey }) => {
   const [books, setBooks] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
-  const [selectedRating, setSelectedRating] = useState([]);
+  const [selectedRating, setSelectedRating] = useState("");
   const [selectedRep, setSelectedRep] = useState([]);
   const [selectedRomanceTrope, setSelectedRomanceTrope] = useState([]);
   const [selectedTrueCrimeTrope, setSelectedTrueCrimeTrope] = useState([]);
@@ -97,6 +97,10 @@ const SelectSearch = ({ apiKey }) => {
     setter((prev) =>
       prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
     );
+  };
+
+  const handleSingleSelect = (setter) => (item) => {
+    setter((prev) => (prev === item ? "" : item));
   };
 
   const handleHideCriteria = () => {
@@ -139,7 +143,8 @@ const SelectSearch = ({ apiKey }) => {
                 title="Rating"
                 items={contentRatingFilters}
                 selectedItems={selectedRating}
-                onItemSelect={handleMultiSelect(setSelectedRating)}
+                onItemSelect={handleSingleSelect(setSelectedRating)}
+                multiple={false}
               />
               <ChipGroup
                 title="Representation"
@@ -181,7 +186,7 @@ const SelectSearch = ({ apiKey }) => {
                 title="Max Page Count"
                 items={["100", "300", "500", "1000", "any"]}
                 selectedItems={maxPageCount}
-                onItemSelect={setMaxPageCount}
+                onItemSelect={handleSingleSelect(setMaxPageCount)}
                 multiple={false}
               />
               <Button onClick={handleSearch} loading={isLoading}>
@@ -193,19 +198,19 @@ const SelectSearch = ({ apiKey }) => {
           <SelectionQuery
             apiKey={apiKey}
             criteria={searchCriteria}
-            setBooks={(newBooks) => {
-              setBooks(newBooks);
-              setIsLoading(false);
-            }}
+            setBooks={setBooks}
+            setIsLoading={setIsLoading}
           />
           <Space h="xl" />
-          {books.length > 0 ? (
+          {isLoading ? (
+            <Text align="center">Loading...</Text>
+          ) : books.length > 0 ? (
             <div>
               <Text size="xl" weight={700}>
                 Search Results:
               </Text>
               <Group>
-                {books.length > 0 && <ShelfDisplay books={books} />}
+                <ShelfDisplay books={books} />
               </Group>
             </div>
           ) : (
