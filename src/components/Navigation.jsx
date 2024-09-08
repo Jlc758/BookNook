@@ -57,7 +57,7 @@ function Navigation() {
               <h3>Shelves</h3>
             </Tabs.Tab>
             <Tabs.Tab value="search" onClick={() => handleClick("/search")}>
-              <h3>Search</h3>
+              <h3>Discover</h3>
             </Tabs.Tab>
             <Tabs.Tab value="profile" onClick={() => handleClick("/profile")}>
               <h3>Profile</h3>

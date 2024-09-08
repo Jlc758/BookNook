@@ -1,4 +1,4 @@
-import { ShelfDisplay } from "./ShelfDisplay";
+import ShelfDisplay from "./ShelfDisplay";
 import { Tabs } from "@mantine/core";
 import PropTypes from "prop-types";
 

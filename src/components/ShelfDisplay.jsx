@@ -6,7 +6,7 @@ import Title from "./Title";
 import PropTypes from "prop-types";
 import { BookmarkPlus, BookMarked, BookmarkCheck } from "lucide-react";
 
-export const ShelfDisplay = ({ books }) => {
+const ShelfDisplay = ({ books }) => {
   return (
     <Container size="xl" py="xl">
       <div className={classes.grid}>

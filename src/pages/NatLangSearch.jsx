@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import useOpenAI from "../hooks/useOpenAI";
 import GeneralQuery from "../components/GeneralQuery";
 import { Space, TextInput } from "@mantine/core";
-import { ShelfDisplay } from "../components/ShelfDisplay";
+import ShelfDisplay from "../components/ShelfDisplay";
 import useSearch from "../hooks/useSearch";
 import LoadingAnimation from "../components/LoadingAnimation";
+import { Wand } from "lucide-react";
 
 const NatLangSearch = () => {
   const { searchText, setSearchText } = useSearch();
@@ -33,6 +34,14 @@ const NatLangSearch = () => {
     };
   }, [userInput]);
 
+  const SentencesLabel = (
+    <div className="flex items-center space-x-1">
+      <span>Your words, our magic </span>
+      <Wand style={{ height: "20px" }} />
+      <span> Speak your mind to find your next read!</span>
+    </div>
+  );
+
   return (
     <>
       <Space h="md" />
@@ -40,7 +49,7 @@ const NatLangSearch = () => {
         <TextInput
           size="md"
           radius="xl"
-          label="What vibe are you looking for in your next read?"
+          label={SentencesLabel}
           value={userInput}
           placeholder="enter search query"
           onChange={(e) => {

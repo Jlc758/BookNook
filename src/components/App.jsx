@@ -8,6 +8,7 @@ import Shelves from "../pages/Shelves";
 import Profile from "../pages/Profile";
 import Theme from "../css/theme";
 import SearchProvider from "../context/SearchContext";
+import BookProvider from "../context/BookContext";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,9 @@ const App = () => {
   return (
     <MantineProvider theme={Theme}>
       <SearchProvider>
-        <RouterProvider router={router} />
+        <BookProvider>
+          <RouterProvider router={router} />
+        </BookProvider>
       </SearchProvider>
     </MantineProvider>
   );

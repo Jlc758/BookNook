@@ -10,8 +10,8 @@ const SearchOptionsPage = () => {
       <div className="MainContent">
         <Tabs variant="outline" defaultValue="vibes">
           <Tabs.List grow>
-            <Tabs.Tab value="vibes">Search by Vibes</Tabs.Tab>
-            <Tabs.Tab value="criteria">Search by Criteria</Tabs.Tab>
+            <Tabs.Tab value="vibes">Summon by Sentences</Tabs.Tab>
+            <Tabs.Tab value="criteria">Summon by Selection</Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value="vibes">
