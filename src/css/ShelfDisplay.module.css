@@ -14,6 +14,47 @@
   box-sizing: border-box;
 }
 
+.bookCoverContainer {
+  position: relative;
+  width: 100%;
+  max-width: 120px; /* Adjust this value based on your desired maximum book cover width */
+  margin-bottom: 10px;
+}
+
+.bookCover {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bookmark,
+.shelved,
+.readPrev {
+  position: absolute;
+  top: -5px;
+  right: -28px;
+  width: 32px;
+  height: 32px;
+  padding: 5px;
+}
+
+.shelved {
+  top: -5px;
+}
+
+.bookmark {
+  top: 30px;
+}
+
+.readPrev {
+  top: 65px;
+}
+
+.tooltip {
+  width: max-content;
+  background-color: #ffc0b3;
+}
+
 @media (max-width: 576px) {
   .column {
     width: 50%; /* 2 columns on small screens */
