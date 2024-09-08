@@ -3,6 +3,8 @@ import { Title, Progress, TextInput } from "@mantine/core";
 import { Search } from "lucide-react";
 import Cover from "../images/BookCover.jpg";
 import useSearch from "../hooks/useSearch";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 // const data = [
 //   { name: "Group A", value: 400 },
@@ -16,6 +18,7 @@ import useSearch from "../hooks/useSearch";
 function LandingPage() {
   const { searchText, setSearchText } = useSearch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const ProgressBar = () => {
     return <Progress color="gray" radius="xl" size="lg" value={30} />;
@@ -32,6 +35,10 @@ function LandingPage() {
       <div>Format (Book, AudioBook, eBook)</div>
     </div>
   );
+
+  useEffect(() => {
+    setSearchText("");
+  }, [location, setSearchText]);
 
   const handleClick = () => {
     navigate("/search");
@@ -61,7 +68,7 @@ function LandingPage() {
                 size="sm"
                 radius="lg"
                 value={searchText}
-                placeholder="Find your next favourite read..."
+                placeholder="What's next?"
                 onChange={(event) => setSearchText(event.currentTarget.value)}
               />
               <button onClick={handleClick} className="searchButton">

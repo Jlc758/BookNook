@@ -50,7 +50,6 @@
   justify-content: flex-end;
   align-items: center;
   flex-wrap: nowrap;
-  overflow: hidden;
 }
 
 .TabsList .mantine-Tabs-tab {
@@ -62,7 +61,6 @@
   padding: 0 clamp(5px, 1vw, 10px);
   margin: 0 2px;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -178,7 +176,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   margin: 5px 0; /* Add some vertical spacing between covers */
 }
 
@@ -234,5 +231,57 @@
     justify-content: center;
     margin-top: 10px;
     margin-left: 0;
+  }
+}
+
+/* Loading Animation */
+
+.loadingAnimationContainer {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding-top: 10vh;
+}
+
+html {
+  background: black;
+  height: 100%;
+  position: relative;
+}
+
+.container {
+  height: 200px;
+  width: 200px;
+  position: absolute;
+}
+
+.square {
+  height: 94%;
+  width: 94%;
+  background: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -47% 0 0 -47%;
+}
+
+.black {
+  background: var(--mantine-color-rose-1);
+  border: 2px solid black;
+  animation: rotate 10s infinite linear;
+}
+
+.black img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

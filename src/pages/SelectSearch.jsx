@@ -14,6 +14,7 @@ import SelectionQuery from "../components/SelectionQuery";
 import PropTypes from "prop-types";
 import ShelfDisplay from "../components/ShelfDisplay";
 import classes from "../css/ChipGroup.module.css";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const ChipGroup = ({
   title,
@@ -258,7 +259,7 @@ const SelectSearch = ({ apiKey }) => {
         />
         <Space h="xl" />
         {isLoading ? (
-          <Text align="center">Loading...</Text>
+          <LoadingAnimation />
         ) : books.length > 0 ? (
           <div>
             <Text size="xl" weight={700}>

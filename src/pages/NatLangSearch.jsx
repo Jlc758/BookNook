@@ -4,6 +4,7 @@ import GeneralQuery from "../components/GeneralQuery";
 import { Space, TextInput } from "@mantine/core";
 import { ShelfDisplay } from "../components/ShelfDisplay";
 import useSearch from "../hooks/useSearch";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const NatLangSearch = () => {
   const { searchText, setSearchText } = useSearch();
@@ -48,7 +49,11 @@ const NatLangSearch = () => {
           }}
         />
 
-        {loading && <div>Loading...</div>}
+        {loading && (
+          <div>
+            <LoadingAnimation />
+          </div>
+        )}
         {error && <div>Error: {error}</div>}
         {keywords && (
           <div>
