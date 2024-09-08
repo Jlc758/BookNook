@@ -5,8 +5,45 @@ import StarRating from "./StarRating";
 import Title from "./Title";
 import PropTypes from "prop-types";
 import { BookmarkPlus, BookMarked, BookmarkCheck } from "lucide-react";
+import { useBooks } from "../hooks/useBooks";
+import { useEffect } from "react";
 
 const ShelfDisplay = ({ books }) => {
+  const { saveBook, savedBooks } = useBooks();
+
+  useEffect(() => {
+    console.log("Current saved books:", savedBooks);
+  }, [savedBooks]);
+
+  // Every book get saved in All Books shelf
+  const isBookInAll = (book) => {
+    return savedBooks.allBooks.some(
+      (savedBook) => savedBook.title === book.title
+    );
+  };
+
+  const handleSavetoAll = (book) => {
+    if (!isBookInAll(book)) {
+      saveBook(book, "AllBooks");
+      console.log("Book saved to All Books:", book);
+    } else {
+      console.log("Book already in All Books:", book);
+    }
+  };
+
+  const isBookInTbr = (book) => {
+    return savedBooks.tbr.some((savedBook) => savedBook.title === book.title);
+  };
+
+  const handleSavetoTBR = (book) => {
+    if (!isBookInTbr(book)) {
+      saveBook(book, "TBR");
+      console.log("Book saved to TBR:", book);
+    } else {
+      console.log("Book already in TBR:", book);
+    }
+  };
+
   return (
     <Container size="xl" py="xl">
       <div className={classes.grid}>
@@ -43,6 +80,10 @@ const ShelfDisplay = ({ books }) => {
                   className={classes.bookmark}
                   size={24}
                   color="#ffc0b3"
+                  onClick={() => {
+                    handleSavetoTBR(book);
+                    handleSavetoAll(book);
+                  }}
                 />
               </Tooltip>
 
