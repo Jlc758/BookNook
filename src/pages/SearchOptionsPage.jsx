@@ -1,4 +1,4 @@
-import { Space, Tabs } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 import NatLangSearch from "./NatLangSearch";
 import SelectSearch from "./SelectSearch";
 
@@ -8,7 +8,6 @@ const SearchOptionsPage = () => {
   return (
     <>
       <div className="MainContent">
-        <Space h="md" />
         <Tabs variant="outline" defaultValue="vibes">
           <Tabs.List grow>
             <Tabs.Tab value="vibes">Search by Vibes</Tabs.Tab>
@@ -25,7 +24,6 @@ const SearchOptionsPage = () => {
               display: "flex",
               flexDirection: "column",
               flexWrap: "wrap",
-              border: "2px solid blue",
               justifyContent: "center",
               alignContent: "center",
             }}

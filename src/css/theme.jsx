@@ -135,7 +135,17 @@ const Theme = {
   defaultGradient: { from: "indigo", to: "cyan", deg: 45 },
   activeClassName: "active-class",
   focusClassName: "focus-class",
-  components: {},
+  components: {
+    Chip: {
+      styles: (theme) => ({
+        root: {
+          "--chip-icon-color": theme.colors["rose"][3],
+          "--chip-color": theme.colors["gray"][9],
+          "--chip-bg": theme.colors["rose"][2],
+        },
+      }),
+    },
+  },
   other: {},
 };
 

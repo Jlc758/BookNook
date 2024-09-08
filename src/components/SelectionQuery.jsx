@@ -7,6 +7,11 @@ const SelectionQuery = ({ apiKey, criteria, setBooks, setIsLoading }) => {
   useEffect(() => {
     if (!criteria) return;
 
+    console.log(
+      "SelectionQuery: New search triggered with criteria:",
+      criteria
+    ); // New console log
+
     const fetchBooks = async (query) => {
       try {
         const response = await fetch(query);
@@ -42,36 +47,36 @@ const SelectionQuery = ({ apiKey, criteria, setBooks, setIsLoading }) => {
         selectedThrillerTrope,
         selectedSciFiTrope,
         selectedFantasyTrope,
-        pageCount,
+        maxPageCount,
       } = criteria;
 
-      // Add genres to query (mainCategory)
-      selectedGenres.forEach((genre) => {
-        queryParts.push(`subject:"${encodeURIComponent(genre)}"`);
-      });
-
-      // Add all other criteria (except maxPageCount) as keywords
-      [
-        selectedRating,
-        selectedRep,
-        selectedRomanceTrope,
-        selectedTrueCrimeTrope,
-        selectedThrillerTrope,
-        selectedSciFiTrope,
-        selectedFantasyTrope,
-      ]
-        .filter(Boolean)
-        .forEach((item) => {
-          keywordParts.push(`"${encodeURIComponent(item)}"`);
+      // Add genres to query (mainCategory) only if selected
+      if (selectedGenres && selectedGenres.length > 0) {
+        selectedGenres.forEach((genre) => {
+          queryParts.push(`subject:"${encodeURIComponent(genre)}"`);
         });
+      }
+      // Add other criteria as keywords only if they are selected
+      const selectedCriteria = [
+        selectedRating,
+        ...(selectedRep || []),
+        ...(selectedRomanceTrope || []),
+        ...(selectedTrueCrimeTrope || []),
+        ...(selectedThrillerTrope || []),
+        ...(selectedSciFiTrope || []),
+        ...(selectedFantasyTrope || []),
+      ].filter(Boolean);
 
-      // Add keywords to query if there are any
-      if (keywordParts.length > 0) {
-        queryParts.push(`intitle:${keywordParts.join("+")}`);
+      if (selectedCriteria.length > 0) {
+        keywordParts = selectedCriteria.map(
+          (item) => `"${encodeURIComponent(item)}"`
+        );
+        queryParts.push(`${keywordParts.join("+")}`);
       }
 
       if (queryParts.length === 0) {
         setBooks([]);
+        setIsLoading(false);
         return;
       }
 
@@ -92,20 +97,26 @@ const SelectionQuery = ({ apiKey, criteria, setBooks, setIsLoading }) => {
           return;
         }
 
+        // Filter books by max page count
         const filteredBooks = fetchedBooks.filter((book) => {
           const bookPageCount = book.volumeInfo?.pageCount;
           if (!bookPageCount || bookPageCount <= 0) return false;
 
-          const minPageCount = pageCount?.min ?? null;
-          const maxPageCount = pageCount?.max ?? null;
+          console.log(
+            `Book: ${book.volumeInfo.title}, Pages: ${bookPageCount}, Max: ${maxPageCount}`
+          );
 
-          if (minPageCount !== null && bookPageCount < minPageCount)
+          if (maxPageCount && bookPageCount > maxPageCount) {
+            console.log(`Filtered out: ${book.volumeInfo.title}`);
             return false;
-          if (maxPageCount !== null && bookPageCount > maxPageCount)
-            return false;
+          }
 
           return true;
         });
+
+        console.log(
+          `Total books: ${fetchedBooks.length}, Filtered books: ${filteredBooks.length}`
+        );
 
         setBooks(filteredBooks);
       } catch (error) {
@@ -134,10 +145,7 @@ SelectionQuery.propTypes = {
     selectedThrillerTrope: propTypes.arrayOf(propTypes.string),
     selectedSciFiTrope: propTypes.arrayOf(propTypes.string),
     selectedFantasyTrope: propTypes.arrayOf(propTypes.string),
-    pageCount: propTypes.shape({
-      min: propTypes.number,
-      max: propTypes.number,
-    }),
+    maxPageCount: propTypes.number,
   }),
   setBooks: propTypes.func.isRequired,
   setIsLoading: propTypes.func.isRequired,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Chip, Group, Text, Button, Space } from "@mantine/core";
 import {
   contentRatingFilters,
@@ -21,6 +21,8 @@ const ChipGroup = ({
   selectedItems,
   onItemSelect,
   multiple = true,
+  itemClassName,
+  disabled = false,
 }) => {
   const [showAll, setShowAll] = useState(false);
 
@@ -33,7 +35,8 @@ const ChipGroup = ({
   return (
     <>
       <div className="chips">
-        <Text>{title}</Text>
+        <Text className={classes.chipGroup}>{title}</Text>
+
         <Group className={classes.chipGroup}>
           {displayedItems.map((item) => {
             const value = item.value || item;
@@ -47,6 +50,8 @@ const ChipGroup = ({
                     : selectedItems === value
                 }
                 onChange={() => onItemSelect(value)}
+                className={itemClassName}
+                disabled={disabled}
               >
                 {label}
               </Chip>
@@ -76,6 +81,8 @@ ChipGroup.propTypes = {
   ]).isRequired,
   onItemSelect: PropTypes.func.isRequired,
   multiple: PropTypes.bool,
+  itemClassName: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 const SelectSearch = ({ apiKey }) => {
@@ -88,7 +95,7 @@ const SelectSearch = ({ apiKey }) => {
   const [selectedThrillerTrope, setSelectedThrillerTrope] = useState([]);
   const [selectedSciFiTrope, setSelectedSciFiTrope] = useState([]);
   const [selectedFantasyTrope, setSelectedFantasyTrope] = useState([]);
-  const [maxPageCount, setMaxPageCount] = useState("any");
+  const [maxPageCount, setMaxPageCount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState(null);
   const [hideCriteria, setHideCriteria] = useState(false);
@@ -107,6 +114,10 @@ const SelectSearch = ({ apiKey }) => {
     setHideCriteria((prevState) => !prevState);
   };
 
+  const handleMaxPageCountSelect = (value) => {
+    setMaxPageCount(value === "any" ? null : Number(value));
+  };
+
   const handleSearch = () => {
     setIsLoading(true);
     setSearchCriteria({
@@ -122,11 +133,33 @@ const SelectSearch = ({ apiKey }) => {
     });
   };
 
+  const isMaxPageCountDisabled = useMemo(() => {
+    return (
+      selectedGenres.length === 0 &&
+      !selectedRating &&
+      selectedRep.length === 0 &&
+      selectedRomanceTrope.length === 0 &&
+      selectedTrueCrimeTrope.length === 0 &&
+      selectedThrillerTrope.length === 0 &&
+      selectedSciFiTrope.length === 0 &&
+      selectedFantasyTrope.length === 0
+    );
+  }, [
+    selectedGenres,
+    selectedRating,
+    selectedRep,
+    selectedRomanceTrope,
+    selectedTrueCrimeTrope,
+    selectedThrillerTrope,
+    selectedSciFiTrope,
+    selectedFantasyTrope,
+  ]);
+
   return (
     <>
-      <div className="MainContent">
+      <div>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Button onClick={handleHideCriteria}>
+          <Button onClick={handleHideCriteria} className="button">
             {hideCriteria ? "Show Criteria" : "Hide Criteria"}
           </Button>
         </div>
@@ -138,6 +171,7 @@ const SelectSearch = ({ apiKey }) => {
                 items={genres}
                 selectedItems={selectedGenres}
                 onItemSelect={handleMultiSelect(setSelectedGenres)}
+                itemClassName={classes.button}
               />
               <ChipGroup
                 title="Rating"
@@ -145,80 +179,100 @@ const SelectSearch = ({ apiKey }) => {
                 selectedItems={selectedRating}
                 onItemSelect={handleSingleSelect(setSelectedRating)}
                 multiple={false}
+                itemClassName={classes.button}
               />
               <ChipGroup
                 title="Representation"
                 items={representationFilters}
                 selectedItems={selectedRep}
                 onItemSelect={handleMultiSelect(setSelectedRep)}
+                itemClassName={classes.button}
               />
               <ChipGroup
                 title="Romance Tropes"
                 items={romanceTropeOptions}
                 selectedItems={selectedRomanceTrope}
                 onItemSelect={handleMultiSelect(setSelectedRomanceTrope)}
+                itemClassName={classes.button}
               />
               <ChipGroup
                 title="True Crime Tropes"
                 items={trueCrimeTropeOptions}
                 selectedItems={selectedTrueCrimeTrope}
                 onItemSelect={handleMultiSelect(setSelectedTrueCrimeTrope)}
+                itemClassName={classes.button}
               />
               <ChipGroup
                 title="Thriller Tropes"
                 items={thrillerTropeOptions}
                 selectedItems={selectedThrillerTrope}
                 onItemSelect={handleMultiSelect(setSelectedThrillerTrope)}
+                itemClassName={classes.button}
               />
               <ChipGroup
                 title="Science Fiction Tropes"
                 items={sciFiTropeOptions}
                 selectedItems={selectedSciFiTrope}
                 onItemSelect={handleMultiSelect(setSelectedSciFiTrope)}
+                itemClassName={classes.button}
               />
               <ChipGroup
                 title="Fantasy Tropes"
                 items={fantasyTropeOptions}
                 selectedItems={selectedFantasyTrope}
                 onItemSelect={handleMultiSelect(setSelectedFantasyTrope)}
+                itemClassName={classes.button}
               />
               <ChipGroup
                 title="Max Page Count"
-                items={["100", "300", "500", "1000", "any"]}
-                selectedItems={maxPageCount}
-                onItemSelect={handleSingleSelect(setMaxPageCount)}
+                items={[
+                  { value: "100", label: "Under 100 pages" },
+                  { value: "300", label: "100-300 pages" },
+                  { value: "500", label: "300-500 pages" },
+                  { value: "1000", label: "Over 500 pages" },
+                  { value: "any", label: "Any" },
+                ]}
+                selectedItems={
+                  maxPageCount === null ? "any" : maxPageCount.toString()
+                }
+                onItemSelect={handleMaxPageCountSelect}
                 multiple={false}
+                itemClassName={classes.button}
+                disabled={isMaxPageCountDisabled}
               />
-              <Button onClick={handleSearch} loading={isLoading}>
+              <Button
+                onClick={handleSearch}
+                loading={isLoading}
+                className="button"
+              >
                 Search
               </Button>
             </>
           )}
-
-          <SelectionQuery
-            apiKey={apiKey}
-            criteria={searchCriteria}
-            setBooks={setBooks}
-            setIsLoading={setIsLoading}
-          />
-          <Space h="xl" />
-          {isLoading ? (
-            <Text align="center">Loading...</Text>
-          ) : books.length > 0 ? (
-            <div>
-              <Text size="xl" weight={700}>
-                Search Results:
-              </Text>
-              <Group>
-                <ShelfDisplay books={books} />
-              </Group>
-            </div>
-          ) : (
-            <Text align="center">
-              No books found. Try selecting different criteria!
-            </Text>
-          )}
         </div>
+        <SelectionQuery
+          apiKey={apiKey}
+          criteria={searchCriteria}
+          setBooks={setBooks}
+          setIsLoading={setIsLoading}
+        />
+        <Space h="xl" />
+        {isLoading ? (
+          <Text align="center">Loading...</Text>
+        ) : books.length > 0 ? (
+          <div>
+            <Text size="xl" weight={700}>
+              Search Results:
+            </Text>
+            <Group>
+              <ShelfDisplay books={books} />
+            </Group>
+          </div>
+        ) : (
+          <Text align="center">
+            No books found. Try selecting different criteria!
+          </Text>
+        )}
       </div>
     </>
   );
