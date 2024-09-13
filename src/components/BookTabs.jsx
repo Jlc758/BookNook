@@ -1,4 +1,4 @@
-import ShelfDisplay from "./ShelfDisplay";
+import ResultsDisplay from "./ResultsDisplay";
 import { Tabs } from "@mantine/core";
 import PropTypes from "prop-types";
 
@@ -6,7 +6,7 @@ const BookTabs = ({ books }) => {
   return (
     <Tabs defaultValue="CurrentRead" orientation="vertical">
       <Tabs.List>
-        <Tabs.Tab value="CurrentRead">Currently Reading</Tabs.Tab>
+        <Tabs.Tab value="CurrentRead">Current Reads</Tabs.Tab>
         <Tabs.Tab value="AllBooks">All Books</Tabs.Tab>
         <Tabs.Tab value="TopTen">Top Ten</Tabs.Tab>
         <Tabs.Tab value="TBR">TBR</Tabs.Tab>
@@ -17,35 +17,35 @@ const BookTabs = ({ books }) => {
       <Tabs.Panel value="CurrentRead">
         Currently Reading tab content
         <div>
-          <ShelfDisplay books={books} />
+          <ResultsDisplay books={books} />
         </div>
       </Tabs.Panel>
       <Tabs.Panel value="AllBooks">
         All Books
-        <ShelfDisplay books={books} />
+        <ResultsDisplay books={books} />
       </Tabs.Panel>
       <Tabs.Panel value="TopTen">
         TopTen tab content
         <div>
-          <ShelfDisplay books={books} />
+          <ResultsDisplay books={books} />
         </div>
       </Tabs.Panel>
       <Tabs.Panel value="TBR">
         TBR tab content
         <div>
-          <ShelfDisplay books={books} />
+          <ResultsDisplay books={books} />
         </div>
       </Tabs.Panel>
       <Tabs.Panel value="Loved">
         Loved tab content
         <div>
-          <ShelfDisplay books={books} />
+          <ResultsDisplay books={books} />
         </div>
       </Tabs.Panel>
       <Tabs.Panel value="DNF">
         DNF tab content
         <div>
-          <ShelfDisplay books={books} />
+          <ResultsDisplay books={books} />
         </div>
       </Tabs.Panel>
     </Tabs>

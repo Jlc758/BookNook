@@ -1,6 +1,6 @@
 import { Container, Tooltip } from "@mantine/core";
 import placeholder from "../images/BookCover.jpg";
-import classes from "../css/ShelfDisplay.module.css";
+import classes from "../css/ResultsDisplay.module.css";
 import StarRating from "./StarRating";
 import Title from "./Title";
 import PropTypes from "prop-types";
@@ -8,7 +8,7 @@ import { BookmarkPlus, BookMarked, BookmarkCheck } from "lucide-react";
 import { useBooks } from "../hooks/useBooks";
 import { useEffect } from "react";
 
-const ShelfDisplay = ({ books }) => {
+const ResultsDisplay = ({ books }) => {
   const { saveBook, savedBooks } = useBooks();
 
   useEffect(() => {
@@ -111,8 +111,8 @@ const ShelfDisplay = ({ books }) => {
   );
 };
 
-ShelfDisplay.propTypes = {
+ResultsDisplay.propTypes = {
   books: PropTypes.array,
 };
 
-export default ShelfDisplay;
+export default ResultsDisplay;

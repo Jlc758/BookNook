@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export const ShelfContext = createContext();
 
-const ShelfProvider = ({ children }) => {
+export function ShelfProvider({ children }) {
   const [shelves, setShelves] = useState({
     AllBooks: [],
     TopTen: [],
@@ -20,12 +20,26 @@ const ShelfProvider = ({ children }) => {
     }));
   };
 
+  const removeFromShelf = (book, shelfName) => {
+    setShelves((prevShelves) => ({
+      ...prevShelves,
+      [shelfName]: prevShelves[shelfName].filter((b) => b.id !== book.id),
+    }));
+  };
+
+  const moveBook = (book, fromShelf, toShelf) => {
+    removeFromShelf(book, fromShelf);
+    addToShelf(book, toShelf);
+  };
+
   return (
-    <ShelfContext.Provider value={{ shelves, addToShelf }}>
+    <ShelfContext.Provider
+      value={{ shelves, addToShelf, removeFromShelf, moveBook }}
+    >
       {children}
     </ShelfContext.Provider>
   );
-};
+}
 
 ShelfProvider.propTypes = {
   children: PropTypes.node.isRequired,

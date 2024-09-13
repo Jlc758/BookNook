@@ -12,7 +12,7 @@ import {
 } from "../context/searchCriteria";
 import SelectionQuery from "../components/SelectionQuery";
 import PropTypes from "prop-types";
-import ShelfDisplay from "../components/ShelfDisplay";
+import ResultsDisplay from "../components/ResultsDisplay";
 import classes from "../css/ChipGroup.module.css";
 import LoadingAnimation from "../components/LoadingAnimation";
 
@@ -266,7 +266,7 @@ const SelectSearch = ({ apiKey }) => {
               Search Results:
             </Text>
             <Group>
-              <ShelfDisplay books={books} />
+              <ResultsDisplay books={books} />
             </Group>
           </div>
         ) : (

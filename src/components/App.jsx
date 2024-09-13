@@ -9,6 +9,7 @@ import Profile from "../pages/Profile";
 import Theme from "../css/theme";
 import SearchProvider from "../context/SearchContext";
 import BookProvider from "../context/BookContext";
+import ShelfProvider from "../context/ShelfContext";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,9 @@ const App = () => {
     <MantineProvider theme={Theme}>
       <SearchProvider>
         <BookProvider>
-          <RouterProvider router={router} />
+          <ShelfProvider>
+            <RouterProvider router={router} />
+          </ShelfProvider>
         </BookProvider>
       </SearchProvider>
     </MantineProvider>

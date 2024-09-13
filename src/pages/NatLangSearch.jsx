@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useOpenAI from "../hooks/useOpenAI";
 import GeneralQuery from "../components/GeneralQuery";
 import { Space, TextInput } from "@mantine/core";
-import ShelfDisplay from "../components/ShelfDisplay";
+import ResultsDisplay from "../components/ResultsDisplay";
 import useSearch from "../hooks/useSearch";
 import LoadingAnimation from "../components/LoadingAnimation";
 import { Wand } from "lucide-react";
@@ -72,7 +72,7 @@ const NatLangSearch = () => {
               setBooks={setBooks} // Ensure setBooks is passed as a prop
             />
 
-            {books.length > 0 && <ShelfDisplay books={books} />}
+            {books.length > 0 && <ResultsDisplay books={books} />}
           </div>
         )}
       </div>
