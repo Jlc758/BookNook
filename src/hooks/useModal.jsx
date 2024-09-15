@@ -39,6 +39,8 @@ const useModal = () => {
     const bookCover =
       selectedBook.volumeInfo?.imageLinks?.thumbnail || placeholder;
     const bookTitle = selectedBook.volumeInfo?.title;
+    const bookDescription =
+      selectedBook.volumeInfo?.description || "No description available.";
 
     const modalStyle = {
       display: "flex",
@@ -138,6 +140,22 @@ const useModal = () => {
                   {formatShelfName(shelfName)}
                 </button>
               ))}
+            </div>
+          </div>
+        );
+      case "bookDescription":
+        return (
+          <div style={modalStyle}>
+            {renderBookInfo()}
+            <div
+              style={{
+                maxWidth: "500px",
+                maxHeight: "300px",
+                overflowY: "auto",
+                marginTop: "20px",
+              }}
+            >
+              <p>{bookDescription}</p>
             </div>
           </div>
         );

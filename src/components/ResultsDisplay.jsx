@@ -171,11 +171,12 @@ const ResultsDisplay = ({ books }) => {
         return "Select a shelf to save...";
       case "previouslyRead":
         return "Rate and Review";
+      case "bookDescription":
+        return "Book Description";
       default:
         return "Book Options";
     }
   };
-
   const handleIconClick = (book, type) => {
     if (type === "tbr") {
       addToShelf(book, "TBR");
@@ -256,6 +257,10 @@ const ResultsDisplay = ({ books }) => {
     }
   };
 
+  const handleBookCoverClick = (book) => {
+    openModal(book, "bookDescription");
+  };
+
   return (
     <Container size="xl" py="xl" className={classes.grid}>
       {books &&
@@ -264,15 +269,26 @@ const ResultsDisplay = ({ books }) => {
           <div key={book.id} className={classes.bookContainer}>
             <div className={classes.bookRatingTitle}>
               <div className={classes.bookCoverContainer}>
-                <img
-                  src={book.volumeInfo?.imageLinks?.thumbnail || Placeholder}
-                  alt={book.volumeInfo?.title}
-                  className={classes.bookCover}
-                />
+                {book.volumeInfo?.imageLinks?.thumbnail ? (
+                  <img
+                    src={book.volumeInfo.imageLinks.thumbnail}
+                    alt={book.volumeInfo?.title}
+                    className={classes.bookCover}
+                    onClick={() => handleBookCoverClick(book)}
+                  />
+                ) : (
+                  <Placeholder
+                    className={classes.bookCover}
+                    onClick={() => handleBookCoverClick(book)}
+                  />
+                )}
               </div>
               <StarRating />
               <Title order={6} className={classes.title}>
                 {book.volumeInfo?.title}
+              </Title>
+              <Title order={6} className={classes.author}>
+                {book.volumeInfo?.authors}
               </Title>
             </div>
             <div className={classes.shelfIcons}>
