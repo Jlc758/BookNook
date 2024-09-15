@@ -5,6 +5,7 @@ export const ShelfContext = createContext();
 
 export function ShelfProvider({ children }) {
   const [shelves, setShelves] = useState({
+    CurrentRead: [],
     AllBooks: [],
     TopTen: [],
     TBR: [],

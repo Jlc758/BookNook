@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Title, Progress, TextInput } from "@mantine/core";
-import { Search } from "lucide-react";
 import Cover from "../images/BookCover.jpg";
 import useSearch from "../hooks/useSearch";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { RiSearch2Line } from "react-icons/ri";
 
 // const data = [
 //   { name: "Group A", value: 400 },
@@ -72,7 +72,7 @@ function LandingPage() {
                 onChange={(event) => setSearchText(event.currentTarget.value)}
               />
               <button onClick={handleClick} className="searchButton">
-                <Search />
+                <RiSearch2Line />
               </button>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import "../css/index.css";
 import Layout from "../context/Layout";
 import LandingPage from "../pages/LandingPage";
@@ -8,7 +9,6 @@ import Shelves from "../pages/Shelves";
 import Profile from "../pages/Profile";
 import Theme from "../css/theme";
 import SearchProvider from "../context/SearchContext";
-import BookProvider from "../context/BookContext";
 import ShelfProvider from "../context/ShelfContext";
 
 const router = createBrowserRouter([
@@ -27,13 +27,13 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <MantineProvider theme={Theme}>
-      <SearchProvider>
-        <BookProvider>
+      <ModalsProvider>
+        <SearchProvider>
           <ShelfProvider>
             <RouterProvider router={router} />
           </ShelfProvider>
-        </BookProvider>
-      </SearchProvider>
+        </SearchProvider>
+      </ModalsProvider>
     </MantineProvider>
   );
 };

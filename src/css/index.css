@@ -234,6 +234,21 @@
   }
 }
 
+.modalButtonsContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.modalButtons {
+  border: none;
+  border-bottom: 2px solid var(--mantine-color-rose-1);
+  background-color: transparent;
+  font-size: clamp(0.7rem, 1.5vw, 1rem);
+  padding: 0 clamp(5px, 1vw, 10px);
+  margin: 0 2px;
+  height: 2rem;
+}
+
 /* Loading Animation */
 
 .loadingAnimationContainer {

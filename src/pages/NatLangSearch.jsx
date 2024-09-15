@@ -5,7 +5,7 @@ import { Space, TextInput } from "@mantine/core";
 import ResultsDisplay from "../components/ResultsDisplay";
 import useSearch from "../hooks/useSearch";
 import LoadingAnimation from "../components/LoadingAnimation";
-import { Wand } from "lucide-react";
+import { RxMagicWand } from "react-icons/rx";
 
 const NatLangSearch = () => {
   const { searchText, setSearchText } = useSearch();
@@ -37,7 +37,7 @@ const NatLangSearch = () => {
   const SentencesLabel = (
     <div className="flex items-center space-x-1">
       <span>Your words, our magic </span>
-      <Wand style={{ height: "20px" }} />
+      <RxMagicWand style={{ height: "20px" }} />
       <span> Speak your mind to find your next read!</span>
     </div>
   );
