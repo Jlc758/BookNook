@@ -1,24 +1,41 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 export const ShelfContext = createContext();
 
 export function ShelfProvider({ children }) {
-  const [shelves, setShelves] = useState({
-    CurrentRead: [],
-    AllBooks: [],
-    TopTen: [],
-    TBR: [],
-    Loved: [],
-    DNF: [],
+  const [shelves, setShelves] = useState(() => {
+    const savedShelves = localStorage.getItem("shelves");
+    return savedShelves
+      ? JSON.parse(savedShelves)
+      : {
+          CurrentRead: [],
+          AllBooks: [],
+          TopTen: [],
+          TBR: [],
+          Loved: [],
+          Completed: [],
+          DNF: [],
+        };
   });
 
+  useEffect(() => {
+    // Save shelves to localStorage whenever they change
+    localStorage.setItem("shelves", JSON.stringify(shelves));
+    console.log("Updated shelves:", shelves);
+  }, [shelves]);
+
   const addToShelf = (book, shelfName) => {
-    setShelves((prevShelves) => ({
-      ...prevShelves,
-      AllBooks: [...new Set([...prevShelves.AllBooks, book])],
-      [shelfName]: [...new Set([...prevShelves[shelfName], book])],
-    }));
+    setShelves((prevShelves) => {
+      const newShelves = {
+        ...prevShelves,
+        AllBooks: [...new Set([...prevShelves.AllBooks, book])],
+        [shelfName]: [...new Set([...prevShelves[shelfName], book])],
+      };
+      console.log(`Added "${book.volumeInfo?.title}" to: ${shelfName}`);
+      console.log(`${shelfName} now contains:`, newShelves[shelfName]);
+      return newShelves;
+    });
   };
 
   const removeFromShelf = (book, shelfName) => {

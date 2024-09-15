@@ -1,4 +1,5 @@
 import { useState } from "react";
+import StarRating from "../components/StarRating";
 
 const useModal = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -27,7 +28,12 @@ const useModal = () => {
     return shelfName.replace(/([A-Z])/g, " $1").trim();
   };
 
-  const renderModalContent = (addToShelf, shelves, placeholder) => {
+  const renderModalContent = (
+    addToShelf,
+    shelves,
+    placeholder,
+    handleModalAction
+  ) => {
     if (!selectedBook) return null;
 
     const bookCover =
@@ -72,22 +78,6 @@ const useModal = () => {
     );
 
     switch (modalType) {
-      case "tbr":
-        return (
-          <div style={modalStyle}>
-            {renderBookInfo()}
-            <p>Do you want to add this book to your TBR list?</p>
-            <button
-              style={buttonStyle}
-              onClick={() => {
-                addToShelf(selectedBook, "TBR");
-                closeModal();
-              }}
-            >
-              Add to TBR
-            </button>
-          </div>
-        );
       case "selectShelf":
         return (
           <div style={modalStyle}>
@@ -109,6 +99,7 @@ const useModal = () => {
                   style={buttonStyle}
                   onClick={() => {
                     addToShelf(selectedBook, shelfName);
+                    handleModalAction(selectedBook, "onShelf");
                     closeModal();
                   }}
                 >
@@ -122,8 +113,32 @@ const useModal = () => {
         return (
           <div style={modalStyle}>
             {renderBookInfo()}
-            <p>Add a review or select a shelf for this book:</p>
-            {/* Add review form and shelf selection here */}
+            <StarRating />
+            <p style={subheaderStyle}>
+              Have you already read this book? Provide a rating and optional
+              review, and save it to your preferred shelf!
+            </p>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+              }}
+            >
+              {Object.keys(shelves).map((shelfName) => (
+                <button
+                  key={shelfName}
+                  style={buttonStyle}
+                  onClick={() => {
+                    addToShelf(selectedBook, shelfName);
+                    handleModalAction(selectedBook, "prevRead");
+                    closeModal();
+                  }}
+                >
+                  {formatShelfName(shelfName)}
+                </button>
+              ))}
+            </div>
           </div>
         );
       default:

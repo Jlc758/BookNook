@@ -1,48 +1,15 @@
 // Shelves.jsx
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import BookTabs from "../components/BookTabs";
-import placeholder from "../images/BookCover.jpg";
+import { ShelfContext } from "../context/ShelfContext"; // Adjust the import path as needed
 
 const Shelves = () => {
-  const [books, setBooks] = useState([]);
-
-  useEffect(() => {
-    // Fetch books data here
-    // This is just an example, replace with your actual data fetching logic
-    const fetchBooks = async () => {
-      // const response = await fetch('your-api-endpoint');
-      // const data = await response.json();
-      // setBooks(data);
-
-      // For now, let's use some dummy data
-      setBooks([
-        {
-          id: 1,
-          volumeInfo: {
-            title: "Book 1",
-            imageLinks: { thumbnail: placeholder },
-          },
-        },
-        {
-          id: 2,
-          volumeInfo: {
-            title: "Book 2",
-            imageLinks: { thumbnail: placeholder },
-          },
-        },
-        // ... more books
-      ]);
-    };
-
-    fetchBooks();
-  }, []);
+  const { shelves } = useContext(ShelfContext);
 
   return (
-    <>
-      <div className="MainContent">
-        <BookTabs books={books} />
-      </div>
-    </>
+    <div className="MainContent">
+      <BookTabs shelves={shelves} />
+    </div>
   );
 };
 

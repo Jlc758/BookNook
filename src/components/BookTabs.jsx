@@ -2,7 +2,7 @@ import ResultsDisplay from "./ResultsDisplay";
 import { Tabs } from "@mantine/core";
 import PropTypes from "prop-types";
 
-const BookTabs = ({ books }) => {
+const BookTabs = ({ shelves }) => {
   return (
     <Tabs defaultValue="CurrentRead" orientation="vertical">
       <Tabs.List>
@@ -11,49 +11,37 @@ const BookTabs = ({ books }) => {
         <Tabs.Tab value="TopTen">Top Ten</Tabs.Tab>
         <Tabs.Tab value="TBR">TBR</Tabs.Tab>
         <Tabs.Tab value="Loved">Loved</Tabs.Tab>
+        <Tabs.Tab value="Completed">Completed</Tabs.Tab>
         <Tabs.Tab value="DNF">DNF</Tabs.Tab>
       </Tabs.List>
 
       <Tabs.Panel value="CurrentRead">
-        Currently Reading tab content
-        <div>
-          <ResultsDisplay books={books} />
-        </div>
+        <ResultsDisplay books={shelves.CurrentRead} />
       </Tabs.Panel>
       <Tabs.Panel value="AllBooks">
-        All Books
-        <ResultsDisplay books={books} />
+        <ResultsDisplay books={shelves.AllBooks} />
       </Tabs.Panel>
       <Tabs.Panel value="TopTen">
-        TopTen tab content
-        <div>
-          <ResultsDisplay books={books} />
-        </div>
+        <ResultsDisplay books={shelves.TopTen} />
       </Tabs.Panel>
       <Tabs.Panel value="TBR">
-        TBR tab content
-        <div>
-          <ResultsDisplay books={books} />
-        </div>
+        <ResultsDisplay books={shelves.TBR} />
       </Tabs.Panel>
       <Tabs.Panel value="Loved">
-        Loved tab content
-        <div>
-          <ResultsDisplay books={books} />
-        </div>
+        <ResultsDisplay books={shelves.Loved} />
+      </Tabs.Panel>
+      <Tabs.Panel value="Completed">
+        <ResultsDisplay books={shelves.Completed} />
       </Tabs.Panel>
       <Tabs.Panel value="DNF">
-        DNF tab content
-        <div>
-          <ResultsDisplay books={books} />
-        </div>
+        <ResultsDisplay books={shelves.DNF} />
       </Tabs.Panel>
     </Tabs>
   );
 };
 
 BookTabs.propTypes = {
-  books: PropTypes.array.isRequired,
+  shelves: PropTypes.object.isRequired,
 };
 
 export default BookTabs;
