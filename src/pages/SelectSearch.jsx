@@ -121,6 +121,7 @@ const SelectSearch = ({ apiKey }) => {
 
   const handleSearch = () => {
     setIsLoading(true);
+    setHideCriteria(true);
     setSearchCriteria({
       selectedGenres,
       selectedRating,

@@ -3,6 +3,7 @@
   --tab-height: 40px;
   --tab-height-small: 30px;
   --breakpoint: 630px;
+  --button-bg: var(--mantine-color-rose-1);
 }
 
 .MainContent {
@@ -57,7 +58,7 @@
   height: var(--tab-height);
   flex: 1 1 auto; /* Allow tabs to grow and shrink */
   min-width: 0; /* Allow tabs to shrink below their content size */
-  font-size: clamp(0.7rem, 1.5vw, 1rem);
+  font-size: clamp(0.7rem, 1.5vw, 0.8rem);
   padding: 0 clamp(5px, 1vw, 10px);
   margin: 0 2px;
   white-space: nowrap;
