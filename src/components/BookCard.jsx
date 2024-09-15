@@ -1,16 +1,23 @@
 import PropTypes from "prop-types";
-import PlaceholderCover from "../images/BookCover.jpg";
+import Placeholder from "./Placeholder";
 
 const BookCard = ({ title, authors, pageCount, categories, cover }) => {
   return (
     <div className="book-card">
-      {cover && (
-        <img
-          src={cover}
-          alt={`${title} cover`}
-          placeholder={PlaceholderCover}
-        />
-      )}
+      <div
+        className="cover-container"
+        style={{ aspectRatio: "2 / 3", overflow: "hidden" }}
+      >
+        {cover ? (
+          <img
+            src={cover}
+            alt={`${title} cover`}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          <Placeholder className="placeholder-cover" />
+        )}
+      </div>
       <h3>{title}</h3>
       {authors && <p>Authors: {authors}</p>}
       {pageCount && <p>Page Count: {pageCount}</p>}

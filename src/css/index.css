@@ -117,12 +117,12 @@
   height: 100%;
   width: 100%;
   grid-template-columns: 1fr 0.5fr 1fr;
-  grid-template-rows: 1fr 0.5fr;
+  grid-template-rows: 0.8fr 1fr;
   gap: 2% 2%;
   grid-auto-flow: row;
   grid-template-areas:
-    "second first first"
-    "footer footer footer";
+    "hero hero hero"
+    "second first first";
 }
 
 .first {
@@ -140,11 +140,17 @@
   grid-auto-flow: column;
 }
 
-.footer {
-  grid-area: footer;
+.hero {
+  grid-area: hero;
   height: 100%;
   width: 100%;
   background-color: greenyellow;
+}
+
+.heroPlaceholder {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .second {
