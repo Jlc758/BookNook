@@ -256,6 +256,11 @@
   height: 2rem;
 }
 
+.Stack {
+  padding-bottom: 1em;
+  gap: 0.3rem !important;
+}
+
 /* Loading Animation */
 
 .loadingAnimationContainer {

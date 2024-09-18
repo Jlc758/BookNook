@@ -1,5 +1,5 @@
 const Theme = {
-  colorScheme: "light",
+  colorScheme: "dark",
   focusRing: "auto",
   scale: 1,
   fontSmoothing: true,

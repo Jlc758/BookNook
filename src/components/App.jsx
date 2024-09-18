@@ -10,6 +10,7 @@ import Profile from "../pages/Profile";
 import Theme from "../css/theme";
 import SearchProvider from "../context/SearchContext";
 import ShelfProvider from "../context/ShelfContext";
+import AvatarFAB from "./AvatarFAB";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ const App = () => {
         <SearchProvider>
           <ShelfProvider>
             <RouterProvider router={router} />
+            <AvatarFAB />
           </ShelfProvider>
         </SearchProvider>
       </ModalsProvider>

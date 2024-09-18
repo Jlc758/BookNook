@@ -59,15 +59,11 @@ function Navigation() {
             <Tabs.Tab value="search" onClick={() => handleClick("/search")}>
               <h3>Discover</h3>
             </Tabs.Tab>
-            <Tabs.Tab value="profile" onClick={() => handleClick("/profile")}>
-              <h3>Profile</h3>
-            </Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value="home"></Tabs.Panel>
           <Tabs.Panel value="shelves"></Tabs.Panel>
           <Tabs.Panel value="search"></Tabs.Panel>
-          <Tabs.Panel value="profile"></Tabs.Panel>
         </Tabs>
         <div className="DarkLight">
           <Switch
