@@ -143,6 +143,38 @@ const useModal = () => {
             </div>
           </div>
         );
+      case "reading":
+        return (
+          <div style={modalStyle}>
+            {renderBookInfo()}
+            <StarRating />
+            <p style={subheaderStyle}>
+              Are you reading this book? How exciting! Note your progress and
+              set a rating and optional review when you&quot;re done!
+            </p>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+              }}
+            >
+              {Object.keys(shelves).map((shelfName) => (
+                <button
+                  key={shelfName}
+                  style={buttonStyle}
+                  onClick={() => {
+                    addToShelf(selectedBook, shelfName);
+                    handleModalAction(selectedBook, "currentRead");
+                    closeModal();
+                  }}
+                >
+                  {formatShelfName(shelfName)}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
       case "bookDescription":
         return (
           <div style={modalStyle}>

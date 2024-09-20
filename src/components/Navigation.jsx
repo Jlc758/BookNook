@@ -10,11 +10,19 @@ import { IconSun, IconMoonStars } from "@tabler/icons-react";
 import LogoDark from "../images/Logo-Dark.png";
 import LogoLight from "../images/Logo-Light.png";
 import "@mantine/core/styles.css";
+import { useEffect } from "react";
 
 function Navigation() {
   const navigate = useNavigate();
   const theme = useMantineTheme();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+
+  useEffect(() => {
+    localStorage.setItem("mantine-color-scheme", colorScheme);
+  }, [colorScheme]);
+
+  console.log("Current color scheme:", colorScheme);
+  console.log("Toggle function exists:", !!toggleColorScheme);
 
   const handleClick = (path) => {
     navigate(path);
@@ -68,7 +76,7 @@ function Navigation() {
         <div className="DarkLight">
           <Switch
             size="md"
-            color={colorScheme === "dark" ? "gray" : "dark"}
+            color={colorScheme === "dark" ? "light" : "dark"}
             onLabel={sunIcon}
             offLabel={moonIcon}
             checked={colorScheme === "dark"}

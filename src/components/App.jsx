@@ -6,11 +6,11 @@ import Layout from "../context/Layout";
 import LandingPage from "../pages/LandingPage";
 import SearchOptions from "../pages/SearchOptionsPage";
 import Shelves from "../pages/Shelves";
-import Profile from "../pages/Profile";
 import Theme from "../css/theme";
 import SearchProvider from "../context/SearchContext";
 import ShelfProvider from "../context/ShelfContext";
 import AvatarFAB from "./AvatarFAB";
+import { useState, useEffect } from "react";
 
 const router = createBrowserRouter([
   {
@@ -20,14 +20,26 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage /> },
       { path: "search", element: <SearchOptions /> },
       { path: "shelves", element: <Shelves /> },
-      { path: "profile", element: <Profile /> },
     ],
   },
 ]);
 
 const App = () => {
+  const [colorScheme, setColorScheme] = useState(Theme.colorScheme);
+
+  useEffect(() => {
+    const savedScheme = localStorage.getItem("mantine-color-scheme");
+    if (savedScheme) {
+      setColorScheme(savedScheme);
+    }
+  }, []);
+
   return (
-    <MantineProvider theme={Theme}>
+    <MantineProvider
+      theme={{ ...Theme, colorScheme }}
+      withGlobalStyles
+      withNormalizeCSS
+    >
       <ModalsProvider>
         <SearchProvider>
           <ShelfProvider>
