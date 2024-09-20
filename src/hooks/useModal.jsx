@@ -5,10 +5,12 @@ const useModal = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [modalType, setModalType] = useState("");
+  const [selectedShelves, setSelectedShelves] = useState({});
 
   const openModal = (book, type) => {
     setSelectedBook(book);
     setModalType(type);
+    setSelectedShelves({});
     setModalOpen(true);
   };
 
@@ -16,16 +18,22 @@ const useModal = () => {
     setModalOpen(false);
     setSelectedBook(null);
     setModalType("");
+    setSelectedShelves({});
   };
 
   const formatShelfName = (shelfName) => {
     const unchangedShelves = ["TBR", "DNF"];
-
     if (unchangedShelves.includes(shelfName)) {
       return shelfName;
     }
-
     return shelfName.replace(/([A-Z])/g, " $1").trim();
+  };
+
+  const toggleShelfSelection = (shelfName) => {
+    setSelectedShelves((prevShelves) => ({
+      ...prevShelves,
+      [shelfName]: !prevShelves[shelfName],
+    }));
   };
 
   const renderModalContent = (
@@ -58,18 +66,35 @@ const useModal = () => {
       marginBottom: "10px",
     };
 
-    const buttonStyle = {
+    const buttonStyle = (shelfName) => ({
       border: "none",
-      borderBottom: "2px solid var(--mantine-color-rose-1)",
-      backgroundColor: "transparent",
-      fontSize: "clamp(0.7rem, 1.5vw, 1rem)",
+      borderBottom: `2px solid ${
+        selectedShelves[shelfName]
+          ? "var(--mantine-color-rose-6)"
+          : "var(--mantine-color-rose-1)"
+      }`,
+      backgroundColor: selectedShelves[shelfName]
+        ? "var(--mantine-color-rose-1)"
+        : "transparent",
+      fontSize: "clamp(0.8rem, 1.5vw, 1rem)",
       padding: "0 clamp(5px, 1vw, 10px)",
       margin: "0 2px 2rem 2px",
-    };
+      cursor: "pointer",
+    });
 
     const subheaderStyle = {
       fontSize: 12,
       fontStyle: "italic",
+    };
+
+    const confirmButtonStyle = {
+      backgroundColor: "var(--mantine-color-rose-1)",
+      color: "black",
+      border: "none",
+      padding: "10px 20px",
+      borderRadius: "5px",
+      cursor: "pointer",
+      marginTop: "20px",
     };
 
     const renderBookInfo = () => (
@@ -79,78 +104,40 @@ const useModal = () => {
       </div>
     );
 
+    const handleConfirm = () => {
+      Object.keys(selectedShelves).forEach((shelfName) => {
+        if (selectedShelves[shelfName]) {
+          addToShelf(selectedBook, shelfName);
+          addToShelf(selectedBook, "AllBooks");
+        }
+      });
+
+      handleModalAction(
+        selectedBook,
+        modalType === "selectShelf"
+          ? "onShelf"
+          : modalType === "previouslyRead"
+          ? "prevRead"
+          : "currentRead"
+      );
+
+      closeModal();
+    };
+
     switch (modalType) {
       case "selectShelf":
-        return (
-          <div style={modalStyle}>
-            {renderBookInfo()}
-            <p style={subheaderStyle}>
-              Selections are automatically added to both their chosen shelf and
-              &quot;All Books&quot;.
-            </p>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-              }}
-            >
-              {Object.keys(shelves).map((shelfName) => (
-                <button
-                  key={shelfName}
-                  style={buttonStyle}
-                  onClick={() => {
-                    addToShelf(selectedBook, shelfName);
-                    handleModalAction(selectedBook, "onShelf");
-                    closeModal();
-                  }}
-                >
-                  {formatShelfName(shelfName)}
-                </button>
-              ))}
-            </div>
-          </div>
-        );
       case "previouslyRead":
-        return (
-          <div style={modalStyle}>
-            {renderBookInfo()}
-            <StarRating />
-            <p style={subheaderStyle}>
-              Have you already read this book? Provide a rating and optional
-              review, and save it to your preferred shelf!
-            </p>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-              }}
-            >
-              {Object.keys(shelves).map((shelfName) => (
-                <button
-                  key={shelfName}
-                  style={buttonStyle}
-                  onClick={() => {
-                    addToShelf(selectedBook, shelfName);
-                    handleModalAction(selectedBook, "prevRead");
-                    closeModal();
-                  }}
-                >
-                  {formatShelfName(shelfName)}
-                </button>
-              ))}
-            </div>
-          </div>
-        );
       case "reading":
         return (
           <div style={modalStyle}>
             {renderBookInfo()}
-            <StarRating />
+            {modalType !== "selectShelf" && <StarRating />}
             <p style={subheaderStyle}>
-              Are you reading this book? How exciting! Note your progress and
-              set a rating and optional review when you&quot;re done!
+              {modalType === "selectShelf"
+                ? 'Selections are automatically added to both their chosen shelf and "All Books".'
+                : modalType === "previouslyRead"
+                ? "Have you already read this book? Provide a rating and optional review, and save it to your preferred shelf!"
+                : "Are you reading this book? How exciting! Note your progress and set a rating and optional review when you're done!"}
             </p>
             <div
               style={{
@@ -162,17 +149,20 @@ const useModal = () => {
               {Object.keys(shelves).map((shelfName) => (
                 <button
                   key={shelfName}
-                  style={buttonStyle}
-                  onClick={() => {
-                    addToShelf(selectedBook, shelfName);
-                    handleModalAction(selectedBook, "currentRead");
-                    closeModal();
-                  }}
+                  style={buttonStyle(shelfName)}
+                  onClick={() => toggleShelfSelection(shelfName)}
                 >
                   {formatShelfName(shelfName)}
                 </button>
               ))}
             </div>
+            <button
+              style={confirmButtonStyle}
+              onClick={handleConfirm}
+              disabled={Object.values(selectedShelves).every((v) => !v)}
+            >
+              Confirm
+            </button>
           </div>
         );
       case "bookDescription":
