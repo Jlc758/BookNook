@@ -8,8 +8,16 @@ const useModal = () => {
   const [selectedShelves, setSelectedShelves] = useState({});
 
   const openModal = (book, type, topTenCount) => {
-    if (type === "topTen" && topTenCount < 10) {
-      return { addedToTopTen: true };
+    if (type === "topTen") {
+      if (topTenCount < 10) {
+        return { addedToTopTen: true };
+      } else {
+        setSelectedBook(book);
+        setModalType(type);
+        setSelectedShelves({});
+        setModalOpen(true);
+        return { addedToTopTen: false };
+      }
     }
 
     setSelectedBook(book);
@@ -46,7 +54,7 @@ const useModal = () => {
     removeFromShelf,
     shelves,
     placeholder,
-    handleModalAction
+    handleModalConfirm
   ) => {
     if (!selectedBook) return null;
 
@@ -76,7 +84,7 @@ const useModal = () => {
       border: "none",
       borderBottom: `2px solid ${
         selectedShelves[shelfName]
-          ? "var(--mantine-color-rose-6)"
+          ? "var(--mantine-color-blue-1)"
           : "var(--mantine-color-rose-1)"
       }`,
       backgroundColor: selectedShelves[shelfName]
@@ -111,21 +119,19 @@ const useModal = () => {
     );
 
     const handleConfirm = () => {
-      Object.keys(selectedShelves).forEach((shelfName) => {
-        if (selectedShelves[shelfName]) {
-          addToShelf(selectedBook, shelfName);
-          addToShelf(selectedBook, "AllBooks");
-        }
-      });
-
-      handleModalAction(
-        selectedBook,
-        modalType === "selectShelf"
-          ? "onShelf"
-          : modalType === "previouslyRead"
-          ? "prevRead"
-          : "currentRead"
+      const selectedShelfNames = Object.keys(selectedShelves).filter(
+        (shelf) => selectedShelves[shelf]
       );
+
+      if (modalType === "selectShelf" && selectedShelfNames.length > 0) {
+        selectedShelfNames.forEach((shelfName) => {
+          handleModalConfirm(selectedBook, shelfName);
+        });
+      } else if (modalType === "CurrentRead") {
+        handleModalConfirm(selectedBook, "CurrentRead");
+      } else {
+        handleModalConfirm(selectedBook, modalType);
+      }
 
       closeModal();
     };
@@ -200,7 +206,7 @@ const useModal = () => {
             </button>
           </div>
         );
-      case "currentRead":
+      case "CurrentRead":
         return (
           <div style={modalStyle}>
             {renderBookInfo()}
@@ -213,7 +219,7 @@ const useModal = () => {
               onClick={() => {
                 addToShelf(selectedBook, "CurrentRead");
                 addToShelf(selectedBook, "AllBooks");
-                handleModalAction(selectedBook, "currentRead");
+                handleModalConfirm(selectedBook, "CurrentRead");
                 closeModal();
               }}
             >
@@ -239,7 +245,7 @@ const useModal = () => {
             >
               {shelves.TopTen.map((topTenBook, index) => (
                 <div
-                  key={topTenBook.id}
+                  key={topTenBook.etag}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -261,7 +267,7 @@ const useModal = () => {
                       removeFromShelf(topTenBook, "TopTen");
                       addToShelf(selectedBook, "TopTen");
                       addToShelf(selectedBook, "AllBooks");
-                      handleModalAction(selectedBook, "topTen");
+                      handleModalConfirm(selectedBook, "topTen");
                       closeModal();
                     }}
                   >

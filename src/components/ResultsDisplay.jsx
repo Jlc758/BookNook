@@ -28,17 +28,20 @@ const ResultsDisplay = ({ books }) => {
         return "Rate and Review";
       case "bookDescription":
         return "Book Description";
+      case "topTen":
+        return "Your top ten list is full";
       default:
         return "Book Options";
     }
   };
+
   const handleIconClick = (book, type) => {
     if (type === "tbr") {
       addToShelf(book, "TBR");
       addToShelf(book, "AllBooks");
       setBookStates((prevStates) => ({
         ...prevStates,
-        [book.id]: { ...prevStates[book.id], tbr: true },
+        [book.etag]: { ...prevStates[book.etag], tbr: true },
       }));
     } else if (type === "topTen") {
       const topTenCount = shelves.TopTen.length;
@@ -47,28 +50,28 @@ const ResultsDisplay = ({ books }) => {
         addToShelf(book, "AllBooks");
         setBookStates((prevStates) => ({
           ...prevStates,
-          [book.id]: { ...prevStates[book.id], topTen: true },
+          [book.etag]: { ...prevStates[book.etag], topTen: true },
         }));
-      } else {
-        openModal(book, type);
+      } else if (topTenCount === 10) {
+        openModal(book, "topTen", topTenCount);
       }
     } else {
       openModal(book, type);
     }
   };
 
-  const handleModalAction = (book, shelfName) => {
+  const handleModalConfirm = (book, shelfName) => {
     addToShelf(book, shelfName);
     addToShelf(book, "AllBooks");
+
     setBookStates((prevStates) => ({
       ...prevStates,
-      [book.id]: {
-        ...prevStates[book.id],
-        onShelf: true,
-        prevRead: shelfName === "Completed",
-        topTen: shelfName === "TopTen",
+      [book.etag]: {
+        ...prevStates[book.etag],
+        [shelfName.toLowerCase()]: true,
       },
     }));
+    closeModal();
   };
 
   const handleRemoveFromShelf = (book, shelfName) => {
@@ -76,26 +79,28 @@ const ResultsDisplay = ({ books }) => {
     removeFromShelf(book, "AllBooks");
     setBookStates((prevStates) => ({
       ...prevStates,
-      [book.id]: {
-        ...prevStates[book.id],
-        onShelf:
-          shelfName === "selectShelf" ? false : prevStates[book.id]?.onShelf,
-        tbr: shelfName === "TBR" ? false : prevStates[book.id]?.tbr,
-        prevRead:
-          shelfName === "Completed" ? false : prevStates[book.id]?.prevRead,
+      [book.etag]: {
+        ...prevStates[book.etag],
+        [shelfName.toLowerCase()]: false,
+        onShelf: false, // Set to false as we're removing from AllBooks
       },
     }));
   };
 
+  const isOnAnyShelf = (bookState) => {
+    return Object.values(bookState).some((value) => value === true);
+  };
+
   const renderIcon = (book, type) => {
-    const bookState = bookStates[book.id] || {};
+    const bookState = bookStates[book.etag] || {};
+    const onShelf = isOnAnyShelf(bookState);
 
     switch (type) {
       case "selectShelf":
         return (
           <SelectShelfIcon
             book={book}
-            bookState={bookState}
+            bookState={{ onShelf: onShelf }}
             handleIconClick={handleIconClick}
             removeFromShelf={handleRemoveFromShelf}
             openModal={openModal}
@@ -105,16 +110,16 @@ const ResultsDisplay = ({ books }) => {
         return (
           <TBRIcon
             book={book}
-            bookState={bookState}
+            bookState={{ tbr: bookState.tbr || false }}
             handleIconClick={handleIconClick}
             removeFromShelf={handleRemoveFromShelf}
           />
         );
-      case "currentRead":
+      case "CurrentRead":
         return (
           <CurrentReadIcon
             book={book}
-            bookState={bookState}
+            bookState={{ CurrentRead: bookState.CurrentRead || false }}
             handleIconClick={handleIconClick}
             removeFromShelf={handleRemoveFromShelf}
             openModal={openModal}
@@ -124,7 +129,7 @@ const ResultsDisplay = ({ books }) => {
         return (
           <TopTenIcon
             book={book}
-            bookState={bookState}
+            bookState={{ topTen: bookState.topTen || false }}
             handleIconClick={handleIconClick}
             removeFromShelf={handleRemoveFromShelf}
             openModal={openModal}
@@ -135,7 +140,7 @@ const ResultsDisplay = ({ books }) => {
         return (
           <PreviouslyReadIcon
             book={book}
-            bookState={bookState}
+            bookState={{ previouslyRead: bookState.previouslyRead || false }}
             handleIconClick={handleIconClick}
             removeFromShelf={handleRemoveFromShelf}
             openModal={openModal}
@@ -155,7 +160,7 @@ const ResultsDisplay = ({ books }) => {
       {books &&
         books.length > 0 &&
         books.map((book) => (
-          <div key={book.id} className={classes.bookContainer}>
+          <div key={book.etag} className={classes.bookContainer}>
             <div className={classes.bookRatingTitle}>
               <div className={classes.bookCoverContainer}>
                 {book.volumeInfo?.imageLinks?.thumbnail ? (
@@ -172,7 +177,7 @@ const ResultsDisplay = ({ books }) => {
                   />
                 )}
                 <div className={classes.shelfIcons}>
-                  {renderIcon(book, "currentRead")}
+                  {renderIcon(book, "CurrentRead")}
                   {renderIcon(book, "topTen")}
                   {renderIcon(book, "selectShelf")}
                   {renderIcon(book, "tbr")}
@@ -202,7 +207,7 @@ const ResultsDisplay = ({ books }) => {
           removeFromShelf,
           shelves,
           Placeholder,
-          handleModalAction
+          handleModalConfirm
         )}
       </Modal>
     </Container>
