@@ -22,7 +22,6 @@ export function ShelfProvider({ children }) {
   useEffect(() => {
     // Save shelves to localStorage whenever they change
     localStorage.setItem("shelves", JSON.stringify(shelves));
-    console.log("Updated shelves:", shelves);
   }, [shelves]);
 
   const addToShelf = (book, shelfName) => {

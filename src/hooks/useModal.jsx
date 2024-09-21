@@ -7,11 +7,16 @@ const useModal = () => {
   const [modalType, setModalType] = useState("");
   const [selectedShelves, setSelectedShelves] = useState({});
 
-  const openModal = (book, type) => {
+  const openModal = (book, type, topTenCount) => {
+    if (type === "topTen" && topTenCount < 10) {
+      return { addedToTopTen: true };
+    }
+
     setSelectedBook(book);
     setModalType(type);
     setSelectedShelves({});
     setModalOpen(true);
+    return { addedToTopTen: false };
   };
 
   const closeModal = () => {
@@ -38,6 +43,7 @@ const useModal = () => {
 
   const renderModalContent = (
     addToShelf,
+    removeFromShelf,
     shelves,
     placeholder,
     handleModalAction
@@ -126,18 +132,12 @@ const useModal = () => {
 
     switch (modalType) {
       case "selectShelf":
-      case "previouslyRead":
-      case "reading":
         return (
           <div style={modalStyle}>
             {renderBookInfo()}
-            {modalType !== "selectShelf" && <StarRating />}
             <p style={subheaderStyle}>
-              {modalType === "selectShelf"
-                ? 'Selections are automatically added to both their chosen shelf and "All Books".'
-                : modalType === "previouslyRead"
-                ? "Have you already read this book? Provide a rating and optional review, and save it to your preferred shelf!"
-                : "Are you reading this book? How exciting! Note your progress and set a rating and optional review when you're done!"}
+              Selections are automatically added to both their chosen shelf and
+              &quot;All Books&quot;
             </p>
             <div
               style={{
@@ -159,9 +159,119 @@ const useModal = () => {
             <button
               style={confirmButtonStyle}
               onClick={handleConfirm}
-              disabled={Object.values(selectedShelves).every((v) => !v)}
+              disabled={Object.values(selectedShelves).every((value) => !value)}
             >
               Confirm
+            </button>
+          </div>
+        );
+      case "previouslyRead":
+        return (
+          <div style={modalStyle}>
+            {renderBookInfo()}
+            <StarRating />
+            <p style={subheaderStyle}>
+              Have you already read this book? Provide a rating and optional
+              review, and save it to your preferred shelf!
+            </p>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+              }}
+            >
+              {Object.keys(shelves).map((shelfName) => (
+                <button
+                  key={shelfName}
+                  style={buttonStyle(shelfName)}
+                  onClick={() => toggleShelfSelection(shelfName)}
+                >
+                  {formatShelfName(shelfName)}
+                </button>
+              ))}
+            </div>
+            <button
+              style={confirmButtonStyle}
+              onClick={handleConfirm}
+              disabled={Object.values(selectedShelves).every((value) => !value)}
+            >
+              Confirm
+            </button>
+          </div>
+        );
+      case "currentRead":
+        return (
+          <div style={modalStyle}>
+            {renderBookInfo()}
+            <p style={subheaderStyle}>
+              Are you reading this book? How exciting! Note your progress and
+              set a rating and optional review when you&apos;re done!
+            </p>
+            <button
+              style={confirmButtonStyle}
+              onClick={() => {
+                addToShelf(selectedBook, "CurrentRead");
+                addToShelf(selectedBook, "AllBooks");
+                handleModalAction(selectedBook, "currentRead");
+                closeModal();
+              }}
+            >
+              Confirm
+            </button>
+          </div>
+        );
+      case "topTen":
+        return (
+          <div style={modalStyle}>
+            {renderBookInfo()}
+            <p style={subheaderStyle}>
+              Your Top Ten list is full. To add this book, you&apos;ll need to
+              remove one from your current list.
+            </p>
+            <div
+              style={{
+                maxHeight: "200px",
+                overflowY: "auto",
+                width: "100%",
+                marginBottom: "20px",
+              }}
+            >
+              {shelves.TopTen.map((topTenBook, index) => (
+                <div
+                  key={topTenBook.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "5px",
+                    borderBottom: "1px solid #eee",
+                  }}
+                >
+                  <span>
+                    {index + 1}. {topTenBook.volumeInfo.title}
+                  </span>
+                  <button
+                    style={{
+                      ...confirmButtonStyle,
+                      padding: "5px 10px",
+                      fontSize: "0.8em",
+                    }}
+                    onClick={() => {
+                      removeFromShelf(topTenBook, "TopTen");
+                      addToShelf(selectedBook, "TopTen");
+                      addToShelf(selectedBook, "AllBooks");
+                      handleModalAction(selectedBook, "topTen");
+                      closeModal();
+                    }}
+                  >
+                    Swap
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button style={confirmButtonStyle} onClick={closeModal}>
+              Cancel
             </button>
           </div>
         );

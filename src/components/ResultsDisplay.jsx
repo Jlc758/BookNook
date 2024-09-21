@@ -6,7 +6,13 @@ import StarRating from "./StarRating";
 import PropTypes from "prop-types";
 import useShelf from "../hooks/useShelf";
 import useModal from "../hooks/useModal";
-import { SelectShelfIcon, TBRIcon, PreviouslyReadIcon } from "./Icons";
+import {
+  SelectShelfIcon,
+  TBRIcon,
+  PreviouslyReadIcon,
+  CurrentReadIcon,
+  TopTenIcon,
+} from "./Icons";
 
 const ResultsDisplay = ({ books }) => {
   const { shelves, addToShelf, removeFromShelf } = useShelf();
@@ -34,6 +40,18 @@ const ResultsDisplay = ({ books }) => {
         ...prevStates,
         [book.id]: { ...prevStates[book.id], tbr: true },
       }));
+    } else if (type === "topTen") {
+      const topTenCount = shelves.TopTen.length;
+      if (topTenCount < 10) {
+        addToShelf(book, "TopTen");
+        addToShelf(book, "AllBooks");
+        setBookStates((prevStates) => ({
+          ...prevStates,
+          [book.id]: { ...prevStates[book.id], topTen: true },
+        }));
+      } else {
+        openModal(book, type);
+      }
     } else {
       openModal(book, type);
     }
@@ -48,6 +66,7 @@ const ResultsDisplay = ({ books }) => {
         ...prevStates[book.id],
         onShelf: true,
         prevRead: shelfName === "Completed",
+        topTen: shelfName === "TopTen",
       },
     }));
   };
@@ -91,6 +110,27 @@ const ResultsDisplay = ({ books }) => {
             removeFromShelf={handleRemoveFromShelf}
           />
         );
+      case "currentRead":
+        return (
+          <CurrentReadIcon
+            book={book}
+            bookState={bookState}
+            handleIconClick={handleIconClick}
+            removeFromShelf={handleRemoveFromShelf}
+            openModal={openModal}
+          />
+        );
+      case "topTen":
+        return (
+          <TopTenIcon
+            book={book}
+            bookState={bookState}
+            handleIconClick={handleIconClick}
+            removeFromShelf={handleRemoveFromShelf}
+            openModal={openModal}
+            topTenCount={shelves.TopTen.length}
+          />
+        );
       case "previouslyRead":
         return (
           <PreviouslyReadIcon
@@ -131,6 +171,13 @@ const ResultsDisplay = ({ books }) => {
                     onClick={() => handleBookCoverClick(book)}
                   />
                 )}
+                <div className={classes.shelfIcons}>
+                  {renderIcon(book, "currentRead")}
+                  {renderIcon(book, "topTen")}
+                  {renderIcon(book, "selectShelf")}
+                  {renderIcon(book, "tbr")}
+                  {renderIcon(book, "previouslyRead")}
+                </div>
               </div>
               <StarRating />
               <Title order={6} className={classes.title}>
@@ -139,11 +186,6 @@ const ResultsDisplay = ({ books }) => {
               <Title order={6} className={classes.author}>
                 {book.volumeInfo?.authors}
               </Title>
-            </div>
-            <div className={classes.shelfIcons}>
-              {renderIcon(book, "selectShelf")}
-              {renderIcon(book, "tbr")}
-              {renderIcon(book, "previouslyRead")}
             </div>
           </div>
         ))}
@@ -155,7 +197,13 @@ const ResultsDisplay = ({ books }) => {
         title={getModalTitle()}
         size="auto"
       >
-        {renderModalContent(handleModalAction, shelves, Placeholder)}
+        {renderModalContent(
+          addToShelf,
+          removeFromShelf,
+          shelves,
+          Placeholder,
+          handleModalAction
+        )}
       </Modal>
     </Container>
   );

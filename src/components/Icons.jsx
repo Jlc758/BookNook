@@ -10,6 +10,11 @@ import {
   BsBookmarks,
   BsBookmarksFill,
   BsBookmarkDash,
+  BsStar,
+  BsStarHalf,
+  BsStarFill,
+  BsBookmarkStar,
+  BsBookmarkStarFill,
 } from "react-icons/bs";
 
 export const SelectShelfIcon = ({
@@ -150,6 +155,103 @@ export const PreviouslyReadIcon = ({
 };
 
 PreviouslyReadIcon.propTypes = {
+  book: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    volumeInfo: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  bookState: PropTypes.shape({
+    prevRead: PropTypes.bool,
+  }).isRequired,
+  handleIconClick: PropTypes.func.isRequired,
+  removeFromShelf: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
+};
+
+export const CurrentReadIcon = ({
+  book,
+  bookState,
+  removeFromShelf,
+  openModal,
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      className={classes.iconContainer}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {bookState.prevRead ? (
+        isHovered ? (
+          <BsStarHalf
+            className={classes.icon}
+            onClick={() => removeFromShelf(book, "currentRead")}
+          />
+        ) : (
+          <BsStarFill
+            className={classes.icon}
+            onClick={() => openModal(book, "currentRead")}
+          />
+        )
+      ) : (
+        <BsStar
+          className={classes.icon}
+          onClick={() => openModal(book, "currentRead")}
+        />
+      )}
+    </div>
+  );
+};
+
+CurrentReadIcon.propTypes = {
+  book: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    volumeInfo: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  bookState: PropTypes.shape({
+    prevRead: PropTypes.bool,
+  }).isRequired,
+  handleIconClick: PropTypes.func.isRequired,
+  removeFromShelf: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
+};
+
+export const TopTenIcon = ({ book, bookState, removeFromShelf, openModal }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      className={classes.iconContainer}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {bookState.prevRead ? (
+        isHovered ? (
+          <BsBookmarkDash
+            className={classes.icon}
+            onClick={() => removeFromShelf(book, "topTen")}
+          />
+        ) : (
+          <BsBookmarkStarFill
+            className={classes.icon}
+            onClick={() => openModal(book, "topTen")}
+          />
+        )
+      ) : (
+        <BsBookmarkStar
+          className={classes.icon}
+          onClick={() => openModal(book, "topTen")}
+        />
+      )}
+    </div>
+  );
+};
+
+TopTenIcon.propTypes = {
   book: PropTypes.shape({
     id: PropTypes.string.isRequired,
     volumeInfo: PropTypes.shape({

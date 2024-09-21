@@ -21,9 +21,6 @@ function Navigation() {
     localStorage.setItem("mantine-color-scheme", colorScheme);
   }, [colorScheme]);
 
-  console.log("Current color scheme:", colorScheme);
-  console.log("Toggle function exists:", !!toggleColorScheme);
-
   const handleClick = (path) => {
     navigate(path);
   };
