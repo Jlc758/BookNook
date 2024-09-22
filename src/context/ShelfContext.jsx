@@ -65,6 +65,20 @@ const ShelfProvider = ({ children }) => {
     addToShelf(book, toShelf);
   };
 
+  const updateBookInShelf = (book, shelfName, updates) => {
+    if (!getValidShelfNames().includes(shelfName)) {
+      console.warn(`Attempted to update book on invalid shelf: ${shelfName}`);
+      return;
+    }
+
+    setShelves((prevShelves) => ({
+      ...prevShelves,
+      [shelfName]: prevShelves[shelfName].map((book) =>
+        book.etag === book.etag ? { ...book, ...updates } : book
+      ),
+    }));
+  };
+
   return (
     <ShelfContext.Provider
       value={{
@@ -73,6 +87,7 @@ const ShelfProvider = ({ children }) => {
         removeFromShelf,
         moveBook,
         getValidShelfNames,
+        updateBookInShelf,
       }}
     >
       {children}

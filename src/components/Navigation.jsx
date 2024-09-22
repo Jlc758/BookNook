@@ -44,7 +44,7 @@ function Navigation() {
   return (
     <>
       <div className="NavContainer">
-        <div className="LogoContainer">
+        <div className="LogoContainer" onClick={() => handleClick("/")}>
           <div className="LogoWrapper">
             <img
               src={colorScheme === "dark" ? LogoDark : LogoLight}

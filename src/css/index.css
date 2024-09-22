@@ -128,7 +128,7 @@
 
 .first {
   display: grid;
-  grid-template-columns: 1fr 0.5fr;
+  grid-template-columns: 1fr;
   grid-area: first;
   height: 100%;
   width: 100%;
@@ -158,6 +158,8 @@
 
 .second {
   grid-area: second;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   background-color: lavender;
@@ -181,18 +183,11 @@
 }
 
 .NextThree {
-  flex: 1;
   display: flex;
+  height: 15vh;
   justify-content: center;
   align-items: center;
   margin: 5px 0; /* Add some vertical spacing between covers */
-}
-
-.NextThree img {
-  height: 100%;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
 }
 
 .CurrentRead {

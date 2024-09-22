@@ -1,20 +1,36 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Title, Progress, TextInput } from "@mantine/core";
+import { Title, TextInput, Checkbox, Group } from "@mantine/core";
 import Placeholder from "../components/Placeholder";
 import useSearch from "../hooks/useSearch";
 import { useEffect, useContext } from "react";
 import { RiSearch2Line } from "react-icons/ri";
+import { FcKindle } from "react-icons/fc";
+import { FaBook } from "react-icons/fa";
+import { TbHeadphonesFilled } from "react-icons/tb";
 import HeroPlaceholder from "../images/HeroPlaceholder.png";
 import { ShelfContext } from "../context/ShelfContext";
+import ProgressBar from "../components/ProgressBar";
 
-function LandingPage() {
+const LandingPage = () => {
   const { searchText, setSearchText } = useSearch();
   const navigate = useNavigate();
   const location = useLocation();
   const { shelves } = useContext(ShelfContext); // Use ShelfContext
 
-  const ProgressBar = () => {
-    return <Progress color="gray" radius="xl" size="lg" value={30} />;
+  const ReadingFormatOptions = () => {
+    return (
+      <Checkbox.Group>
+        <Group mt="xs">
+          <Checkbox value="book" label="book" icon={FaBook} />
+          <Checkbox
+            value="audiobook"
+            label="audiobook"
+            icon={TbHeadphonesFilled}
+          />
+          <Checkbox value="ebook" label="ebook" icon={FcKindle} />
+        </Group>
+      </Checkbox.Group>
+    );
   };
 
   const CurrentRead = (() => {
@@ -32,23 +48,30 @@ function LandingPage() {
     }
 
     return (
-      <div>
-        <div style={{ height: "20rem", width: "auto" }}>
-          {currentReadBook.volumeInfo?.imageLinks?.thumbnail ? (
-            <img
-              src={currentReadBook.volumeInfo.imageLinks.thumbnail}
-              alt={currentReadBook.volumeInfo.title}
-              style={{ height: "100%", width: "auto", objectFit: "cover" }}
-            />
-          ) : (
-            <Placeholder className="current-read-placeholder" />
-          )}
+      <>
+        <div>
+          <div style={{ height: "15rem", width: "auto" }}>
+            {currentReadBook.volumeInfo?.imageLinks?.thumbnail ? (
+              <img
+                src={currentReadBook.volumeInfo.imageLinks.thumbnail}
+                alt={currentReadBook.volumeInfo.title}
+                style={{ height: "100%", width: "auto", objectFit: "cover" }}
+              />
+            ) : (
+              <Placeholder className="current-read-placeholder" />
+            )}
+          </div>
+          <div>
+            <ProgressBar />
+          </div>
         </div>
-        <Title>{currentReadBook.volumeInfo?.title || "Unknown Title"}</Title>
-        <div>{ProgressBar()}</div>
-        <div>Rating</div>
-        <div>Format (Book, AudioBook, eBook)</div>
-      </div>
+        <div>
+          <Title order={5}>
+            {currentReadBook.volumeInfo?.title || "Unknown Title"}
+          </Title>
+          <div>{ReadingFormatOptions(currentReadBook)}</div>
+        </div>
+      </>
     );
   })();
 
@@ -68,17 +91,6 @@ function LandingPage() {
         </div>
         <div className="first">
           <div className="CurrentRead">{CurrentRead}</div>
-          <div className="rightArea">
-            <div className="NextThree">
-              <Placeholder className="next-read-placeholder" />
-            </div>
-            <div className="NextThree">
-              <Placeholder className="next-read-placeholder" />
-            </div>
-            <div className="NextThree">
-              <Placeholder className="next-read-placeholder" />
-            </div>
-          </div>
         </div>
         <div className="second">
           <div className="landingSearch">
@@ -93,10 +105,17 @@ function LandingPage() {
               <RiSearch2Line />
             </button>
           </div>
+          <div className="rightArea">
+            <Placeholder className="NextThree" />
+
+            <Placeholder className="NextThree" />
+
+            <Placeholder className="NextThree" />
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default LandingPage;

@@ -15,10 +15,12 @@ import {
 } from "./Icons";
 
 const ResultsDisplay = ({ books }) => {
-  const { shelves, addToShelf, removeFromShelf } = useShelf();
+  const { shelves, addToShelf, removeFromShelf, updateBookInShelf } =
+    useShelf();
   const { modalOpen, openModal, closeModal, renderModalContent, modalType } =
     useModal();
   const [bookStates, setBookStates] = useState({});
+  const [selectedRating, setSelectedRating] = useState({});
 
   const getModalTitle = () => {
     switch (modalType) {
@@ -60,20 +62,6 @@ const ResultsDisplay = ({ books }) => {
     }
   };
 
-  const handleModalConfirm = (book, shelfName) => {
-    addToShelf(book, shelfName);
-    addToShelf(book, "AllBooks");
-
-    setBookStates((prevStates) => ({
-      ...prevStates,
-      [book.etag]: {
-        ...prevStates[book.etag],
-        [shelfName.toLowerCase()]: true,
-      },
-    }));
-    closeModal();
-  };
-
   const handleRemoveFromShelf = (book, shelfName) => {
     removeFromShelf(book, shelfName);
     removeFromShelf(book, "AllBooks");
@@ -85,6 +73,37 @@ const ResultsDisplay = ({ books }) => {
         onShelf: false, // Set to false as we're removing from AllBooks
       },
     }));
+  };
+
+  const handleBookCoverClick = (book) => {
+    openModal(book, "bookDescription");
+  };
+
+  const handleRatingChange = (book, newRating) => {
+    setSelectedRating((prevRating) => ({
+      ...prevRating,
+      [book.etag]: newRating,
+    }));
+    openModal(book, "selectShelf");
+  };
+
+  const handleModalConfirm = (book, shelfName) => {
+    addToShelf(book, shelfName);
+    addToShelf(book, "AllBooks");
+
+    const rating = selectedRating[book.etag];
+    if (rating !== undefined) {
+      updateBookInShelf(book, shelfName, { rating });
+    }
+
+    setBookStates((prevStates) => ({
+      ...prevStates,
+      [book.etag]: {
+        ...prevStates[book.etag],
+        [shelfName.toLowerCase()]: true,
+      },
+    }));
+    closeModal();
   };
 
   const isOnAnyShelf = (bookState) => {
@@ -151,10 +170,6 @@ const ResultsDisplay = ({ books }) => {
     }
   };
 
-  const handleBookCoverClick = (book) => {
-    openModal(book, "bookDescription");
-  };
-
   return (
     <Container size="xl" py="xl" className={classes.grid}>
       {books &&
@@ -184,7 +199,11 @@ const ResultsDisplay = ({ books }) => {
                   {renderIcon(book, "previouslyRead")}
                 </div>
               </div>
-              <StarRating />
+              <StarRating
+                book={book}
+                rating={selectedRating[book.etag] || 0}
+                onRatingChange={handleRatingChange}
+              />
               <Title order={6} className={classes.title}>
                 {book.volumeInfo?.title}
               </Title>

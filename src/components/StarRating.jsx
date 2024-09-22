@@ -1,12 +1,16 @@
 import { Rating } from "@mantine/core";
-import { useState } from "react";
+import PropTypes from "prop-types";
 
-function StarRating() {
-  const [value, setValue] = useState(0);
-
-  return <Rating value={value} onChange={setValue} fractions={2} />;
+function StarRating({ book, onRatingChange }) {
+  const handleRatingChange = (newValue) => {
+    onRatingChange(book, newValue);
+  };
+  return <Rating onChange={handleRatingChange} fractions={2} />;
 }
 
-export default StarRating;
+StarRating.propTypes = {
+  book: PropTypes.object.isRequired,
+  onRatingChange: PropTypes.func.isRequired,
+};
 
-// currently allows user to select number of stars with half-star options
+export default StarRating;
