@@ -8,11 +8,12 @@
 
 .MainContent {
   padding-top: calc(var(--navContainer-height) + 10px);
-  height: 100%;
-  min-height: calc(100vh - var(--navContainer-height));
+  height: 100vh;
   background-color: #f0f0f0;
   padding-left: 20px;
   padding-right: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 [data-mantine-color-scheme="dark"] .MainContent {
@@ -114,31 +115,40 @@
 }
 
 .main {
+  flex: 1;
   display: grid;
-  height: 100%;
   width: 100%;
   grid-template-columns: 1fr 0.5fr 1fr;
-  grid-template-rows: 0.8fr 1fr;
+  grid-template-rows: auto 1fr;
   gap: 2% 2%;
   grid-auto-flow: row;
   grid-template-areas:
     "hero hero hero"
     "second first first";
+  overflow: hidden; /* Prevent content from overflowing */
 }
 
 .first {
-  display: grid;
-  grid-template-columns: 1fr;
   grid-area: first;
-  height: 100%;
-  width: 100%;
-  background-color: pink;
+  overflow: hidden; /* Hide overflow */
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-width: 0 3px 0 0;
+  border-style: solid;
+  border-image: linear-gradient(
+      to top,
+      var(--mantine-color-rose-1),
+      rgba(0, 0, 0, 0)
+    )
+    1 100%;
 }
 
 .rightArea {
-  display: grid;
-  grid-template-rows: repeat(3, 0.7fr);
-  grid-auto-flow: column;
+  flex: 1;
+  overflow-y: auto; /* Enable vertical scrolling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--mantine-color-rose-1) transparent;
 }
 
 .hero {
@@ -146,7 +156,7 @@
   height: 25vh;
   width: auto;
   background-color: greenyellow;
-  overflow: hidden; /* This ensures the image doesn't spill out of the container */
+  overflow: hidden;
 }
 
 .heroPlaceholder {
@@ -158,12 +168,18 @@
 
 .second {
   grid-area: second;
+  overflow: hidden; /* Hide overflow */
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%;
-  background-color: lavender;
-  padding-top: 10px;
+  padding: 1rem;
+  border-width: 3px;
+  border-style: solid;
+  border-image: linear-gradient(
+      to top,
+      var(--mantine-color-rose-1),
+      rgba(0, 0, 0, 0)
+    )
+    1 100%;
 }
 
 .landingSearch {
@@ -182,12 +198,47 @@
   background-color: var(--mantine-color-rose-1);
 }
 
-.NextThree {
+.rightArea {
   display: flex;
-  height: 15vh;
-  justify-content: center;
+  flex-direction: column;
+  height: inherit;
+  overflow-y: auto; /* Enable vertical scrolling */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: var(--mantine-color-rose-1) transparent; /* For Firefox */
+}
+
+.rightArea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.rightArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rightArea::-webkit-scrollbar-thumb {
+  background-color: var(--mantine-color-rose-1);
+  border-radius: 3px;
+}
+
+.topTenBook {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin: 5px 0; /* Add some vertical spacing between covers */
+  margin-bottom: 1rem;
+}
+
+.topTenBookCover {
+  width: 40%;
+  max-width: 150px;
+  height: auto;
+  object-fit: cover;
+  margin-bottom: 0.5rem;
+}
+
+.topTenBookPlaceholder {
+  width: 40%;
+  height: 120px;
+  margin-bottom: 0.5rem;
 }
 
 .CurrentRead {

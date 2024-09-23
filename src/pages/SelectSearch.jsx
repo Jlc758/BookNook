@@ -35,10 +35,10 @@ const ChipGroup = ({
 
   return (
     <>
-      <div className="chips">
-        <Text className={classes.chipGroup}>{title}</Text>
+      <div className={classes.chipGroup}>
+        <Text>{title}</Text>
 
-        <Group className={classes.chipGroup}>
+        <Group>
           {displayedItems.map((item) => {
             const value = item.value || item;
             const label = item.label || item;
@@ -165,9 +165,9 @@ const SelectSearch = ({ apiKey }) => {
             {hideCriteria ? "Show Criteria" : "Hide Criteria"}
           </Button>
         </div>
-        <div className={classes.allChips}>
+        <div>
           {!hideCriteria && (
-            <>
+            <div className={classes.allChips}>
               <ChipGroup
                 title="Genres"
                 items={genres}
@@ -242,16 +242,12 @@ const SelectSearch = ({ apiKey }) => {
                 itemClassName={classes.button}
                 disabled={isMaxPageCountDisabled}
               />
-              <Button
-                onClick={handleSearch}
-                loading={isLoading}
-                className="button"
-              >
-                Search
-              </Button>
-            </>
+            </div>
           )}
         </div>
+        <Button onClick={handleSearch} loading={isLoading} className="button">
+          Search
+        </Button>
         <SelectionQuery
           apiKey={apiKey}
           criteria={searchCriteria}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Container, Modal, Title } from "@mantine/core";
 import Placeholder from "./Placeholder";
 import classes from "../css/ResultsDisplay.module.css";
@@ -6,6 +6,7 @@ import StarRating from "./StarRating";
 import PropTypes from "prop-types";
 import useShelf from "../hooks/useShelf";
 import useModal from "../hooks/useModal";
+import useTopTen from "../hooks/useTopTen";
 import {
   SelectShelfIcon,
   TBRIcon,
@@ -14,211 +15,187 @@ import {
   TopTenIcon,
 } from "./Icons";
 
-const ResultsDisplay = ({ books }) => {
-  const { shelves, addToShelf, removeFromShelf, updateBookInShelf } =
-    useShelf();
+const ResultsDisplay = React.memo(({ books }) => {
+  const {
+    shelves,
+    addToShelf,
+    removeFromShelf,
+    updateBookInShelf,
+    isBookOnShelf,
+  } = useShelf();
   const { modalOpen, openModal, closeModal, renderModalContent, modalType } =
     useModal();
-  const [bookStates, setBookStates] = useState({});
   const [selectedRating, setSelectedRating] = useState({});
+  const { addToTopTen, topTenCount, swapTopTenBook } = useTopTen();
 
-  const getModalTitle = () => {
-    switch (modalType) {
-      case "selectShelf":
-        return "Select a shelf to save...";
-      case "previouslyRead":
-        return "Rate and Review";
-      case "bookDescription":
-        return "Book Description";
-      case "topTen":
-        return "Your top ten list is full";
-      default:
-        return "Book Options";
-    }
-  };
-
-  const handleIconClick = (book, type) => {
-    if (type === "tbr") {
-      addToShelf(book, "TBR");
-      addToShelf(book, "AllBooks");
-      setBookStates((prevStates) => ({
-        ...prevStates,
-        [book.etag]: { ...prevStates[book.etag], tbr: true },
-      }));
-    } else if (type === "topTen") {
-      const topTenCount = shelves.TopTen.length;
-      if (topTenCount < 10) {
-        addToShelf(book, "TopTen");
-        addToShelf(book, "AllBooks");
-        setBookStates((prevStates) => ({
-          ...prevStates,
-          [book.etag]: { ...prevStates[book.etag], topTen: true },
-        }));
-      } else if (topTenCount === 10) {
-        openModal(book, "topTen", topTenCount);
+  const handleIconClick = useCallback(
+    (book, type) => {
+      switch (type) {
+        case "tbr":
+          if (isBookOnShelf(book, "TBR")) {
+            removeFromShelf(book, "TBR");
+          } else {
+            addToShelf(book, "TBR");
+          }
+          break;
+        case "topTen":
+          if (isBookOnShelf(book, "TopTen")) {
+            removeFromShelf(book, "TopTen");
+          } else if (topTenCount < 10) {
+            addToTopTen(book);
+          } else {
+            openModal(book, "topTen");
+          }
+          break;
+        case "CurrentRead":
+          if (isBookOnShelf(book, "CurrentRead")) {
+            removeFromShelf(book, "CurrentRead");
+          } else {
+            addToShelf(book, "CurrentRead");
+          }
+          break;
+        case "previouslyRead":
+          if (isBookOnShelf(book, "Completed")) {
+            removeFromShelf(book, "Completed");
+          } else {
+            addToShelf(book, "Completed");
+          }
+          break;
+        case "selectShelf":
+          if (isBookOnShelf(book, "AllBooks")) {
+            removeFromShelf(book, "AllBooks");
+          } else {
+            addToShelf(book, "AllBooks");
+          }
+          break;
+        default:
+          console.warn(`Unhandled icon type: ${type}`);
       }
-    } else {
-      openModal(book, type);
-    }
-  };
+    },
+    [
+      isBookOnShelf,
+      removeFromShelf,
+      addToShelf,
+      addToTopTen,
+      topTenCount,
+      openModal,
+    ]
+  );
 
-  const handleRemoveFromShelf = (book, shelfName) => {
-    removeFromShelf(book, shelfName);
-    removeFromShelf(book, "AllBooks");
-    setBookStates((prevStates) => ({
-      ...prevStates,
-      [book.etag]: {
-        ...prevStates[book.etag],
-        [shelfName.toLowerCase()]: false,
-        onShelf: false, // Set to false as we're removing from AllBooks
-      },
-    }));
-  };
+  const renderIcon = useCallback(
+    (book, type) => {
+      const props = {
+        book,
+        bookState: {
+          tbr: isBookOnShelf(book, "TBR"),
+          topTen: isBookOnShelf(book, "TopTen"),
+          CurrentRead: isBookOnShelf(book, "CurrentRead"),
+          previouslyRead: isBookOnShelf(book, "Completed"),
+          onShelf: isBookOnShelf(book, "AllBooks"),
+        },
+        handleIconClick,
+      };
 
-  const handleBookCoverClick = (book) => {
-    openModal(book, "bookDescription");
-  };
+      switch (type) {
+        case "selectShelf":
+          return <SelectShelfIcon {...props} />;
+        case "tbr":
+          return <TBRIcon {...props} />;
+        case "CurrentRead":
+          return <CurrentReadIcon {...props} />;
+        case "topTen":
+          return <TopTenIcon {...props} />;
+        case "previouslyRead":
+          return <PreviouslyReadIcon {...props} />;
+        default:
+          return null;
+      }
+    },
+    [isBookOnShelf, handleIconClick]
+  );
 
-  const handleRatingChange = (book, newRating) => {
-    setSelectedRating((prevRating) => ({
-      ...prevRating,
-      [book.etag]: newRating,
-    }));
-    openModal(book, "selectShelf");
-  };
+  const handleModalConfirm = useCallback(
+    (book, shelfName, bookToRemove) => {
+      if (shelfName === "TopTen" && bookToRemove) {
+        swapTopTenBook(bookToRemove, book);
+      } else {
+        addToShelf(book, shelfName);
+      }
+      const rating = selectedRating[book.id];
+      if (rating !== undefined) {
+        updateBookInShelf(book, shelfName, { rating });
+      }
+      closeModal();
+    },
+    [swapTopTenBook, addToShelf, updateBookInShelf, selectedRating, closeModal]
+  );
 
-  const handleModalConfirm = (book, shelfName) => {
-    addToShelf(book, shelfName);
-    addToShelf(book, "AllBooks");
-
-    const rating = selectedRating[book.etag];
-    if (rating !== undefined) {
-      updateBookInShelf(book, shelfName, { rating });
-    }
-
-    setBookStates((prevStates) => ({
-      ...prevStates,
-      [book.etag]: {
-        ...prevStates[book.etag],
-        [shelfName.toLowerCase()]: true,
-      },
-    }));
-    closeModal();
-  };
-
-  const isOnAnyShelf = (bookState) => {
-    return Object.values(bookState).some((value) => value === true);
-  };
-
-  const renderIcon = (book, type) => {
-    const bookState = bookStates[book.etag] || {};
-    const onShelf = isOnAnyShelf(bookState);
-
-    switch (type) {
-      case "selectShelf":
-        return (
-          <SelectShelfIcon
+  const renderedBooks = useMemo(() => {
+    return books.map((book) => (
+      <div key={book.id} className={classes.bookContainer}>
+        <div className={classes.bookRatingTitle}>
+          <div className={classes.bookCoverContainer}>
+            {book.volumeInfo?.imageLinks?.thumbnail ? (
+              <img
+                src={book.volumeInfo.imageLinks.thumbnail}
+                alt={book.volumeInfo?.title || "Untitled book"}
+                className={classes.bookCover}
+                onClick={() => openModal(book, "bookDescription")}
+              />
+            ) : (
+              <Placeholder
+                className={classes.bookCover}
+                onClick={() => openModal(book, "bookDescription")}
+              />
+            )}
+            <div className={classes.shelfIcons}>
+              {renderIcon(book, "CurrentRead")}
+              {renderIcon(book, "topTen")}
+              {renderIcon(book, "selectShelf")}
+              {renderIcon(book, "tbr")}
+              {renderIcon(book, "previouslyRead")}
+            </div>
+          </div>
+          <StarRating
             book={book}
-            bookState={{ onShelf: onShelf }}
-            handleIconClick={handleIconClick}
-            removeFromShelf={handleRemoveFromShelf}
-            openModal={openModal}
+            rating={selectedRating[book.id] || 0}
+            onRatingChange={(newRating) => {
+              setSelectedRating((prev) => ({
+                ...prev,
+                [book.id]: newRating,
+              }));
+              openModal(book, "selectShelf");
+            }}
           />
-        );
-      case "tbr":
-        return (
-          <TBRIcon
-            book={book}
-            bookState={{ tbr: bookState.tbr || false }}
-            handleIconClick={handleIconClick}
-            removeFromShelf={handleRemoveFromShelf}
-          />
-        );
-      case "CurrentRead":
-        return (
-          <CurrentReadIcon
-            book={book}
-            bookState={{ CurrentRead: bookState.CurrentRead || false }}
-            handleIconClick={handleIconClick}
-            removeFromShelf={handleRemoveFromShelf}
-            openModal={openModal}
-          />
-        );
-      case "topTen":
-        return (
-          <TopTenIcon
-            book={book}
-            bookState={{ topTen: bookState.topTen || false }}
-            handleIconClick={handleIconClick}
-            removeFromShelf={handleRemoveFromShelf}
-            openModal={openModal}
-            topTenCount={shelves.TopTen.length}
-          />
-        );
-      case "previouslyRead":
-        return (
-          <PreviouslyReadIcon
-            book={book}
-            bookState={{ previouslyRead: bookState.previouslyRead || false }}
-            handleIconClick={handleIconClick}
-            removeFromShelf={handleRemoveFromShelf}
-            openModal={openModal}
-          />
-        );
-      default:
-        return null;
-    }
-  };
+          <Title order={6} className={classes.title}>
+            {book.volumeInfo?.title || "Untitled"}
+          </Title>
+          <Title order={6} className={classes.author}>
+            {book.volumeInfo?.authors?.join(", ") || "Unknown Author"}
+          </Title>
+        </div>
+      </div>
+    ));
+  }, [books, selectedRating, renderIcon, openModal]);
 
   return (
     <Container size="xl" py="xl" className={classes.grid}>
-      {books &&
-        books.length > 0 &&
-        books.map((book) => (
-          <div key={book.etag} className={classes.bookContainer}>
-            <div className={classes.bookRatingTitle}>
-              <div className={classes.bookCoverContainer}>
-                {book.volumeInfo?.imageLinks?.thumbnail ? (
-                  <img
-                    src={book.volumeInfo.imageLinks.thumbnail}
-                    alt={book.volumeInfo?.title}
-                    className={classes.bookCover}
-                    onClick={() => handleBookCoverClick(book)}
-                  />
-                ) : (
-                  <Placeholder
-                    className={classes.bookCover}
-                    onClick={() => handleBookCoverClick(book)}
-                  />
-                )}
-                <div className={classes.shelfIcons}>
-                  {renderIcon(book, "CurrentRead")}
-                  {renderIcon(book, "topTen")}
-                  {renderIcon(book, "selectShelf")}
-                  {renderIcon(book, "tbr")}
-                  {renderIcon(book, "previouslyRead")}
-                </div>
-              </div>
-              <StarRating
-                book={book}
-                rating={selectedRating[book.etag] || 0}
-                onRatingChange={handleRatingChange}
-              />
-              <Title order={6} className={classes.title}>
-                {book.volumeInfo?.title}
-              </Title>
-              <Title order={6} className={classes.author}>
-                {book.volumeInfo?.authors}
-              </Title>
-            </div>
-          </div>
-        ))}
-
+      {renderedBooks}
       <Modal
         centered
         opened={modalOpen}
         onClose={closeModal}
-        title={getModalTitle()}
+        title={
+          modalType === "selectShelf"
+            ? "Select a shelf to save..."
+            : modalType === "previouslyRead"
+            ? "Rate and Review"
+            : modalType === "bookDescription"
+            ? "Book Description"
+            : modalType === "topTen"
+            ? "Your top ten list is full"
+            : "Book Options"
+        }
         size="auto"
       >
         {renderModalContent(
@@ -231,18 +208,21 @@ const ResultsDisplay = ({ books }) => {
       </Modal>
     </Container>
   );
-};
+});
+
+ResultsDisplay.displayName = "ResultsDisplay";
 
 ResultsDisplay.propTypes = {
   books: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       volumeInfo: PropTypes.shape({
-        title: PropTypes.string.isRequired,
+        title: PropTypes.string,
+        authors: PropTypes.arrayOf(PropTypes.string),
         imageLinks: PropTypes.shape({
           thumbnail: PropTypes.string,
         }),
-      }).isRequired,
+      }),
     })
   ).isRequired,
 };

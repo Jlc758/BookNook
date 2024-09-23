@@ -17,12 +17,7 @@ import {
   BsFillBookmarkStarFill,
 } from "react-icons/bs";
 
-export const SelectShelfIcon = ({
-  book,
-  bookState,
-  removeFromShelf,
-  openModal,
-}) => {
+export const SelectShelfIcon = ({ book, bookState, handleIconClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -35,44 +30,25 @@ export const SelectShelfIcon = ({
         isHovered ? (
           <BsBookmarkDash
             className={classes.icon}
-            onClick={() => removeFromShelf(book, "selectShelf")}
+            onClick={() => handleIconClick(book, "selectShelf")}
           />
         ) : (
           <BsBookmarksFill
             className={classes.icon}
-            onClick={() => openModal(book, "selectShelf")}
+            onClick={() => handleIconClick(book, "selectShelf")}
           />
         )
       ) : (
         <BsBookmarks
           className={classes.icon}
-          onClick={() => openModal(book, "selectShelf")}
+          onClick={() => handleIconClick(book, "selectShelf")}
         />
       )}
     </div>
   );
 };
 
-SelectShelfIcon.propTypes = {
-  book: PropTypes.shape({
-    etag: PropTypes.string.isRequired,
-    volumeInfo: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  bookState: PropTypes.shape({
-    onShelf: PropTypes.bool,
-  }).isRequired,
-  removeFromShelf: PropTypes.func.isRequired,
-  openModal: PropTypes.func.isRequired,
-};
-
-export const TBRIcon = ({
-  book,
-  bookState,
-  handleIconClick,
-  removeFromShelf,
-}) => {
+export const TBRIcon = ({ book, bookState, handleIconClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -85,7 +61,7 @@ export const TBRIcon = ({
         isHovered ? (
           <BsBookmarkDash
             className={classes.icon}
-            onClick={() => removeFromShelf(book, "TBR")}
+            onClick={() => handleIconClick(book, "tbr")}
           />
         ) : (
           <BsBookmarkCheckFill
@@ -103,26 +79,7 @@ export const TBRIcon = ({
   );
 };
 
-TBRIcon.propTypes = {
-  book: PropTypes.shape({
-    etag: PropTypes.string.isRequired,
-    volumeInfo: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  bookState: PropTypes.shape({
-    tbr: PropTypes.bool,
-  }).isRequired,
-  handleIconClick: PropTypes.func.isRequired,
-  removeFromShelf: PropTypes.func.isRequired,
-};
-
-export const PreviouslyReadIcon = ({
-  book,
-  bookState,
-  removeFromShelf,
-  openModal,
-}) => {
+export const PreviouslyReadIcon = ({ book, bookState, handleIconClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -135,45 +92,25 @@ export const PreviouslyReadIcon = ({
         isHovered ? (
           <BsBookHalf
             className={classes.icon}
-            onClick={() => removeFromShelf(book, "Completed")}
+            onClick={() => handleIconClick(book, "previouslyRead")}
           />
         ) : (
           <BsBookFill
             className={classes.icon}
-            onClick={() => openModal(book, "previouslyRead")}
+            onClick={() => handleIconClick(book, "previouslyRead")}
           />
         )
       ) : (
         <BsBook
           className={classes.icon}
-          onClick={() => openModal(book, "previouslyRead")}
+          onClick={() => handleIconClick(book, "previouslyRead")}
         />
       )}
     </div>
   );
 };
 
-PreviouslyReadIcon.propTypes = {
-  book: PropTypes.shape({
-    etag: PropTypes.string.isRequired,
-    volumeInfo: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  bookState: PropTypes.shape({
-    previouslyRead: PropTypes.bool,
-  }).isRequired,
-  handleIconClick: PropTypes.func.isRequired,
-  removeFromShelf: PropTypes.func.isRequired,
-  openModal: PropTypes.func.isRequired,
-};
-
-export const CurrentReadIcon = ({
-  book,
-  bookState,
-  removeFromShelf,
-  openModal,
-}) => {
+export const CurrentReadIcon = ({ book, bookState, handleIconClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -186,50 +123,30 @@ export const CurrentReadIcon = ({
         isHovered ? (
           <BsStarHalf
             className={classes.icon}
-            onClick={() => removeFromShelf(book, "CurrentRead")}
+            onClick={() => handleIconClick(book, "CurrentRead")}
           />
         ) : (
           <BsStarFill
             className={classes.icon}
-            onClick={() => openModal(book, "CurrentRead")}
+            onClick={() => handleIconClick(book, "CurrentRead")}
           />
         )
       ) : isHovered ? (
         <BsStarHalf
           className={classes.icon}
-          onClick={() => openModal(book, "CurrentRead")}
+          onClick={() => handleIconClick(book, "CurrentRead")}
         />
       ) : (
         <BsStar
           className={classes.icon}
-          onClick={() => openModal(book, "CurrentRead")}
+          onClick={() => handleIconClick(book, "CurrentRead")}
         />
       )}
     </div>
   );
 };
 
-CurrentReadIcon.propTypes = {
-  book: PropTypes.shape({
-    etag: PropTypes.string.isRequired,
-    volumeInfo: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  bookState: PropTypes.shape({
-    CurrentRead: PropTypes.bool,
-  }).isRequired,
-  handleIconClick: PropTypes.func.isRequired,
-  removeFromShelf: PropTypes.func.isRequired,
-  openModal: PropTypes.func.isRequired,
-};
-
-export const TopTenIcon = ({
-  book,
-  bookState,
-  handleIconClick,
-  removeFromShelf,
-}) => {
+export const TopTenIcon = ({ book, bookState, handleIconClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -242,7 +159,7 @@ export const TopTenIcon = ({
         isHovered ? (
           <BsBookmarkDash
             className={classes.icon}
-            onClick={() => removeFromShelf(book, "TopTen")}
+            onClick={() => handleIconClick(book, "topTen")}
           />
         ) : (
           <BsFillBookmarkStarFill
@@ -253,25 +170,27 @@ export const TopTenIcon = ({
       ) : (
         <BsBookmarkStar
           className={classes.icon}
-          onClick={() => {
-            handleIconClick(book, "topTen");
-          }}
+          onClick={() => handleIconClick(book, "topTen")}
         />
       )}
     </div>
   );
 };
 
-TopTenIcon.propTypes = {
+const iconPropTypes = {
   book: PropTypes.shape({
-    etag: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     volumeInfo: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-    }).isRequired,
+      title: PropTypes.string,
+    }),
   }).isRequired,
-  bookState: PropTypes.shape({
-    topTen: PropTypes.bool,
-  }).isRequired,
+  bookState: PropTypes.object.isRequired,
   handleIconClick: PropTypes.func.isRequired,
-  removeFromShelf: PropTypes.func.isRequired,
 };
+
+// Apply this to all icon components
+SelectShelfIcon.propTypes = iconPropTypes;
+TBRIcon.propTypes = iconPropTypes;
+PreviouslyReadIcon.propTypes = iconPropTypes;
+CurrentReadIcon.propTypes = iconPropTypes;
+TopTenIcon.propTypes = iconPropTypes;

@@ -1,4 +1,10 @@
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import PropTypes from "prop-types";
 
 export const ShelfContext = createContext();
@@ -23,73 +29,143 @@ const ShelfProvider = ({ children }) => {
     localStorage.setItem("shelves", JSON.stringify(shelves));
   }, [shelves]);
 
-  const getValidShelfNames = () => Object.keys(shelves);
+  const getValidShelfNames = useCallback(() => Object.keys(shelves), []);
 
-  const addToShelf = (book, shelfName) => {
-    if (!getValidShelfNames().includes(shelfName)) {
-      console.warn(`Attempted to add book to invalid shelf: ${shelfName}`);
-      return;
-    }
+  const isBookOnShelf = useCallback(
+    (book, shelfName) => {
+      return shelves[shelfName].some((shelfBook) => shelfBook.id === book.id);
+    },
+    [shelves]
+  );
 
-    setShelves((prevShelves) => {
-      const updatedShelf = [...new Set([...prevShelves[shelfName], book])];
-
-      if (updatedShelf.length > prevShelves.length) {
-        console.log(`Added "${book.volumeInfo?.title}" to: ${shelfName}`);
-        console.log(`${shelfName} now contains: ${updatedShelf.length} books`);
+  const addToShelf = useCallback(
+    (book, shelfName) => {
+      if (!getValidShelfNames().includes(shelfName)) {
+        console.warn(`Attempted to add book to invalid shelf: ${shelfName}`);
+        return;
       }
 
-      return {
+      setShelves((prevShelves) => {
+        const updatedShelf = [...new Set([...prevShelves[shelfName], book])];
+        const updatedAllBooks = [...new Set([...prevShelves.AllBooks, book])];
+
+        if (updatedShelf.length > prevShelves[shelfName].length) {
+          console.log(`Added "${book.volumeInfo?.title}" to: ${shelfName}`);
+          console.log(
+            `${shelfName} now contains: ${updatedShelf.length} books`
+          );
+        }
+
+        return {
+          ...prevShelves,
+          [shelfName]: updatedShelf,
+          AllBooks: updatedAllBooks,
+        };
+      });
+    },
+    [getValidShelfNames]
+  );
+
+  const removeFromShelf = useCallback(
+    (book, shelfName) => {
+      if (!getValidShelfNames().includes(shelfName)) {
+        console.warn(
+          `Attempted to remove book from invalid shelf: ${shelfName}`
+        );
+        return;
+      }
+
+      setShelves((prevShelves) => {
+        const updatedShelf = prevShelves[shelfName].filter(
+          (b) => b.id !== book.id
+        );
+        const updatedAllBooks =
+          shelfName === "AllBooks"
+            ? prevShelves.AllBooks.filter((b) => b.id !== book.id)
+            : prevShelves.AllBooks;
+
+        return {
+          ...prevShelves,
+          [shelfName]: updatedShelf,
+          AllBooks: updatedAllBooks,
+        };
+      });
+    },
+    [getValidShelfNames]
+  );
+
+  const moveBook = useCallback(
+    (book, fromShelf, toShelf) => {
+      removeFromShelf(book, fromShelf);
+      addToShelf(book, toShelf);
+    },
+    [removeFromShelf, addToShelf]
+  );
+
+  const updateBookInShelf = useCallback(
+    (book, shelfName, updates) => {
+      if (!getValidShelfNames().includes(shelfName)) {
+        console.warn(`Attempted to update book on invalid shelf: ${shelfName}`);
+        return;
+      }
+
+      setShelves((prevShelves) => ({
         ...prevShelves,
-        [shelfName]: updatedShelf,
-      };
-    });
-  };
+        [shelfName]: prevShelves[shelfName].map((b) =>
+          b.id === book.id ? { ...b, ...updates } : b
+        ),
+      }));
+    },
+    [getValidShelfNames]
+  );
 
-  const removeFromShelf = (book, shelfName) => {
-    if (!getValidShelfNames().includes(shelfName)) {
-      console.warn(`Attempted to remove book from invalid shelf: ${shelfName}`);
-      return;
-    }
+  const logShelfContents = useCallback(
+    (shelfName) => {
+      if (!getValidShelfNames().includes(shelfName)) {
+        console.warn(
+          `Attempted to log contents of invalid shelf: ${shelfName}`
+        );
+        return;
+      }
 
-    setShelves((prevShelves) => ({
-      ...prevShelves,
-      [shelfName]: prevShelves[shelfName].filter(
-        (book) => book.etag !== book.etag
-      ),
-    }));
-  };
+      console.log(`Books in ${shelfName}:`);
+      shelves[shelfName].forEach((book, index) => {
+        console.log(
+          `${index + 1}. "${book.volumeInfo?.title}" by ${
+            book.volumeInfo?.authors?.join(", ") || "Unknown Author"
+          }`
+        );
+      });
+      console.log(`Total books in ${shelfName}: ${shelves[shelfName].length}`);
+    },
+    [getValidShelfNames, shelves]
+  );
 
-  const moveBook = (book, fromShelf, toShelf) => {
-    removeFromShelf(book, fromShelf);
-    addToShelf(book, toShelf);
-  };
-
-  const updateBookInShelf = (book, shelfName, updates) => {
-    if (!getValidShelfNames().includes(shelfName)) {
-      console.warn(`Attempted to update book on invalid shelf: ${shelfName}`);
-      return;
-    }
-
-    setShelves((prevShelves) => ({
-      ...prevShelves,
-      [shelfName]: prevShelves[shelfName].map((book) =>
-        book.etag === book.etag ? { ...book, ...updates } : book
-      ),
-    }));
-  };
+  const contextValue = useMemo(
+    () => ({
+      shelves,
+      addToShelf,
+      removeFromShelf,
+      moveBook,
+      getValidShelfNames,
+      updateBookInShelf,
+      isBookOnShelf,
+      logShelfContents,
+    }),
+    [
+      shelves,
+      addToShelf,
+      removeFromShelf,
+      moveBook,
+      getValidShelfNames,
+      updateBookInShelf,
+      isBookOnShelf,
+      logShelfContents,
+    ]
+  );
 
   return (
-    <ShelfContext.Provider
-      value={{
-        shelves,
-        addToShelf,
-        removeFromShelf,
-        moveBook,
-        getValidShelfNames,
-        updateBookInShelf,
-      }}
-    >
+    <ShelfContext.Provider value={contextValue}>
       {children}
     </ShelfContext.Provider>
   );

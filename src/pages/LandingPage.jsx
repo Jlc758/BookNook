@@ -2,20 +2,20 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Title, TextInput, Checkbox, Group } from "@mantine/core";
 import Placeholder from "../components/Placeholder";
 import useSearch from "../hooks/useSearch";
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { FcKindle } from "react-icons/fc";
 import { FaBook } from "react-icons/fa";
 import { TbHeadphonesFilled } from "react-icons/tb";
 import HeroPlaceholder from "../images/HeroPlaceholder.png";
-import { ShelfContext } from "../context/ShelfContext";
+import { useShelf } from "../hooks/useShelf";
 import ProgressBar from "../components/ProgressBar";
 
 const LandingPage = () => {
   const { searchText, setSearchText } = useSearch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { shelves } = useContext(ShelfContext); // Use ShelfContext
+  const { shelves } = useShelf(); // Use ShelfContext
 
   const ReadingFormatOptions = () => {
     return (
@@ -34,13 +34,13 @@ const LandingPage = () => {
   };
 
   const CurrentRead = (() => {
-    const currentReadBook = shelves.CurrentRead[0];
+    const CurrentReadBook = shelves.CurrentRead[0];
 
-    if (!currentReadBook) {
+    if (!CurrentReadBook) {
       return (
         <div>
           <div style={{ height: "20rem", width: "auto" }}>
-            <Placeholder className="currentReadPlaceholder" />
+            <Placeholder className="CurrentReadPlaceholder" />
           </div>
           <Title>No book chosen</Title>
         </div>
@@ -51,10 +51,10 @@ const LandingPage = () => {
       <>
         <div>
           <div style={{ height: "15rem", width: "auto" }}>
-            {currentReadBook.volumeInfo?.imageLinks?.thumbnail ? (
+            {CurrentReadBook.volumeInfo?.imageLinks?.thumbnail ? (
               <img
-                src={currentReadBook.volumeInfo.imageLinks.thumbnail}
-                alt={currentReadBook.volumeInfo.title}
+                src={CurrentReadBook.volumeInfo.imageLinks.thumbnail}
+                alt={CurrentReadBook.volumeInfo.title}
                 style={{ height: "100%", width: "auto", objectFit: "cover" }}
               />
             ) : (
@@ -67,9 +67,9 @@ const LandingPage = () => {
         </div>
         <div>
           <Title order={5}>
-            {currentReadBook.volumeInfo?.title || "Unknown Title"}
+            {CurrentReadBook.volumeInfo?.title || "Unknown Title"}
           </Title>
-          <div>{ReadingFormatOptions(currentReadBook)}</div>
+          <div>{ReadingFormatOptions(CurrentReadBook)}</div>
         </div>
       </>
     );
@@ -82,6 +82,21 @@ const LandingPage = () => {
   const handleClick = () => {
     navigate("/search");
   };
+
+  const topTenBooks = shelves.TopTen.slice(0, 10).map((book, index) => (
+    <div key={book.id || index} className="topTenBook">
+      {book.volumeInfo?.imageLinks?.thumbnail ? (
+        <img
+          src={book.volumeInfo.imageLinks.thumbnail}
+          alt={book.volumeInfo.title}
+          className="topTenBookCover"
+        />
+      ) : (
+        <Placeholder className="topTenBookPlaceholder" />
+      )}
+      <Title order={6}>{book.volumeInfo?.title || "Unknown Title"}</Title>
+    </div>
+  ));
 
   return (
     <div className="MainContent">
@@ -106,11 +121,14 @@ const LandingPage = () => {
             </button>
           </div>
           <div className="rightArea">
-            <Placeholder className="NextThree" />
-
-            <Placeholder className="NextThree" />
-
-            <Placeholder className="NextThree" />
+            <div className="topTenScroll">
+              <Title order={6}>Coming up on your TBR...</Title>
+              {shelves.TopTen.length > 0 ? (
+                topTenBooks
+              ) : (
+                <p>No books in Top Ten shelf</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Progress, TextInput, Text, Container, Group } from "@mantine/core";
 
-export default function ProgressBar(currentReadBook) {
+export default function ProgressBar(CurrentReadBook) {
   const [current, setCurrent] = useState(50);
   const [max, setMax] = useState(100);
 
@@ -40,7 +40,7 @@ export default function ProgressBar(currentReadBook) {
         <TextInput
           label="Total Pages"
           type="number"
-          value={currentReadBook.volumeInfo?.title}
+          value={CurrentReadBook.volumeInfo?.title}
           onChange={(event) => handleMaxChange(event.currentTarget.value)}
           min={1}
         />
