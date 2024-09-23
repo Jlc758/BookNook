@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { ActionIcon, Transition, Stack } from "@mantine/core";
+import { ActionIcon, Transition, Stack, Tooltip, Text } from "@mantine/core";
 import {
   IconPlus,
   IconX,
-  IconEdit,
-  IconTrash,
-  IconShare,
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconMail,
+  IconBook,
+  IconCode,
+  IconLeaf,
 } from "@tabler/icons-react";
 
 const AvatarFAB = () => {
@@ -16,13 +19,51 @@ const AvatarFAB = () => {
   };
 
   const menuItems = [
-    { icon: IconEdit, label: "Edit" },
-    { icon: IconTrash, label: "Delete" },
-    { icon: IconShare, label: "Share" },
+    {
+      icon: IconBrandGithub,
+      label: "GitHub",
+      link: "https://github.com/Jlc758",
+      description: "Check out my projects and contributions",
+    },
+    {
+      icon: IconBrandLinkedin,
+      label: "LinkedIn",
+      link: "https://www.linkedin.com/in/jlc758/",
+      description: "Connect with me professionally",
+    },
+    {
+      icon: IconMail,
+      label: "Email",
+      link: "mailto:janelle.chafe@gmail.com",
+      description: "Reach out to collaborate anytime!",
+    },
+    {
+      icon: IconBook,
+      label: "Fun Fact",
+      description:
+        "I have a dog that looks like a cow and a cat that looks like a lynx!",
+    },
+    {
+      icon: IconCode,
+      label: "Skills",
+      description: "React, JavaScript, CSS, HTML, & Typescript (in progress)",
+    },
+    {
+      icon: IconLeaf,
+      label: "Interests",
+      description: "AI, sustainable tech, and digital storytelling",
+    },
   ];
 
   return (
-    <div style={{ position: "fixed", bottom: "6rem", left: "1.5rem" }}>
+    <div
+      style={{
+        position: "fixed",
+        bottom: "5rem",
+        left: "1.5rem",
+        zIndex: 1000,
+      }}
+    >
       <Transition
         mounted={isOpen}
         transition="scale-x"
@@ -32,32 +73,65 @@ const AvatarFAB = () => {
         {(styles) => (
           <Stack spacing="xs" style={styles} className="Stack">
             {menuItems.map((item, index) => (
-              <ActionIcon
+              <Tooltip
                 key={index}
-                size="md"
-                radius="md"
-                variant="filled"
-                color="blue"
-                onClick={() => console.log(`Clicked ${item.label}`)}
+                label={
+                  <div>
+                    <Text size="sm" weight={700}>
+                      {item.label}
+                    </Text>
+                    <Text size="xs">{item.description}</Text>
+                  </div>
+                }
+                position="right"
+                withArrow
               >
-                <item.icon size={20} />
-              </ActionIcon>
+                <ActionIcon
+                  size="lg"
+                  radius="lg"
+                  variant="filled"
+                  color="var(--mantine-color-gray-7)"
+                  onClick={() => {
+                    if (item.link) {
+                      window.open(item.link, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                  style={{
+                    transition:
+                      "background-color 0.3s ease, transform 0.3s ease",
+                    cursor: item.link ? "pointer" : "default",
+                  }}
+                  sx={(theme) => ({
+                    "&:hover": {
+                      backgroundColor: theme.colors.blue[7],
+                      transform: "scale(1.1)",
+                    },
+                  })}
+                >
+                  <item.icon size={24} />
+                </ActionIcon>
+              </Tooltip>
             ))}
           </Stack>
         )}
       </Transition>
       <ActionIcon
-        size={30}
-        radius="xl"
+        size="lg"
+        radius="lg"
         variant="filled"
-        color="red"
+        color="var(--mantine-color-rose-1)"
         onClick={toggleMenu}
         style={{
-          transition: "transform 0.3s ease",
+          transition: "transform 0.3s ease, background-color 0.3s ease",
           transform: isOpen ? "rotate(45deg)" : "none",
         }}
+        sx={(theme) => ({
+          "&:hover": {
+            backgroundColor: theme.colors.rose[3],
+          },
+        })}
       >
-        {isOpen ? <IconX size={16} /> : <IconPlus size={16} />}
+        {isOpen ? <IconX size={24} /> : <IconPlus size={24} />}
       </ActionIcon>
     </div>
   );
