@@ -1,4 +1,11 @@
 /* ResultsDisplay.module.css */
+
+.resultsContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
 .grid {
   display: grid;
 }

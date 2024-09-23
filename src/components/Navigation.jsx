@@ -55,13 +55,25 @@ function Navigation() {
         </div>
         <Tabs defaultValue={"home"} className="TabsContainer">
           <Tabs.List className="TabsList">
-            <Tabs.Tab value="home" onClick={() => handleClick("/")}>
+            <Tabs.Tab
+              value="home"
+              onClick={() => handleClick("/")}
+              color="var(--mantine-color-rose-1)"
+            >
               <h3>Home</h3>
             </Tabs.Tab>
-            <Tabs.Tab value="shelves" onClick={() => handleClick("/shelves")}>
+            <Tabs.Tab
+              value="shelves"
+              onClick={() => handleClick("/shelves")}
+              color="var(--mantine-color-rose-1)"
+            >
               <h3>Shelves</h3>
             </Tabs.Tab>
-            <Tabs.Tab value="search" onClick={() => handleClick("/search")}>
+            <Tabs.Tab
+              value="search"
+              onClick={() => handleClick("/search")}
+              color="var(--mantine-color-rose-1)"
+            >
               <h3>Discover</h3>
             </Tabs.Tab>
           </Tabs.List>

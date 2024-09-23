@@ -2,7 +2,7 @@ import ResultsDisplay from "./ResultsDisplay";
 import { Tabs } from "@mantine/core";
 import PropTypes from "prop-types";
 
-const BookTabs = ({ shelves }) => {
+const BookShelfTabs = ({ shelves }) => {
   return (
     <Tabs defaultValue="CurrentRead" orientation="vertical">
       <Tabs.List>
@@ -40,8 +40,8 @@ const BookTabs = ({ shelves }) => {
   );
 };
 
-BookTabs.propTypes = {
+BookShelfTabs.propTypes = {
   shelves: PropTypes.object.isRequired,
 };
 
-export default BookTabs;
+export default BookShelfTabs;

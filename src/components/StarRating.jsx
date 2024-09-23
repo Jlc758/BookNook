@@ -19,7 +19,12 @@ function StarRating({ book, onRatingSelect, initialRating }) {
   };
 
   return (
-    <Rating value={localRating} onChange={handleRatingChange} fractions={2} />
+    <Rating
+      value={localRating}
+      onChange={handleRatingChange}
+      fractions={2}
+      color="var(--mantine-color-rose-1)"
+    />
   );
 }
 

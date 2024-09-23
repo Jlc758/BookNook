@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Modal } from "@mantine/core";
+import { Modal } from "@mantine/core";
 import BookCard from "./BookCard";
 import classes from "../css/ResultsDisplay.module.css";
 import PropTypes from "prop-types";
@@ -24,16 +24,18 @@ const ResultsDisplay = React.memo(({ books }) => {
   const { handleRatingSelect, renderIcon } = useBookActions(openModal);
 
   return (
-    <Container size="xl" py="xl" className={classes.grid}>
-      {books.map((book, index) => (
-        <BookCard
-          key={`${book.id}_${index}`}
-          book={book}
-          onRatingSelect={handleRatingSelect}
-          renderIcon={renderIcon}
-          openModal={openModal}
-        />
-      ))}
+    <div className={classes.resultsContainer}>
+      <div className={classes.grid}>
+        {books.map((book, index) => (
+          <BookCard
+            key={`${book.id}_${index}`}
+            book={book}
+            onRatingSelect={handleRatingSelect}
+            renderIcon={renderIcon}
+            openModal={openModal}
+          />
+        ))}
+      </div>
       <Modal
         centered
         opened={modalOpen}
@@ -64,7 +66,7 @@ const ResultsDisplay = React.memo(({ books }) => {
           selectedRating
         )}
       </Modal>
-    </Container>
+    </div>
   );
 });
 

@@ -35,7 +35,7 @@ const NatLangSearch = () => {
   }, [userInput]);
 
   const SentencesLabel = (
-    <div className="flex items-center space-x-1">
+    <div className="SentenceLabel">
       <span>Your words, our magic </span>
       <RxMagicWand style={{ height: "20px" }} />
       <span> Speak your mind to find your next read!</span>
@@ -43,21 +43,21 @@ const NatLangSearch = () => {
   );
 
   return (
-    <>
+    <div className="NatLangSearch">
       <Space h="md" />
-      <div className="GeneralQuery">
-        <TextInput
-          size="md"
-          radius="xl"
-          label={SentencesLabel}
-          value={userInput}
-          placeholder="enter search query"
-          onChange={(e) => {
-            setUserInput(e.target.value);
-            setSearchText(e.target.value);
-          }}
-        />
+      <TextInput
+        size="md"
+        radius="xl"
+        label={SentencesLabel}
+        value={userInput}
+        placeholder="enter search query"
+        onChange={(e) => {
+          setUserInput(e.target.value);
+          setSearchText(e.target.value);
+        }}
+      />
 
+      <div className="searchContent">
         {loading && (
           <div>
             <LoadingAnimation />
@@ -65,18 +65,15 @@ const NatLangSearch = () => {
         )}
         {error && <div>Error: {error}</div>}
         {keywords && (
-          <div>
-            <GeneralQuery
-              keywords={keywords}
-              apiKey={googleAPIKey}
-              setBooks={setBooks} // Ensure setBooks is passed as a prop
-            />
-
-            {books.length > 0 && <ResultsDisplay books={books} />}
-          </div>
+          <GeneralQuery
+            keywords={keywords}
+            apiKey={googleAPIKey}
+            setBooks={setBooks}
+          />
         )}
+        {books.length > 0 && <ResultsDisplay books={books} />}
       </div>
-    </>
+    </div>
   );
 };
 

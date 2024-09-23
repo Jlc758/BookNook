@@ -1,6 +1,6 @@
 // Shelves.jsx
 import { useContext } from "react";
-import BookTabs from "../components/BookTabs";
+import BookShelfTabs from "../components/BookShelfTabs";
 import { ShelfContext } from "../context/ShelfContext"; // Adjust the import path as needed
 
 const Shelves = () => {
@@ -8,7 +8,7 @@ const Shelves = () => {
 
   return (
     <div className="MainContent">
-      <BookTabs shelves={shelves} />
+      <BookShelfTabs shelves={shelves} />
     </div>
   );
 };

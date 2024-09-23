@@ -6,14 +6,84 @@
   --button-bg: var(--mantine-color-rose-1);
 }
 
+/* Global Styles */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  padding-top: var(--navContainer-height);
+}
+
+/* Mantine Input Placeholder Styles */
+[data-mantine-color-scheme="dark"] .mantine-Input-input::placeholder,
+[data-mantine-color-scheme="dark"] .mantine-Textarea-input::placeholder,
+[data-mantine-color-scheme="dark"] .mantine-Select-input::placeholder,
+[data-mantine-color-scheme="dark"] .mantine-NumberInput-input::placeholder,
+[data-mantine-color-scheme="dark"] .mantine-TextInput-input::placeholder,
+[data-mantine-color-scheme="light"] .mantine-Input-input::placeholder,
+[data-mantine-color-scheme="light"] .mantine-Textarea-input::placeholder,
+[data-mantine-color-scheme="light"] .mantine-Select-input::placeholder,
+[data-mantine-color-scheme="light"] .mantine-NumberInput-input::placeholder,
+[data-mantine-color-scheme="light"] .mantine-TextInput-input::placeholder {
+  color: var(--mantine-color-gray-9) !important;
+}
+
+/* Main Content Styles */
 .MainContent {
-  padding-top: calc(var(--navContainer-height) + 10px);
-  height: 100vh;
-  background-color: #f0f0f0;
-  padding-left: 20px;
-  padding-right: 20px;
+  position: absolute;
+  top: 0; /* Change this from var(--navContainer-height) to 0 */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto; /* Allow vertical scrolling */
+  padding-top: var(
+    --navContainer-height
+  ); /* Add padding to account for fixed NavContainer */
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Style the scrollbar */
+.MainContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.MainContent::-webkit-scrollbar-track {
+  background: transparent;
+  margin-top: var(--navContainer-height);
+}
+
+.MainContent::-webkit-scrollbar-thumb {
+  background-color: var(--mantine-color-rose-1);
+  border-radius: 3px;
+}
+
+.SentenceLabel {
+  padding-left: 14px;
+}
+
+.SearchOptionsPage {
   display: flex;
   flex-direction: column;
+  min-height: 100%; /* Use min-height instead of height */
+}
+
+.SearchOptionsPage .mantine-Tabs-root {
+  position: sticky;
+  background-color: var(
+    --mantine-color-body
+  ); /* Match your app's background color */
+  z-index: 10;
+}
+
+.SearchOptionsPage .mantine-Tabs-panel {
+  flex: 1;
+  overflow: visible; /* Change from auto to visible */
 }
 
 [data-mantine-color-scheme="dark"] .MainContent {
@@ -24,6 +94,7 @@
   background-color: #faf9f9;
 }
 
+/* Navigation Container Styles */
 .NavContainer {
   display: flex;
   position: fixed;
@@ -39,13 +110,40 @@
   background: #02020040;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(11, 118, 123, 0.18);
+
   padding-top: 15px;
   padding-left: 10vw;
   padding-right: 10vw;
-  padding-bottom: 2px;
 }
 
+/* Logo Styles */
+.LogoContainer {
+  height: 7rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  overflow: visible;
+}
+
+.LogoWrapper {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+}
+
+.Logo {
+  flex: 1;
+  height: 100%;
+  width: auto;
+  display: block;
+  border: 0;
+  border-radius: 50% 50% 0 0;
+  object-fit: contain;
+}
+
+/* Tab List Styles */
 .TabsList {
   flex: 1;
   display: flex;
@@ -57,8 +155,8 @@
 .TabsList .mantine-Tabs-tab {
   transition: all 0.3s ease;
   height: var(--tab-height);
-  flex: 1 1 auto; /* Allow tabs to grow and shrink */
-  min-width: 0; /* Allow tabs to shrink below their content size */
+  flex: 1 1 auto;
+  min-width: 0;
   font-size: clamp(0.7rem, 1.5vw, 0.8rem);
   padding: 0 clamp(5px, 1vw, 10px);
   margin: 0 2px;
@@ -66,37 +164,11 @@
   text-overflow: ellipsis;
 }
 
-/* Multi-layer glow effect for dark theme */
 [data-mantine-color-scheme="dark"] .TabsList .mantine-Tabs-tab:hover h3 {
   text-shadow: 0 0 5px #080301, 0 0 10px #ffc0b3, 0 0 20px #ffc0b3;
 }
 
-.LogoContainer {
-  height: 7rem;
-  flex: 1;
-  display: flex;
-  align-items: center; /* Changed from flex-end to center */
-  padding-bottom: 0;
-  margin-bottom: 0;
-  overflow: visible; /* Changed from hidden to visible */
-}
-
-.LogoWrapper {
-  position: relative;
-  display: inline-block;
-  height: 100%; /* Ensure wrapper takes full height of container */
-}
-
-.Logo {
-  flex: 1;
-  height: 110%;
-  width: auto; /* Maintain aspect ratio */
-  display: block;
-  border: 0px;
-  border-radius: 50% 50% 0 0;
-  object-fit: contain; /* Ensure logo fits within the container */
-}
-
+/* Dark/Light Toggle Styles */
 .DarkLight {
   flex: 0 0 auto;
   display: flex;
@@ -105,19 +177,12 @@
   margin-left: 10px;
 }
 
-.LogoWrapper::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100%;
-}
-
+/* Main Grid Layout */
 .main {
   flex: 1;
   display: grid;
   width: 100%;
+  height: 100%;
   grid-template-columns: 1fr 0.5fr 1fr;
   grid-template-rows: auto 1fr;
   gap: 2% 2%;
@@ -125,37 +190,14 @@
   grid-template-areas:
     "hero hero hero"
     "second first first";
-  overflow: hidden; /* Prevent content from overflowing */
+  overflow: hidden;
 }
 
-.first {
-  grid-area: first;
-  overflow: hidden; /* Hide overflow */
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  border-width: 0 3px 0 0;
-  border-style: solid;
-  border-image: linear-gradient(
-      to top,
-      var(--mantine-color-rose-1),
-      rgba(0, 0, 0, 0)
-    )
-    1 100%;
-}
-
-.rightArea {
-  flex: 1;
-  overflow-y: auto; /* Enable vertical scrolling */
-  scrollbar-width: thin;
-  scrollbar-color: var(--mantine-color-rose-1) transparent;
-}
-
+/* Hero Section Styles */
 .hero {
   grid-area: hero;
   height: 25vh;
   width: auto;
-  background-color: greenyellow;
   overflow: hidden;
 }
 
@@ -166,11 +208,33 @@
   display: block;
 }
 
+/* First Section Styles */
+.first {
+  grid-area: first;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  border-width: 0 3px 0 0;
+  border-style: solid;
+  border-image: linear-gradient(
+      to top,
+      var(--mantine-color-rose-1),
+      rgba(0, 0, 0, 0)
+    )
+    1 100%;
+  overflow: hidden;
+}
+
+/* Second Section Styles */
 .second {
   grid-area: second;
-  overflow: hidden; /* Hide overflow */
   display: flex;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
   padding: 1rem;
   border-width: 3px;
   border-style: solid;
@@ -180,31 +244,17 @@
       rgba(0, 0, 0, 0)
     )
     1 100%;
+  overflow: hidden;
 }
 
-.landingSearch {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.searchButton {
-  background-color: transparent;
-  color: #2c2c2c;
-  border: none;
-}
-
-.second .mantine-TextInput-input {
-  background-color: var(--mantine-color-rose-1);
-}
-
+/* Right Area Styles */
 .rightArea {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: inherit;
-  overflow-y: auto; /* Enable vertical scrolling */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: var(--mantine-color-rose-1) transparent; /* For Firefox */
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mantine-color-rose-1) transparent;
 }
 
 .rightArea::-webkit-scrollbar {
@@ -220,38 +270,53 @@
   border-radius: 3px;
 }
 
-.topTenBook {
+/* Current Read Styles */
+.CurrentRead {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
+  overflow: hidden;
 }
 
-.topTenBookCover {
-  width: 40%;
-  max-width: 150px;
-  height: auto;
-  object-fit: cover;
-  margin-bottom: 0.5rem;
-}
-
-.topTenBookPlaceholder {
-  width: 40%;
-  height: 120px;
-  margin-bottom: 0.5rem;
-}
-
-.CurrentRead {
+/* Natural Language Search Styles */
+.NatLangSearch,
+.SelectSearch {
+  flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  color: black;
+  flex-direction: column;
 }
 
-.CurrentRead text {
-  justify-content: center;
+.searchContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
+.generalResults {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+/* Search Page Specific Styles */
+.search-page {
+  overflow: auto !important;
+  height: 100vh;
+}
+
+.search-page .MainContent {
+  overflow: auto;
+}
+
+/* Ensure Mantine components don't overflow */
+.mantine-Container-root {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/* Media Queries */
 @media (max-width: calc(var(--breakpoint) * 1px)) {
   .NavContainer {
     height: auto;
@@ -278,7 +343,7 @@
     padding: 0 5px;
     text-align: center;
     font-size: 0.9rem;
-    flex: none; /* Reset flex properties for vertical layout */
+    flex: none;
   }
 
   .DarkLight {
@@ -287,6 +352,66 @@
     margin-top: 10px;
     margin-left: 0;
   }
+}
+
+/* Additional Styles */
+.landingSearch {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-bottom: 1rem;
+}
+
+.searchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  height: 3rem;
+  width: 3rem;
+  background: radial-gradient(
+    circle,
+    rgba(255, 234, 229, 1) 20%,
+    rgba(255, 234, 229, 0) 60%
+  );
+}
+
+svg.searchImg {
+  stroke-width: 2px;
+  color: var(--mantine-color-gray-9);
+}
+
+.emptyTopTen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20%;
+  text-align: center;
+}
+
+.second .mantine-TextInput-input {
+  background-color: var(--mantine-color-rose-1);
+}
+
+.topTenBook {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.topTenBookCover {
+  width: 40%;
+  height: auto;
+  object-fit: cover;
+  margin-bottom: 0.5rem;
+}
+
+.topTenBookPlaceholder {
+  width: 40%;
+  height: 120px;
+  margin-bottom: 0.5rem;
 }
 
 .modalButtonsContainer {
@@ -310,18 +435,11 @@
 }
 
 /* Loading Animation */
-
 .loadingAnimationContainer {
   height: 100vh;
   display: flex;
   justify-content: center;
   padding-top: 10vh;
-}
-
-html {
-  background: black;
-  height: 100%;
-  position: relative;
 }
 
 .container {

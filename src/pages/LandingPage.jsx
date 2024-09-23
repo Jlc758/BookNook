@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Title, TextInput, Checkbox, Group } from "@mantine/core";
+import { Title, TextInput, Checkbox, Group, Text } from "@mantine/core";
 import Placeholder from "../components/Placeholder";
 import useSearch from "../hooks/useSearch";
 import { useEffect } from "react";
@@ -115,18 +115,31 @@ const LandingPage = () => {
               value={searchText}
               placeholder="What's next?"
               onChange={(event) => setSearchText(event.currentTarget.value)}
+              styles={() => ({
+                root: { width: "100%" },
+                wrapper: { width: "100%" },
+                input: { width: "100%" },
+              })}
             />
             <button onClick={handleClick} className="searchButton">
-              <RiSearch2Line />
+              <RiSearch2Line className="searchImg" />
             </button>
           </div>
           <div className="rightArea">
             <div className="topTenScroll">
-              <Title order={6}>Coming up on your TBR...</Title>
+              <Text size="lg" fs="italic" fw={500} ta="center">
+                Coming up on your TBR...
+              </Text>
               {shelves.TopTen.length > 0 ? (
                 topTenBooks
               ) : (
-                <p>No books in Top Ten shelf</p>
+                <div className="emptyTopTen">
+                  <p>No books saved to your Top Ten TBR shelf yet!</p>
+                  <p>
+                    Make a search above, or check out the Disover page and find
+                    your next adventure
+                  </p>
+                </div>
               )}
             </div>
           </div>
