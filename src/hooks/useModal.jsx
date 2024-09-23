@@ -6,11 +6,13 @@ const useModal = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [modalType, setModalType] = useState("");
   const [selectedShelves, setSelectedShelves] = useState({});
+  const [selectedRating, setSelectedRating] = useState(0);
 
   const openModal = useCallback((book, type) => {
     setSelectedBook(book);
     setModalType(type);
     setSelectedShelves({});
+    setSelectedRating(0);
     setModalOpen(true);
   }, []);
 
@@ -19,6 +21,7 @@ const useModal = () => {
     setSelectedBook(null);
     setModalType("");
     setSelectedShelves({});
+    setSelectedRating(0);
   };
 
   const formatShelfName = (shelfName) => {
@@ -36,12 +39,17 @@ const useModal = () => {
     }));
   }, []);
 
+  const handleRatingChange = useCallback((newRating) => {
+    setSelectedRating(newRating);
+  }, []);
+
   const renderModalContent = useCallback(
-    (addToShelf, removeFromShelf, shelves, placeholder, handleModalConfirm) => {
+    (addToShelf, removeFromShelf, shelves, handleModalConfirm) => {
       if (!selectedBook) return null;
 
       const bookCover =
-        selectedBook.volumeInfo?.imageLinks?.thumbnail || placeholder;
+        selectedBook.volumeInfo?.imageLinks?.thumbnail ||
+        "placeholder_image_url";
       const bookTitle = selectedBook.volumeInfo?.title;
       const bookDescription =
         selectedBook.volumeInfo?.description || "No description available.";
@@ -107,12 +115,14 @@ const useModal = () => {
 
         if (modalType === "selectShelf" && selectedShelfNames.length > 0) {
           selectedShelfNames.forEach((shelfName) => {
-            handleModalConfirm(selectedBook, shelfName);
+            handleModalConfirm(selectedBook, shelfName, null, selectedRating);
           });
+        } else if (modalType === "previouslyRead") {
+          handleModalConfirm(selectedBook, "Completed", null, selectedRating);
         } else if (modalType === "CurrentRead") {
-          handleModalConfirm(selectedBook, "CurrentRead");
+          handleModalConfirm(selectedBook, "CurrentRead", null, selectedRating);
         } else {
-          handleModalConfirm(selectedBook, modalType);
+          handleModalConfirm(selectedBook, modalType, null, selectedRating);
         }
 
         closeModal();
@@ -159,7 +169,11 @@ const useModal = () => {
           return (
             <div style={modalStyle}>
               {renderBookInfo()}
-              <StarRating />
+              <StarRating
+                book={selectedBook}
+                rating={selectedRating}
+                onRatingChange={handleRatingChange}
+              />
               <p style={subheaderStyle}>
                 Have you already read this book? Provide a rating and optional
                 review, and save it to your preferred shelf!
@@ -184,9 +198,7 @@ const useModal = () => {
               <button
                 style={confirmButtonStyle}
                 onClick={handleConfirm}
-                disabled={Object.values(selectedShelves).every(
-                  (value) => !value
-                )}
+                disabled={selectedRating === 0}
               >
                 Confirm
               </button>
@@ -200,15 +212,7 @@ const useModal = () => {
                 Are you reading this book? How exciting! Note your progress and
                 set a rating and optional review when you&apos;re done!
               </p>
-              <button
-                style={confirmButtonStyle}
-                onClick={() => {
-                  addToShelf(selectedBook, "CurrentRead");
-                  addToShelf(selectedBook, "AllBooks");
-                  handleModalConfirm(selectedBook, "CurrentRead");
-                  closeModal();
-                }}
-              >
+              <button style={confirmButtonStyle} onClick={handleConfirm}>
                 Confirm
               </button>
             </div>
@@ -249,10 +253,9 @@ const useModal = () => {
                         padding: "5px 10px",
                         fontSize: "0.8em",
                       }}
-                      onClick={() => {
-                        handleModalConfirm(selectedBook, "TopTen", topTenBook);
-                        closeModal();
-                      }}
+                      onClick={() =>
+                        handleModalConfirm(selectedBook, "TopTen", topTenBook)
+                      }
                     >
                       Swap
                     </button>
@@ -284,7 +287,14 @@ const useModal = () => {
           return null;
       }
     },
-    [selectedBook, modalType, selectedShelves, toggleShelfSelection]
+    [
+      selectedBook,
+      modalType,
+      selectedShelves,
+      toggleShelfSelection,
+      selectedRating,
+      handleRatingChange,
+    ]
   );
 
   return {
@@ -296,6 +306,8 @@ const useModal = () => {
     closeModal,
     toggleShelfSelection,
     renderModalContent,
+    selectedRating,
+    handleRatingChange,
   };
 };
 

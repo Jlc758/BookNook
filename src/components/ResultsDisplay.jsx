@@ -15,6 +15,8 @@ import {
   TopTenIcon,
 } from "./Icons";
 
+localStorage.clear();
+
 const ResultsDisplay = React.memo(({ books }) => {
   const {
     shelves,
@@ -51,22 +53,14 @@ const ResultsDisplay = React.memo(({ books }) => {
           if (isBookOnShelf(book, "CurrentRead")) {
             removeFromShelf(book, "CurrentRead");
           } else {
-            addToShelf(book, "CurrentRead");
+            openModal(book, "CurrentRead");
           }
           break;
         case "previouslyRead":
-          if (isBookOnShelf(book, "Completed")) {
-            removeFromShelf(book, "Completed");
-          } else {
-            addToShelf(book, "Completed");
-          }
+          openModal(book, "previouslyRead");
           break;
         case "selectShelf":
-          if (isBookOnShelf(book, "AllBooks")) {
-            removeFromShelf(book, "AllBooks");
-          } else {
-            addToShelf(book, "AllBooks");
-          }
+          openModal(book, "selectShelf");
           break;
         default:
           console.warn(`Unhandled icon type: ${type}`);
@@ -116,23 +110,51 @@ const ResultsDisplay = React.memo(({ books }) => {
 
   const handleModalConfirm = useCallback(
     (book, shelfName, bookToRemove) => {
-      if (shelfName === "TopTen" && bookToRemove) {
-        swapTopTenBook(bookToRemove, book);
-      } else {
-        addToShelf(book, shelfName);
+      switch (modalType) {
+        case "selectShelf":
+        case "previouslyRead":
+          addToShelf(book, shelfName);
+          addToShelf(book, "AllBooks");
+          if (modalType === "previouslyRead") {
+            addToShelf(book, "Completed");
+          }
+          break;
+        case "CurrentRead":
+          addToShelf(book, "CurrentRead");
+          addToShelf(book, "AllBooks");
+          break;
+        case "topTen":
+          if (bookToRemove) {
+            swapTopTenBook(bookToRemove, book);
+          } else {
+            console.warn(
+              "Attempted to swap Top Ten book without specifying a book to remove"
+            );
+          }
+          break;
+        default:
+          console.warn(`Unhandled modal type: ${modalType}`);
       }
+
       const rating = selectedRating[book.id];
       if (rating !== undefined) {
         updateBookInShelf(book, shelfName, { rating });
       }
       closeModal();
     },
-    [swapTopTenBook, addToShelf, updateBookInShelf, selectedRating, closeModal]
+    [
+      modalType,
+      addToShelf,
+      swapTopTenBook,
+      updateBookInShelf,
+      selectedRating,
+      closeModal,
+    ]
   );
 
   const renderedBooks = useMemo(() => {
-    return books.map((book) => (
-      <div key={book.id} className={classes.bookContainer}>
+    return books.map((book, index) => (
+      <div key={`${book.id}_${index}`} className={classes.bookContainer}>
         <div className={classes.bookRatingTitle}>
           <div className={classes.bookCoverContainer}>
             {book.volumeInfo?.imageLinks?.thumbnail ? (
@@ -194,6 +216,8 @@ const ResultsDisplay = React.memo(({ books }) => {
             ? "Book Description"
             : modalType === "topTen"
             ? "Your top ten list is full"
+            : modalType === "CurrentRead"
+            ? "Add to Current Read"
             : "Book Options"
         }
         size="auto"
@@ -202,7 +226,6 @@ const ResultsDisplay = React.memo(({ books }) => {
           addToShelf,
           removeFromShelf,
           shelves,
-          Placeholder,
           handleModalConfirm
         )}
       </Modal>
