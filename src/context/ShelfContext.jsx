@@ -38,7 +38,7 @@ const ShelfProvider = ({ children }) => {
     localStorage.setItem("bookRatings", JSON.stringify(ratings));
   }, [ratings]);
 
-  const getValidShelfNames = useCallback(() => Object.keys(shelves), []);
+  const getValidShelfNames = useCallback(() => Object.keys(shelves), [shelves]);
 
   const isBookOnShelf = useCallback(
     (book, shelfName) => {

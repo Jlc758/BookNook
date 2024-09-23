@@ -1,39 +1,56 @@
-// *Not currenly being called - need to fix
-
-import PropTypes from "prop-types";
+import { Title } from "@mantine/core";
 import Placeholder from "./Placeholder";
+import StarRating from "./StarRating";
+import BookIcons from "./BookIcons";
+import classes from "../css/ResultsDisplay.module.css";
+import PropTypes from "prop-types";
 
-const BookCard = ({ title, authors, pageCount, categories, cover }) => {
+const BookCard = ({ book, onRatingSelect, renderIcon, openModal }) => {
   return (
-    <div className="book-card">
-      <div
-        className="cover-container"
-        style={{ aspectRatio: "2 / 3", overflow: "hidden" }}
-      >
-        {cover ? (
-          <img
-            src={cover}
-            alt={`${title} cover`}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        ) : (
-          <Placeholder className="placeholder-cover" />
-        )}
+    <div className={classes.bookContainer}>
+      <div className={classes.bookRatingTitle}>
+        <div className={classes.bookCoverContainer}>
+          {book.volumeInfo?.imageLinks?.thumbnail ? (
+            <img
+              src={book.volumeInfo.imageLinks.thumbnail}
+              alt={book.volumeInfo?.title || "Untitled book"}
+              className={classes.bookCover}
+              onClick={() => openModal(book, "bookDescription")}
+            />
+          ) : (
+            <Placeholder
+              className={classes.bookCover}
+              onClick={() => openModal(book, "bookDescription")}
+            />
+          )}
+          <BookIcons book={book} renderIcon={renderIcon} />
+        </div>
+        <StarRating book={book} onRatingSelect={onRatingSelect} />
+        <Title order={6} className={classes.title}>
+          {book.volumeInfo?.title || "Untitled"}
+        </Title>
+        <Title order={6} className={classes.author}>
+          {book.volumeInfo?.authors?.join(", ") || "Unknown Author"}
+        </Title>
       </div>
-      <h3>{title}</h3>
-      {authors && <p>Authors: {authors}</p>}
-      {pageCount && <p>Page Count: {pageCount}</p>}
-      {categories && <p>Categories: {categories}</p>}
     </div>
   );
 };
 
 BookCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  authors: PropTypes.string,
-  pageCount: PropTypes.number,
-  categories: PropTypes.string,
-  cover: PropTypes.string,
+  book: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    volumeInfo: PropTypes.shape({
+      title: PropTypes.string,
+      authors: PropTypes.arrayOf(PropTypes.string),
+      imageLinks: PropTypes.shape({
+        thumbnail: PropTypes.string,
+      }),
+    }),
+  }).isRequired,
+  onRatingSelect: PropTypes.func.isRequired,
+  renderIcon: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 export default BookCard;

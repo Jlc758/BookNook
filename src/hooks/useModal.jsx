@@ -1,4 +1,6 @@
 import { useState, useCallback } from "react";
+import useShelf from "./useShelf";
+import useTopTen from "./useTopTen";
 import StarRating from "../components/StarRating";
 
 const useModal = () => {
@@ -8,29 +10,32 @@ const useModal = () => {
   const [selectedShelves, setSelectedShelves] = useState({});
   const [selectedRating, setSelectedRating] = useState(0);
 
-  const openModal = useCallback((book, type, options = {}) => {
-    setSelectedBook(book);
-    setModalType(type);
-    setSelectedShelves({});
-    setSelectedRating(options.initialRating || 0);
-    setModalOpen(true);
-  }, []);
+  const { addToShelf, updateBookInShelf, updateBookRating, getBookRating } =
+    useShelf();
+  const { swapTopTenBook } = useTopTen();
 
-  const closeModal = () => {
+  const openModal = useCallback(
+    (book, type) => {
+      setSelectedBook(book);
+      setModalType(type);
+      setSelectedShelves({});
+      setSelectedRating(getBookRating(book.id));
+      setModalOpen(true);
+    },
+    [getBookRating]
+  );
+
+  const closeModal = useCallback(() => {
     setModalOpen(false);
     setSelectedBook(null);
     setModalType("");
     setSelectedShelves({});
     setSelectedRating(0);
-  };
+  }, []);
 
-  const formatShelfName = (shelfName) => {
-    const unchangedShelves = ["TBR", "DNF"];
-    if (unchangedShelves.includes(shelfName)) {
-      return shelfName;
-    }
-    return shelfName.replace(/([A-Z])/g, " $1").trim();
-  };
+  const handleRatingChange = useCallback((book, newRating) => {
+    setSelectedRating(newRating);
+  }, []);
 
   const toggleShelfSelection = useCallback((shelfName) => {
     setSelectedShelves((prevShelves) => ({
@@ -38,6 +43,58 @@ const useModal = () => {
       [shelfName]: !prevShelves[shelfName],
     }));
   }, []);
+
+  const formatShelfName = useCallback((shelfName) => {
+    const unchangedShelves = ["TBR", "DNF"];
+    if (unchangedShelves.includes(shelfName)) {
+      return shelfName;
+    }
+    return shelfName.replace(/([A-Z])/g, " $1").trim();
+  }, []);
+
+  const handleModalConfirm = useCallback(
+    (book, shelfName, bookToRemove) => {
+      switch (modalType) {
+        case "selectShelf":
+        case "previouslyRead":
+          addToShelf(book, shelfName);
+          addToShelf(book, "AllBooks");
+          if (selectedRating > 0) {
+            updateBookRating(book.id, selectedRating);
+          }
+          break;
+        case "CurrentRead":
+          addToShelf(book, "CurrentRead");
+          addToShelf(book, "AllBooks");
+          break;
+        case "topTen":
+          if (bookToRemove) {
+            swapTopTenBook(bookToRemove, book);
+          } else {
+            console.warn(
+              "Attempted to swap Top Ten book without specifying a book to remove"
+            );
+          }
+          break;
+        default:
+          console.warn(`Unhandled modal type: ${modalType}`);
+      }
+
+      if (selectedRating > 0) {
+        updateBookInShelf(book, shelfName, { rating: selectedRating });
+      }
+      closeModal();
+    },
+    [
+      modalType,
+      addToShelf,
+      swapTopTenBook,
+      updateBookInShelf,
+      updateBookRating,
+      closeModal,
+      selectedRating,
+    ]
+  );
 
   const renderModalContent = useCallback(
     (addToShelf, removeFromShelf, shelves, handleModalConfirm) => {
@@ -177,8 +234,8 @@ const useModal = () => {
               {renderBookInfo()}
               <StarRating
                 book={selectedBook}
-                rating={selectedRating}
-                onRatingChange={(newRating) => setSelectedRating(newRating)}
+                onRatingSelect={handleRatingChange}
+                initialRating={selectedRating || getBookRating(selectedBook.id)}
               />
               <p style={subheaderStyle}>
                 Have you already read this book? Provide a rating and save it to
@@ -293,8 +350,12 @@ const useModal = () => {
       selectedBook,
       modalType,
       selectedShelves,
-      toggleShelfSelection,
       selectedRating,
+      handleRatingChange,
+      formatShelfName,
+      toggleShelfSelection,
+      closeModal,
+      getBookRating,
     ]
   );
 
@@ -305,9 +366,12 @@ const useModal = () => {
     selectedShelves,
     openModal,
     closeModal,
-    toggleShelfSelection,
+    handleModalConfirm,
     renderModalContent,
     selectedRating,
+    handleRatingChange,
+    toggleShelfSelection,
+    formatShelfName,
   };
 };
 
