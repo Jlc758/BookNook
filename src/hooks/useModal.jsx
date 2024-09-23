@@ -8,11 +8,11 @@ const useModal = () => {
   const [selectedShelves, setSelectedShelves] = useState({});
   const [selectedRating, setSelectedRating] = useState(0);
 
-  const openModal = useCallback((book, type) => {
+  const openModal = useCallback((book, type, options = {}) => {
     setSelectedBook(book);
     setModalType(type);
     setSelectedShelves({});
-    setSelectedRating(0);
+    setSelectedRating(options.initialRating || 0);
     setModalOpen(true);
   }, []);
 
@@ -37,10 +37,6 @@ const useModal = () => {
       ...prevShelves,
       [shelfName]: !prevShelves[shelfName],
     }));
-  }, []);
-
-  const handleRatingChange = useCallback((newRating) => {
-    setSelectedRating(newRating);
   }, []);
 
   const renderModalContent = useCallback(
@@ -113,21 +109,31 @@ const useModal = () => {
           (shelf) => selectedShelves[shelf]
         );
 
-        if (modalType === "selectShelf" && selectedShelfNames.length > 0) {
-          selectedShelfNames.forEach((shelfName) => {
-            handleModalConfirm(selectedBook, shelfName, null, selectedRating);
-          });
-        } else if (modalType === "previouslyRead") {
+        if (modalType === "previouslyRead") {
+          // Always add to Completed shelf for previouslyRead
           handleModalConfirm(selectedBook, "Completed", null, selectedRating);
+          // Add to any additional selected shelves
+          selectedShelfNames.forEach((shelfName) => {
+            if (shelfName !== "Completed") {
+              handleModalConfirm(selectedBook, shelfName, null, selectedRating);
+            }
+          });
+        } else if (
+          modalType === "selectShelf" &&
+          selectedShelfNames.length > 0
+        ) {
+          selectedShelfNames.forEach((shelfName) => {
+            handleModalConfirm(selectedBook, shelfName, null);
+          });
         } else if (modalType === "CurrentRead") {
-          handleModalConfirm(selectedBook, "CurrentRead", null, selectedRating);
+          handleModalConfirm(selectedBook, "CurrentRead", null);
         } else {
-          handleModalConfirm(selectedBook, modalType, null, selectedRating);
+          console.warn("No shelf selected");
+          return; // Don't close the modal if no shelf is selected
         }
 
         closeModal();
       };
-
       switch (modalType) {
         case "selectShelf":
           return (
@@ -172,11 +178,11 @@ const useModal = () => {
               <StarRating
                 book={selectedBook}
                 rating={selectedRating}
-                onRatingChange={handleRatingChange}
+                onRatingChange={(newRating) => setSelectedRating(newRating)}
               />
               <p style={subheaderStyle}>
-                Have you already read this book? Provide a rating and optional
-                review, and save it to your preferred shelf!
+                Have you already read this book? Provide a rating and save it to
+                your preferred shelf!
               </p>
               <div
                 style={{
@@ -195,11 +201,7 @@ const useModal = () => {
                   </button>
                 ))}
               </div>
-              <button
-                style={confirmButtonStyle}
-                onClick={handleConfirm}
-                disabled={selectedRating === 0}
-              >
+              <button style={confirmButtonStyle} onClick={handleConfirm}>
                 Confirm
               </button>
             </div>
@@ -293,7 +295,6 @@ const useModal = () => {
       selectedShelves,
       toggleShelfSelection,
       selectedRating,
-      handleRatingChange,
     ]
   );
 
@@ -307,7 +308,6 @@ const useModal = () => {
     toggleShelfSelection,
     renderModalContent,
     selectedRating,
-    handleRatingChange,
   };
 };
 

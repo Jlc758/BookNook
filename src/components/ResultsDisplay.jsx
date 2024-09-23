@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Container, Modal, Title } from "@mantine/core";
 import Placeholder from "./Placeholder";
 import classes from "../css/ResultsDisplay.module.css";
@@ -15,7 +15,7 @@ import {
   TopTenIcon,
 } from "./Icons";
 
-localStorage.clear();
+// localStorage.clear();
 
 const ResultsDisplay = React.memo(({ books }) => {
   const {
@@ -24,11 +24,20 @@ const ResultsDisplay = React.memo(({ books }) => {
     removeFromShelf,
     updateBookInShelf,
     isBookOnShelf,
+    getBookRating,
+    updateBookRating,
   } = useShelf();
   const { modalOpen, openModal, closeModal, renderModalContent, modalType } =
     useModal();
-  const [selectedRating, setSelectedRating] = useState({});
   const { addToTopTen, topTenCount, swapTopTenBook } = useTopTen();
+
+  const handleRatingSelect = useCallback(
+    (book, rating) => {
+      updateBookRating(book.id, rating);
+      openModal(book, "previouslyRead", { initialRating: rating });
+    },
+    [updateBookRating, openModal]
+  );
 
   const handleIconClick = useCallback(
     (book, type) => {
@@ -136,8 +145,8 @@ const ResultsDisplay = React.memo(({ books }) => {
           console.warn(`Unhandled modal type: ${modalType}`);
       }
 
-      const rating = selectedRating[book.id];
-      if (rating !== undefined) {
+      const rating = getBookRating(book.id);
+      if (rating !== 0) {
         updateBookInShelf(book, shelfName, { rating });
       }
       closeModal();
@@ -147,7 +156,7 @@ const ResultsDisplay = React.memo(({ books }) => {
       addToShelf,
       swapTopTenBook,
       updateBookInShelf,
-      selectedRating,
+      getBookRating,
       closeModal,
     ]
   );
@@ -178,17 +187,7 @@ const ResultsDisplay = React.memo(({ books }) => {
               {renderIcon(book, "previouslyRead")}
             </div>
           </div>
-          <StarRating
-            book={book}
-            rating={selectedRating[book.id] || 0}
-            onRatingChange={(newRating) => {
-              setSelectedRating((prev) => ({
-                ...prev,
-                [book.id]: newRating,
-              }));
-              openModal(book, "selectShelf");
-            }}
-          />
+          <StarRating book={book} onRatingSelect={handleRatingSelect} />
           <Title order={6} className={classes.title}>
             {book.volumeInfo?.title || "Untitled"}
           </Title>
@@ -198,7 +197,7 @@ const ResultsDisplay = React.memo(({ books }) => {
         </div>
       </div>
     ));
-  }, [books, selectedRating, renderIcon, openModal]);
+  }, [books, handleRatingSelect, renderIcon, openModal]);
 
   return (
     <Container size="xl" py="xl" className={classes.grid}>

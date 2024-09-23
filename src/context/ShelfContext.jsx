@@ -25,9 +25,18 @@ const ShelfProvider = ({ children }) => {
     return savedShelves ? JSON.parse(savedShelves) : validShelves;
   });
 
+  const [ratings, setRatings] = useState(() => {
+    const savedRatings = localStorage.getItem("bookRatings");
+    return savedRatings ? JSON.parse(savedRatings) : {};
+  });
+
   useEffect(() => {
     localStorage.setItem("shelves", JSON.stringify(shelves));
   }, [shelves]);
+
+  useEffect(() => {
+    localStorage.setItem("bookRatings", JSON.stringify(ratings));
+  }, [ratings]);
 
   const getValidShelfNames = useCallback(() => Object.keys(shelves), []);
 
@@ -141,6 +150,20 @@ const ShelfProvider = ({ children }) => {
     [getValidShelfNames, shelves]
   );
 
+  const updateBookRating = useCallback((bookId, rating) => {
+    setRatings((prevRatings) => ({
+      ...prevRatings,
+      [bookId]: rating,
+    }));
+  }, []);
+
+  const getBookRating = useCallback(
+    (bookId) => {
+      return ratings[bookId] || 0;
+    },
+    [ratings]
+  );
+
   const contextValue = useMemo(
     () => ({
       shelves,
@@ -151,6 +174,8 @@ const ShelfProvider = ({ children }) => {
       updateBookInShelf,
       isBookOnShelf,
       logShelfContents,
+      updateBookRating,
+      getBookRating,
     }),
     [
       shelves,
@@ -161,6 +186,8 @@ const ShelfProvider = ({ children }) => {
       updateBookInShelf,
       isBookOnShelf,
       logShelfContents,
+      updateBookRating,
+      getBookRating,
     ]
   );
 

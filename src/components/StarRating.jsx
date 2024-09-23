@@ -1,16 +1,26 @@
 import { Rating } from "@mantine/core";
 import PropTypes from "prop-types";
+import { useShelf } from "../hooks/useShelf";
 
-function StarRating({ book, onRatingChange }) {
+function StarRating({ book, onRatingSelect }) {
+  const { getBookRating } = useShelf();
+
   const handleRatingChange = (newValue) => {
-    onRatingChange(book, newValue);
+    onRatingSelect(book, newValue);
   };
-  return <Rating onChange={handleRatingChange} fractions={2} />;
+
+  return (
+    <Rating
+      value={getBookRating(book.id)}
+      onChange={handleRatingChange}
+      fractions={2}
+    />
+  );
 }
 
 StarRating.propTypes = {
   book: PropTypes.object.isRequired,
-  onRatingChange: PropTypes.func.isRequired,
+  onRatingSelect: PropTypes.func,
 };
 
 export default StarRating;
