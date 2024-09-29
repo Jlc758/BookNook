@@ -209,15 +209,17 @@ const useModal = () => {
                   justifyContent: "center",
                 }}
               >
-                {Object.keys(shelves).map((shelfName) => (
-                  <button
-                    key={shelfName}
-                    style={buttonStyle(shelfName)}
-                    onClick={() => toggleShelfSelection(shelfName)}
-                  >
-                    {formatShelfName(shelfName)}
-                  </button>
-                ))}
+                {Object.keys(shelves)
+                  .filter((shelfName) => shelfName !== "AllBooks")
+                  .map((shelfName) => (
+                    <button
+                      key={shelfName}
+                      style={buttonStyle(shelfName)}
+                      onClick={() => toggleShelfSelection(shelfName)}
+                    >
+                      {formatShelfName(shelfName)}
+                    </button>
+                  ))}
               </div>
               <button
                 style={confirmButtonStyle}
