@@ -64,10 +64,6 @@ body {
   border-radius: 3px;
 }
 
-.SentenceLabel {
-  padding-left: 14px;
-}
-
 .SearchOptionsPage {
   display: flex;
   align-items: center;
@@ -341,6 +337,36 @@ body {
   flex-direction: column;
   width: 80vw;
   justify-content: center;
+}
+
+.NatLangTextArea input {
+  flex-grow: 1;
+}
+
+.SentenceLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.Sentence {
+  display: flex;
+  height: 5px;
+  padding: 0;
+  align-items: flex-end;
+}
+
+.SentencesWrapper {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+}
+
+.m_8fb7ebe7 {
+  background-color: var(--mantine-color-rose-1) !important;
+  color: var(--mantine-color-gray-9) !important;
+  font-weight: 600;
 }
 
 .searchContent {

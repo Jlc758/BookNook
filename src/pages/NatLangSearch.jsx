@@ -6,6 +6,7 @@ import ResultsDisplay from "../components/ResultsDisplay";
 import useSearch from "../hooks/useSearch";
 import LoadingAnimation from "../components/LoadingAnimation";
 import { RxMagicWand } from "react-icons/rx";
+import Sparkle from "react-sparkle";
 
 const NatLangSearch = () => {
   const { searchText, setSearchText } = useSearch();
@@ -34,28 +35,65 @@ const NatLangSearch = () => {
     };
   }, [userInput]);
 
+  const MagicWand = () => {
+    return (
+      <div
+        style={{
+          position: "relative",
+          display: "in-line block",
+          paddingLeft: "10px",
+        }}
+      >
+        <RxMagicWand />
+        <div
+          style={{
+            position: "relative",
+            top: "-30px", // Adjust this value to move it up
+            right: "-10px", // Adjust this value to move it right
+            overflow: "visible",
+          }}
+        >
+          <Sparkle
+            count={3}
+            overflowPx={8}
+            flicker={false}
+            fadeOutSpeed={20}
+            color={"var(--mantine-color-rose-2)"}
+          />
+        </div>
+      </div>
+    );
+  };
+
   const SentencesLabel = (
     <div className="SentenceLabel">
-      <span>Your words, our magic </span>
-      <RxMagicWand style={{ height: "20px" }} />
-      <span> Speak your mind to find your next read!</span>
+      <p className="Sentence">
+        Your words, our magic
+        <MagicWand />
+      </p>
+      <p className="Sentence"> Speak your mind to find your next read!</p>
     </div>
   );
 
   return (
     <div className="NatLangSearch">
       <Space h="md" />
-      <Textarea
-        size="md"
-        radius="xl"
-        label={SentencesLabel}
-        value={userInput}
-        placeholder="enter search query"
-        onChange={(e) => {
-          setUserInput(e.target.value);
-          setSearchText(e.target.value);
-        }}
-      />
+
+      <div className="SentencesWrapper">
+        {SentencesLabel}
+        <Textarea
+          className="NatLangTextArea"
+          radius="xl"
+          value={userInput}
+          autosize="true"
+          minRows={2}
+          placeholder="enter search query"
+          onChange={(e) => {
+            setUserInput(e.target.value);
+            setSearchText(e.target.value);
+          }}
+        />
+      </div>
 
       <div className="searchContent">
         {loading && (
