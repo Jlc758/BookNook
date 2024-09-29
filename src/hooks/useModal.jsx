@@ -115,13 +115,14 @@ const useModal = () => {
         justifyContent: "center",
         padding: "10px",
         textAlign: "center",
+        zIndex: "1000",
+        maxHeight: "70vh",
       };
 
       const coverStyle = {
         width: "100%",
-        maxWidth: "120px",
+        maxWidth: "100px",
         objectFit: "cover",
-        marginBottom: "10px",
       };
 
       const buttonStyle = (shelfName) => ({
