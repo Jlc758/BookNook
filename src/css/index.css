@@ -367,6 +367,12 @@ body {
   background-color: var(--mantine-color-rose-1) !important;
   color: var(--mantine-color-gray-9) !important;
   font-weight: 600;
+  align-content: center;
+}
+
+.m_6c018570 {
+  padding-right: 18px !important;
+  display: flex;
 }
 
 .searchContent {

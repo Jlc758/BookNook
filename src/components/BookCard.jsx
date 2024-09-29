@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 const BookCard = ({ book, onRatingSelect, renderIcon, openModal }) => {
   return (
     <div className={classes.bookContainer}>
-      <div className={classes.bookRatingTitle}>
+      <div className={classes.bookContent}>
         <div className={classes.bookCoverContainer}>
           {book.volumeInfo?.imageLinks?.thumbnail ? (
             <img
@@ -23,7 +23,6 @@ const BookCard = ({ book, onRatingSelect, renderIcon, openModal }) => {
               onClick={() => openModal(book, "bookDescription")}
             />
           )}
-          <BookIcons book={book} renderIcon={renderIcon} />
         </div>
         <StarRating book={book} onRatingSelect={onRatingSelect} />
         <Title order={6} className={classes.title}>
@@ -32,6 +31,9 @@ const BookCard = ({ book, onRatingSelect, renderIcon, openModal }) => {
         <Title order={6} className={classes.author}>
           {book.volumeInfo?.authors?.join(", ") || "Unknown Author"}
         </Title>
+      </div>
+      <div className={classes.iconOverlay}>
+        <BookIcons book={book} renderIcon={renderIcon} />
       </div>
     </div>
   );
