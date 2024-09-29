@@ -501,6 +501,11 @@ svg.searchImg {
   margin-bottom: 0.5rem;
 }
 
+.m_26063560 {
+  background-color: var(--mantine-color-rose-1) !important;
+  color: black;
+}
+
 .modalButtonsContainer {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

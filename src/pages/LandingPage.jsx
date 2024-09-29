@@ -23,13 +23,24 @@ const LandingPage = () => {
     return (
       <Checkbox.Group>
         <Group mt="xs">
-          <Checkbox value="book" label="book" icon={FaBook} />
+          <Checkbox
+            value="book"
+            label="book"
+            icon={FaBook}
+            iconColor="var(--mantine-color-gray-8)"
+          />
           <Checkbox
             value="audiobook"
             label="audiobook"
             icon={TbHeadphonesFilled}
+            iconColor="var(--mantine-color-gray-8)"
           />
-          <Checkbox value="ebook" label="ebook" icon={FcKindle} />
+          <Checkbox
+            value="ebook"
+            label="ebook"
+            icon={FcKindle}
+            iconColor="var(--mantine-color-gray-8)"
+          />
         </Group>
       </Checkbox.Group>
     );
@@ -64,9 +75,15 @@ const LandingPage = () => {
             )}
           </div>
         </div>
-        <div className="currentReadTitle" style={{ display: "flex" }}>
+        <div
+          className="currentReadTitle"
+          style={{ display: "flex", flexDirection: "column" }}
+        >
           <Title order={5}>
             {CurrentReadBook.volumeInfo?.title || "Unknown Title"}
+          </Title>
+          <Title order={6}>
+            {CurrentReadBook.volumeInfo?.authors || "Unknown Author(s)"}
           </Title>
         </div>
         <div className="currentReadFormatAndProgress">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Progress, TextInput, Text, Container, Group } from "@mantine/core";
 
 export default function ProgressBar({ book }) {
@@ -7,7 +7,19 @@ export default function ProgressBar({ book }) {
 
   useEffect(() => {
     setMax(book?.volumeInfo?.pageCount || 100);
+    // Load the current page from local storage when the component mounts or the book changes
+    const storedCurrent = localStorage.getItem(`book-${book?.id}-current`);
+    if (storedCurrent) {
+      setCurrent(storedCurrent);
+    }
   }, [book]);
+
+  useEffect(() => {
+    // Save the current page to local storage whenever it changes
+    if (current !== "") {
+      localStorage.setItem(`book-${book?.id}-current`, current);
+    }
+  }, [current, book]);
 
   const handleCurrentChange = (value) => {
     if (value === "") {

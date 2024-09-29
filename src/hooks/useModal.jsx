@@ -142,7 +142,7 @@ const useModal = () => {
       });
 
       const subheaderStyle = {
-        fontSize: 12,
+        fontSize: 14,
         fontStyle: "italic",
       };
 
