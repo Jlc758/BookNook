@@ -33,35 +33,40 @@ const ChipGroup = ({
 }) => {
   const [showAll, setShowAll] = useState(false);
 
-  const displayedItems = showAll ? items : items.slice(0, 6);
-
   return (
     <Paper shadow="sm" p="md" withBorder>
       <Text weight={500} size="lg" mb="xs">
         {title}
       </Text>
-      <Group spacing="xs">
-        {displayedItems.map((item) => {
-          const value = item.value || item;
-          const label = item.label || item;
-          return (
-            <Chip
-              key={value}
-              checked={
-                multiple
-                  ? selectedItems.includes(value)
-                  : selectedItems === value
-              }
-              onChange={() => onItemSelect(value)}
-              disabled={disabled}
-              size="sm"
-            >
-              {label}
-            </Chip>
-          );
-        })}
-      </Group>
-      {items.length > 6 && (
+      <div
+        style={{
+          height: showAll ? "auto" : "200px",
+          overflow: "hidden",
+        }}
+      >
+        <Group spacing="xs">
+          {items.map((item) => {
+            const value = item.value || item;
+            const label = item.label || item;
+            return (
+              <Chip
+                key={value}
+                checked={
+                  multiple
+                    ? selectedItems.includes(value)
+                    : selectedItems === value
+                }
+                onChange={() => onItemSelect(value)}
+                disabled={disabled}
+                size="sm"
+              >
+                {label}
+              </Chip>
+            );
+          })}
+        </Group>
+      </div>
+      {items.length > 0 && (
         <Button
           onClick={() => setShowAll(!showAll)}
           variant="subtle"
@@ -177,7 +182,15 @@ const SelectSearch = ({ apiKey }) => {
         top={60}
         style={{ zIndex: 1, marginBottom: "1rem" }}
       >
-        <Button onClick={handleHideCriteria} variant="subtle" fullWidth>
+        <Button
+          onClick={handleHideCriteria}
+          variant="subtle"
+          fullWidth
+          style={{
+            backgroundColor: "var(--mantine-color-rose-1)",
+            color: "var(--mantine-color-gray-7)",
+          }}
+        >
           {hideCriteria ? "Show Criteria" : "Hide Criteria"}
         </Button>
       </Paper>
@@ -263,7 +276,13 @@ const SelectSearch = ({ apiKey }) => {
         loading={isLoading}
         size="lg"
         fullWidth
-        style={{ marginTop: "1rem", marginBottom: "1rem" }}
+        style={{
+          marginTop: "1rem",
+          marginBottom: "1rem",
+          backgroundColor: "var(--mantine-color-rose-1)",
+          color: "var(--mantine-color-gray-7)",
+          fontSize: "16px",
+        }}
       >
         Search
       </Button>
