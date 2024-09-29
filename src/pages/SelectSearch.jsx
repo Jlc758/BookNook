@@ -300,7 +300,7 @@ const SelectSearch = ({ apiKey }) => {
         <LoadingAnimation />
       ) : books.length > 0 ? (
         <div>
-          <Text size="xl" weight={700} mb="md">
+          <Text size="lg" weight={700} mb="md" style={{ paddingLeft: "10px" }}>
             Search Results:
           </Text>
           <ResultsDisplay books={books} />
