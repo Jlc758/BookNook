@@ -21,6 +21,19 @@ import {
   IconLeaf,
 } from "@tabler/icons-react";
 import Headshot from "../images/Headshot.png";
+import Sparkle from "react-sparkle";
+
+const MagicWand = () => {
+  return (
+    <Sparkle
+      count={3}
+      overflowPx={8}
+      flicker={false}
+      fadeOutSpeed={20}
+      color={"var(--mantine-color-gray-7)"}
+    />
+  );
+};
 
 const Animation = (Component) => {
   return motion(Component);
@@ -90,7 +103,7 @@ const AvatarFAB = () => {
       style={{
         position: "fixed",
         bottom: "5rem",
-        left: "1.5rem",
+        right: "1.5rem",
         zIndex: 1000,
       }}
     >
@@ -146,6 +159,7 @@ const AvatarFAB = () => {
             </Stack>
           )}
         </Transition>
+        <MagicWand />
         <AnimatedActionIcon
           size="lg"
           radius="lg"
@@ -183,7 +197,11 @@ const AvatarFAB = () => {
             p="md"
             style={{
               ...styles,
-              maxWidth: "250px",
+              width: "400px",
+              position: "absolute",
+              right: "100%",
+              bottom: 0,
+              marginRight: "1rem",
             }}
           >
             <Group>
