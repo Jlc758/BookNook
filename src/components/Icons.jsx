@@ -144,7 +144,7 @@ export const CurrentReadIcon = forwardRef(
         >
           <IconComponent
             className={classes.icon}
-            onClick={() => handleIconClick(book, "selectShelf")}
+            onClick={() => handleIconClick(book, "CurrentRead")}
           />
         </div>
       </Tooltip>
@@ -177,7 +177,7 @@ export const TopTenIcon = forwardRef(
         >
           <IconComponent
             className={classes.icon}
-            onClick={() => handleIconClick(book, "previouslyRead")}
+            onClick={() => handleIconClick(book, "topTen")}
           />
         </div>
       </Tooltip>

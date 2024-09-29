@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import useShelf from "./useShelf";
 import useTopTen from "./useTopTen";
 import StarRating from "../components/StarRating";
+import Sparkle from "react-sparkle";
 
 const useModal = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -281,9 +282,18 @@ const useModal = () => {
             <div style={modalStyle}>
               {renderBookInfo()}
               <p style={subheaderStyle}>
-                Your Top Ten list is full. To add this book, you&apos;ll need to
-                remove one from your current list.
+                <div style={{ position: "relative" }}>
+                  <Sparkle
+                    count={7}
+                    flickerSpeed={"slowest"}
+                    fadeOutSpeed={20}
+                    flicker={false}
+                  />
+                  Your Top Ten list is full. To add this book, you&apos;ll need
+                  to remove one from your current list.
+                </div>
               </p>
+
               <div
                 style={{
                   maxHeight: "200px",

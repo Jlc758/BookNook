@@ -17,6 +17,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { shelves } = useShelf(); // Use ShelfContext
+  const CurrentReadBook = shelves.CurrentRead[0];
 
   const ReadingFormatOptions = () => {
     return (
@@ -35,24 +36,14 @@ const LandingPage = () => {
   };
 
   const CurrentRead = (() => {
-    const CurrentReadBook = shelves.CurrentRead[0];
-
     if (!CurrentReadBook) {
       return (
-        <div className="right">
-          <div className="currentRead">
-            <Placeholder className="CurrentReadPlaceholder" />
-          </div>
+        <div className="NoCurrentRead">
+          <Placeholder className="CurrentReadPlaceholder" />
           <div className="currentReadTitle">
             <Title order={4} align="center">
               No book selected as your current read!
             </Title>
-          </div>
-          <div className="currentReadProgress">
-            {/* This can remain empty or you can add a placeholder message */}
-          </div>
-          <div className="currentReadFormat">
-            {/* This can remain empty or you can add a placeholder message */}
           </div>
         </div>
       );
@@ -78,11 +69,13 @@ const LandingPage = () => {
             {CurrentReadBook.volumeInfo?.title || "Unknown Title"}
           </Title>
         </div>
-        <div className="currentReadProgress">
-          <ProgressBar book={CurrentReadBook} />
-        </div>
-        <div className="currentReadFormat">
-          {ReadingFormatOptions(CurrentReadBook)}
+        <div className="currentReadFormatAndProgress">
+          <div className="currentReadFormat">
+            {ReadingFormatOptions(CurrentReadBook)}
+          </div>
+          <div className="currentReadProgress">
+            <ProgressBar book={CurrentReadBook} />
+          </div>
         </div>
       </>
     );
@@ -120,7 +113,9 @@ const LandingPage = () => {
           <img src={HeroPlaceholder} className="heroPlaceholder" />
         </div>
         <div className="first">
-          <div className="CurrentRead">{CurrentRead}</div>
+          <div className={CurrentReadBook ? "CurrentRead" : "NoCurrentRead"}>
+            {CurrentRead}
+          </div>
         </div>
         <div className="second">
           <div className="landingSearch">
