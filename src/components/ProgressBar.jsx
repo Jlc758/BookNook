@@ -1,24 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Progress, TextInput, Text, Container, Group } from "@mantine/core";
 
-export default function ProgressBar(CurrentReadBook) {
-  const [current, setCurrent] = useState(50);
-  const [max, setMax] = useState(100);
+export default function ProgressBar({ book }) {
+  const [current, setCurrent] = useState("");
+  const [max, setMax] = useState(book?.volumeInfo?.pageCount || 100);
+
+  useEffect(() => {
+    setMax(book?.volumeInfo?.pageCount || 100);
+  }, [book]);
 
   const handleCurrentChange = (value) => {
-    const numValue = Number(value);
-    setCurrent(Math.max(0, Math.min(numValue, max)));
-  };
-
-  const handleMaxChange = (value) => {
-    const numValue = Math.max(1, Number(value));
-    setMax(numValue);
-    if (current > numValue) {
-      setCurrent(numValue);
+    if (value === "") {
+      setCurrent("");
+    } else {
+      const numValue = Number(value);
+      setCurrent(Math.max(0, Math.min(numValue, max)).toString());
     }
   };
 
-  const percentage = Math.round((current / max) * 100);
+  const currentNumber = current === "" ? 0 : Number(current);
+  const percentage = max > 0 ? Math.round((currentNumber / max) * 100) : 0;
 
   return (
     <Container spacing="md" style={{ maxWidth: 400, margin: "0 auto" }}>
@@ -36,18 +37,13 @@ export default function ProgressBar(CurrentReadBook) {
           onChange={(event) => handleCurrentChange(event.currentTarget.value)}
           min={0}
           max={max}
+          placeholder="0"
         />
-        <TextInput
-          label="Total Pages"
-          type="number"
-          value={CurrentReadBook.volumeInfo?.title}
-          onChange={(event) => handleMaxChange(event.currentTarget.value)}
-          min={1}
-        />
+        <TextInput label="Total Pages" type="number" value={max} readOnly />
       </Group>
 
       <Text align="center" aria-live="polite">
-        Progress: {current} out of {max} ({percentage}%)
+        Progress: {current || 0} out of {max} ({percentage}%)
       </Text>
     </Container>
   );

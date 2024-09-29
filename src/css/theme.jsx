@@ -69,7 +69,7 @@ const Theme = {
     ],
     // Add more color scales as needed
   },
-  primaryShade: { light: 6, dark: 3 },
+  primaryShade: { light: 4, dark: 3 },
   primaryColor: "gray",
   autoContrast: false,
   luminanceThreshold: 0.3,

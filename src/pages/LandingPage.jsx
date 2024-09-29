@@ -10,6 +10,7 @@ import { TbHeadphonesFilled } from "react-icons/tb";
 import HeroPlaceholder from "../images/HeroPlaceholder.png";
 import { useShelf } from "../hooks/useShelf";
 import ProgressBar from "../components/ProgressBar";
+import WelcomeModal from "../components/WelcomeModal";
 
 const LandingPage = () => {
   const { searchText, setSearchText } = useSearch();
@@ -38,18 +39,28 @@ const LandingPage = () => {
 
     if (!CurrentReadBook) {
       return (
-        <div>
-          <div style={{ height: "20rem", width: "auto" }}>
+        <div className="right">
+          <div className="currentRead">
             <Placeholder className="CurrentReadPlaceholder" />
           </div>
-          <Title>No book chosen</Title>
+          <div className="currentReadTitle">
+            <Title order={4} align="center">
+              No book selected as your current read!
+            </Title>
+          </div>
+          <div className="currentReadProgress">
+            {/* This can remain empty or you can add a placeholder message */}
+          </div>
+          <div className="currentReadFormat">
+            {/* This can remain empty or you can add a placeholder message */}
+          </div>
         </div>
       );
     }
 
     return (
       <>
-        <div>
+        <div className="currentReadCover">
           <div style={{ height: "15rem", width: "auto" }}>
             {CurrentReadBook.volumeInfo?.imageLinks?.thumbnail ? (
               <img
@@ -61,15 +72,17 @@ const LandingPage = () => {
               <Placeholder className="current-read-placeholder" />
             )}
           </div>
-          <div>
-            <ProgressBar />
-          </div>
         </div>
-        <div>
+        <div className="currentReadTitle" style={{ display: "flex" }}>
           <Title order={5}>
             {CurrentReadBook.volumeInfo?.title || "Unknown Title"}
           </Title>
-          <div>{ReadingFormatOptions(CurrentReadBook)}</div>
+        </div>
+        <div className="currentReadProgress">
+          <ProgressBar book={CurrentReadBook} />
+        </div>
+        <div className="currentReadFormat">
+          {ReadingFormatOptions(CurrentReadBook)}
         </div>
       </>
     );
@@ -100,6 +113,8 @@ const LandingPage = () => {
 
   return (
     <div className="MainContent">
+      <WelcomeModal />
+
       <div className="main">
         <div className="hero">
           <img src={HeroPlaceholder} className="heroPlaceholder" />

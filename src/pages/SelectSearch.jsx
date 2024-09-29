@@ -1,5 +1,13 @@
 import { useState, useMemo } from "react";
-import { Chip, Group, Text, Button, Space } from "@mantine/core";
+import {
+  Chip,
+  Group,
+  Text,
+  Button,
+  Space,
+  Paper,
+  Container,
+} from "@mantine/core";
 import {
   contentRatingFilters,
   fantasyTropeOptions,
@@ -13,7 +21,6 @@ import {
 import SelectionQuery from "../components/SelectionQuery";
 import PropTypes from "prop-types";
 import ResultsDisplay from "../components/ResultsDisplay";
-import classes from "../css/ChipGroup.module.css";
 import LoadingAnimation from "../components/LoadingAnimation";
 
 const ChipGroup = ({
@@ -22,46 +29,50 @@ const ChipGroup = ({
   selectedItems,
   onItemSelect,
   multiple = true,
-  itemClassName,
   disabled = false,
 }) => {
   const [showAll, setShowAll] = useState(false);
 
   const displayedItems = showAll ? items : items.slice(0, 6);
 
-  const handleShowAll = () => {
-    setShowAll((prevState) => (prevState ? false : true));
-  };
-
   return (
-    <>
-      <div className={classes.chipGroup}>
-        <Text>{title}</Text>
-
-        <Group>
-          {displayedItems.map((item) => {
-            const value = item.value || item;
-            const label = item.label || item;
-            return (
-              <Chip
-                key={value}
-                checked={
-                  multiple
-                    ? selectedItems.includes(value)
-                    : selectedItems === value
-                }
-                onChange={() => onItemSelect(value)}
-                className={itemClassName}
-                disabled={disabled}
-              >
-                {label}
-              </Chip>
-            );
-          })}
-        </Group>
-        <Button onClick={handleShowAll}>Show All</Button>
-      </div>
-    </>
+    <Paper shadow="sm" p="md" withBorder>
+      <Text weight={500} size="lg" mb="xs">
+        {title}
+      </Text>
+      <Group spacing="xs">
+        {displayedItems.map((item) => {
+          const value = item.value || item;
+          const label = item.label || item;
+          return (
+            <Chip
+              key={value}
+              checked={
+                multiple
+                  ? selectedItems.includes(value)
+                  : selectedItems === value
+              }
+              onChange={() => onItemSelect(value)}
+              disabled={disabled}
+              size="sm"
+            >
+              {label}
+            </Chip>
+          );
+        })}
+      </Group>
+      {items.length > 6 && (
+        <Button
+          onClick={() => setShowAll(!showAll)}
+          variant="subtle"
+          size="sm"
+          mt="sm"
+          fullWidth
+        >
+          {showAll ? "Show Less" : "Show More"}
+        </Button>
+      )}
+    </Paper>
   );
 };
 
@@ -82,7 +93,6 @@ ChipGroup.propTypes = {
   ]).isRequired,
   onItemSelect: PropTypes.func.isRequired,
   multiple: PropTypes.bool,
-  itemClassName: PropTypes.func,
   disabled: PropTypes.bool,
 };
 
@@ -158,121 +168,130 @@ const SelectSearch = ({ apiKey }) => {
   ]);
 
   return (
-    <>
-      <div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Button onClick={handleHideCriteria} className="button">
-            {hideCriteria ? "Show Criteria" : "Hide Criteria"}
-          </Button>
-        </div>
-        <div>
-          {!hideCriteria && (
-            <div className={classes.allChips}>
-              <ChipGroup
-                title="Genres"
-                items={genres}
-                selectedItems={selectedGenres}
-                onItemSelect={handleMultiSelect(setSelectedGenres)}
-                itemClassName={classes.button}
-              />
-              <ChipGroup
-                title="Rating"
-                items={contentRatingFilters}
-                selectedItems={selectedRating}
-                onItemSelect={handleSingleSelect(setSelectedRating)}
-                multiple={false}
-                itemClassName={classes.button}
-              />
-              <ChipGroup
-                title="Representation"
-                items={representationFilters}
-                selectedItems={selectedRep}
-                onItemSelect={handleMultiSelect(setSelectedRep)}
-                itemClassName={classes.button}
-              />
-              <ChipGroup
-                title="Romance Tropes"
-                items={romanceTropeOptions}
-                selectedItems={selectedRomanceTrope}
-                onItemSelect={handleMultiSelect(setSelectedRomanceTrope)}
-                itemClassName={classes.button}
-              />
-              <ChipGroup
-                title="True Crime Tropes"
-                items={trueCrimeTropeOptions}
-                selectedItems={selectedTrueCrimeTrope}
-                onItemSelect={handleMultiSelect(setSelectedTrueCrimeTrope)}
-                itemClassName={classes.button}
-              />
-              <ChipGroup
-                title="Thriller Tropes"
-                items={thrillerTropeOptions}
-                selectedItems={selectedThrillerTrope}
-                onItemSelect={handleMultiSelect(setSelectedThrillerTrope)}
-                itemClassName={classes.button}
-              />
-              <ChipGroup
-                title="Science Fiction Tropes"
-                items={sciFiTropeOptions}
-                selectedItems={selectedSciFiTrope}
-                onItemSelect={handleMultiSelect(setSelectedSciFiTrope)}
-                itemClassName={classes.button}
-              />
-              <ChipGroup
-                title="Fantasy Tropes"
-                items={fantasyTropeOptions}
-                selectedItems={selectedFantasyTrope}
-                onItemSelect={handleMultiSelect(setSelectedFantasyTrope)}
-                itemClassName={classes.button}
-              />
-              <ChipGroup
-                title="Max Page Count"
-                items={[
-                  { value: "100", label: "Under 100 pages" },
-                  { value: "300", label: "100-300 pages" },
-                  { value: "500", label: "300-500 pages" },
-                  { value: "1000", label: "Over 500 pages" },
-                  { value: "any", label: "Any" },
-                ]}
-                selectedItems={
-                  maxPageCount === null ? "any" : maxPageCount.toString()
-                }
-                onItemSelect={handleMaxPageCountSelect}
-                multiple={false}
-                itemClassName={classes.button}
-                disabled={isMaxPageCountDisabled}
-              />
-            </div>
-          )}
-        </div>
-        <Button onClick={handleSearch} loading={isLoading} className="button">
-          Search
+    <Container size="xl">
+      <Paper
+        shadow="sm"
+        p="md"
+        withBorder
+        position="sticky"
+        top={60}
+        style={{ zIndex: 1, marginBottom: "1rem" }}
+      >
+        <Button onClick={handleHideCriteria} variant="subtle" fullWidth>
+          {hideCriteria ? "Show Criteria" : "Hide Criteria"}
         </Button>
-        <SelectionQuery
-          apiKey={apiKey}
-          criteria={searchCriteria}
-          setBooks={setBooks}
-          setIsLoading={setIsLoading}
-        />
-        <Space h="xl" />
-        {isLoading ? (
-          <LoadingAnimation />
-        ) : books.length > 0 ? (
-          <div>
-            <Text size="xl" weight={700}>
-              Search Results:
-            </Text>
-            <Group>
-              <ResultsDisplay books={books} />
-            </Group>
-          </div>
-        ) : (
-          <Text align="center">
-            No books found. Try selecting different criteria!
+      </Paper>
+
+      {!hideCriteria && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "1rem",
+          }}
+        >
+          <ChipGroup
+            title="Genres"
+            items={genres}
+            selectedItems={selectedGenres}
+            onItemSelect={handleMultiSelect(setSelectedGenres)}
+          />
+          <ChipGroup
+            title="Rating"
+            items={contentRatingFilters}
+            selectedItems={selectedRating}
+            onItemSelect={handleSingleSelect(setSelectedRating)}
+            multiple={false}
+          />
+          <ChipGroup
+            title="Representation"
+            items={representationFilters}
+            selectedItems={selectedRep}
+            onItemSelect={handleMultiSelect(setSelectedRep)}
+          />
+          <ChipGroup
+            title="Romance Tropes"
+            items={romanceTropeOptions}
+            selectedItems={selectedRomanceTrope}
+            onItemSelect={handleMultiSelect(setSelectedRomanceTrope)}
+          />
+          <ChipGroup
+            title="True Crime Tropes"
+            items={trueCrimeTropeOptions}
+            selectedItems={selectedTrueCrimeTrope}
+            onItemSelect={handleMultiSelect(setSelectedTrueCrimeTrope)}
+          />
+          <ChipGroup
+            title="Thriller Tropes"
+            items={thrillerTropeOptions}
+            selectedItems={selectedThrillerTrope}
+            onItemSelect={handleMultiSelect(setSelectedThrillerTrope)}
+          />
+          <ChipGroup
+            title="Science Fiction Tropes"
+            items={sciFiTropeOptions}
+            selectedItems={selectedSciFiTrope}
+            onItemSelect={handleMultiSelect(setSelectedSciFiTrope)}
+          />
+          <ChipGroup
+            title="Fantasy Tropes"
+            items={fantasyTropeOptions}
+            selectedItems={selectedFantasyTrope}
+            onItemSelect={handleMultiSelect(setSelectedFantasyTrope)}
+          />
+          <ChipGroup
+            title="Max Page Count"
+            items={[
+              { value: "100", label: "Under 100 pages" },
+              { value: "300", label: "100-300 pages" },
+              { value: "500", label: "300-500 pages" },
+              { value: "1000", label: "Over 500 pages" },
+              { value: "any", label: "Any" },
+            ]}
+            selectedItems={
+              maxPageCount === null ? "any" : maxPageCount.toString()
+            }
+            onItemSelect={handleMaxPageCountSelect}
+            multiple={false}
+            disabled={isMaxPageCountDisabled}
+          />
+        </div>
+      )}
+
+      <Button
+        onClick={handleSearch}
+        loading={isLoading}
+        size="lg"
+        fullWidth
+        style={{ marginTop: "1rem", marginBottom: "1rem" }}
+      >
+        Search
+      </Button>
+
+      <SelectionQuery
+        apiKey={apiKey}
+        criteria={searchCriteria}
+        setBooks={setBooks}
+        setIsLoading={setIsLoading}
+      />
+
+      <Space h="xl" />
+
+      {isLoading ? (
+        <LoadingAnimation />
+      ) : books.length > 0 ? (
+        <div>
+          <Text size="xl" weight={700} mb="md">
+            Search Results:
           </Text>
-        )}
-      </div>
-    </>
+          <ResultsDisplay books={books} />
+        </div>
+      ) : (
+        <Text align="center" size="lg">
+          No books found. Try selecting different criteria!
+        </Text>
+      )}
+    </Container>
   );
 };
 

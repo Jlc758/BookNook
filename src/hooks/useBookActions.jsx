@@ -12,7 +12,7 @@ import {
 const useBookActions = (openModal) => {
   const { addToShelf, removeFromShelf, isBookOnShelf, updateBookRating } =
     useShelf();
-  const { addToTopTen, topTenCount } = useTopTen();
+  const { addToTopTen, removeFromTopTen, topTenCount } = useTopTen();
 
   const handleIconClick = useCallback(
     (book, type) => {
@@ -26,7 +26,7 @@ const useBookActions = (openModal) => {
           break;
         case "topTen":
           if (isBookOnShelf(book, "TopTen")) {
-            removeFromShelf(book, "TopTen");
+            removeFromTopTen(book);
           } else if (topTenCount < 10) {
             addToTopTen(book);
           } else {
@@ -41,10 +41,24 @@ const useBookActions = (openModal) => {
           }
           break;
         case "previouslyRead":
-          openModal(book, "previouslyRead");
+          if (isBookOnShelf(book, "Completed")) {
+            removeFromShelf(book, "Completed");
+          } else {
+            openModal(book, "previouslyRead");
+          }
           break;
         case "selectShelf":
-          openModal(book, "selectShelf");
+          if (isBookOnShelf(book, "AllBooks")) {
+            removeFromShelf(book, "AllBooks");
+            // Remove from all other shelves as well
+            ["TBR", "TopTen", "CurrentRead", "Completed"].forEach((shelf) => {
+              if (isBookOnShelf(book, shelf)) {
+                removeFromShelf(book, shelf);
+              }
+            });
+          } else {
+            openModal(book, "selectShelf");
+          }
           break;
         default:
           console.warn(`Unhandled icon type: ${type}`);
@@ -55,6 +69,7 @@ const useBookActions = (openModal) => {
       removeFromShelf,
       addToShelf,
       addToTopTen,
+      removeFromTopTen,
       topTenCount,
       openModal,
     ]

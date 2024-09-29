@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useOpenAI from "../hooks/useOpenAI";
 import GeneralQuery from "../components/GeneralQuery";
-import { Space, TextInput } from "@mantine/core";
+import { Space, Textarea } from "@mantine/core";
 import ResultsDisplay from "../components/ResultsDisplay";
 import useSearch from "../hooks/useSearch";
 import LoadingAnimation from "../components/LoadingAnimation";
@@ -45,7 +45,7 @@ const NatLangSearch = () => {
   return (
     <div className="NatLangSearch">
       <Space h="md" />
-      <TextInput
+      <Textarea
         size="md"
         radius="xl"
         label={SentencesLabel}

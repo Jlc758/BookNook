@@ -268,8 +268,8 @@ const useModal = () => {
             <div style={modalStyle}>
               {renderBookInfo()}
               <p style={subheaderStyle}>
-                Are you reading this book? How exciting! Note your progress and
-                set a rating and optional review when you&apos;re done!
+                Are you reading this book? How exciting! Note your progress on
+                the homepage and set a rating when you&apos;re done!
               </p>
               <button style={confirmButtonStyle} onClick={handleConfirm}>
                 Confirm

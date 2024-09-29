@@ -1,5 +1,3 @@
-// @ts-check
-
 export default {
   plugins: {
     "postcss-preset-mantine": {},
