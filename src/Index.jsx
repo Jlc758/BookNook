@@ -1,12 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import Navigation from "./components/Navigation.jsx";
+import App from "./App.jsx"; //
 
 const Index = () => {
   return (
     <React.StrictMode>
-      <Navigation />
       <App />
     </React.StrictMode>
   );

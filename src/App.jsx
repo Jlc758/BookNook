@@ -10,6 +10,7 @@ import Theme from "./css/theme";
 import SearchProvider from "./context/SearchContext";
 import ShelfProvider from "./context/ShelfContext";
 import AvatarFAB from "./components/AvatarFAB";
+import Navigation from "./components/Navigation.jsx"; // Import Navigation
 import { useState, useEffect } from "react";
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
           <ShelfProvider>
             <AvatarFAB />
             <HashRouter>
+              <Navigation /> {/* Include Navigation within the HashRouter */}
               <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route index element={<LandingPage />} />
