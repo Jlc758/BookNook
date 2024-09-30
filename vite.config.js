@@ -28,6 +28,7 @@ export default defineConfig({
     minify: "esbuild",
     outDir: "dist",
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, "index.html"),
