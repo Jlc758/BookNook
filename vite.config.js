@@ -26,6 +26,8 @@ export default defineConfig({
   build: {
     target: "esnext",
     minify: "esbuild",
+    outDir: "dist",
+    emptyOutDir: true,
   },
   optimizeDeps: {
     include: ["react", "react-dom"],
