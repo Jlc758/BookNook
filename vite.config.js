@@ -17,7 +17,7 @@ export default defineConfig({
       brotliSize: true,
     }),
   ],
-  base: "/BookNook/",
+  base: "/", // Changed from "/BookNook/" to "/"
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -28,6 +28,11 @@ export default defineConfig({
     minify: "esbuild",
     outDir: "dist",
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+      },
+    },
   },
   optimizeDeps: {
     include: ["react", "react-dom"],
