@@ -1,24 +1,20 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Modal, Button, Text } from "@mantine/core";
 import { RxMagicWand } from "react-icons/rx";
 
-const WelcomeModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const WelcomeModal = ({ opened, onClose }) => {
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisitedBefore");
     if (!hasVisited) {
-      setIsOpen(true);
+      onClose(); // Only show modal when it is opened externally for the first time
       localStorage.setItem("hasVisitedBefore", "true");
     }
-  }, []);
-
-  const closeModal = () => setIsOpen(false);
+  }, [onClose]);
 
   return (
     <Modal
-      opened={isOpen}
-      onClose={closeModal}
+      opened={opened}
+      onClose={onClose}
       size="lg"
       centered
       styles={(theme) => ({
@@ -28,7 +24,6 @@ const WelcomeModal = () => {
           display: "flex",
           flexDirection: "column",
         },
-
         body: {
           flex: 1,
           display: "flex",
@@ -60,7 +55,7 @@ const WelcomeModal = () => {
         Welcome to BookNook - a reading tracking app! This video will give you a
         quick tour of the features.
       </Text>
-      <Button onClick={closeModal} fullWidth>
+      <Button onClick={onClose} fullWidth>
         Proceed <RxMagicWand style={{ height: "20px" }} />
       </Button>
     </Modal>

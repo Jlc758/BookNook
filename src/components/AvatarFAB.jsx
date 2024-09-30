@@ -23,6 +23,7 @@ import {
 import { RxQuestionMark } from "react-icons/rx";
 import Headshot from "../images/Headshot.png";
 import Sparkle from "react-sparkle";
+import WelcomeModal from "./WelcomeModal";
 
 const MagicWand = () => {
   return (
@@ -37,26 +38,27 @@ const MagicWand = () => {
 };
 
 const Animation = (Component) => {
-  return motion(Component);
+  return motion.create(Component);
 };
 
 const AnimatedActionIcon = Animation(ActionIcon);
 
 const AvatarFAB = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
+  const [showBio, setShowBio] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
-      setShowWelcome(true);
-      setTimeout(() => setShowWelcome(false), 5000); // Hide welcome message after 5 seconds
+      setShowBio(true);
+      setTimeout(() => setShowBio(false), 5000); // Hide welcome message after 5 seconds
     }
   };
 
   useEffect(() => {
     if (!isOpen) {
-      setShowWelcome(false);
+      setShowBio(false);
     }
   }, [isOpen]);
 
@@ -99,6 +101,7 @@ const AvatarFAB = () => {
     {
       icon: RxQuestionMark,
       label: "Walkthrough",
+      onClick: () => setShowModal(true),
       description:
         "Watch the walkthrough to learn about the features of BookNook!",
     },
@@ -145,14 +148,16 @@ const AvatarFAB = () => {
                     variant="filled"
                     color="var(--mantine-color-gray-7)"
                     onClick={() => {
-                      if (item.link) {
+                      if (item.onClick) {
+                        item.onClick(); // Call the custom onClick handler (e.g., setShowModal(true))
+                      } else if (item.link) {
                         window.open(item.link, "_blank", "noopener,noreferrer");
                       }
                     }}
                     style={{
                       transition:
                         "background-color 0.3s ease, transform 0.3s ease",
-                      cursor: item.link ? "pointer" : "default",
+                      cursor: item.link || item.onClick ? "pointer" : "default",
                     }}
                     sx={(theme) => ({
                       "&:hover": {
@@ -195,7 +200,7 @@ const AvatarFAB = () => {
         </AnimatedActionIcon>
       </div>
       <Transition
-        mounted={showWelcome}
+        mounted={showBio}
         transition="slide-left"
         duration={400}
         timingFunction="ease"
@@ -223,6 +228,7 @@ const AvatarFAB = () => {
           </Paper>
         )}
       </Transition>
+      <WelcomeModal opened={showModal} onClose={() => setShowModal(false)} />
     </Group>
   );
 };

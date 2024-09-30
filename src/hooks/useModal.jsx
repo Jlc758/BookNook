@@ -287,6 +287,7 @@ const useModal = () => {
               <p style={subheaderStyle}>
                 <div style={{ position: "relative" }}>
                   <Sparkle
+                    color={"var(--mantine-color-gray-6)"}
                     count={7}
                     flickerSpeed={"slowest"}
                     fadeOutSpeed={20}
