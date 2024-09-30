@@ -40,12 +40,5 @@ export default defineConfig({
       overlay: false,
     },
   },
-  define: {
-    "import.meta.env.VITE_GOOGLE_BOOKS_API_KEY": JSON.stringify(
-      process.env.VITE_GOOGLE_BOOKS_API_KEY
-    ),
-    "import.meta.env.VITE_OPENAI_API_KEY": JSON.stringify(
-      process.env.VITE_OPENAI_API_KEY
-    ),
-  },
+  envPrefix: "VITE_",
 });

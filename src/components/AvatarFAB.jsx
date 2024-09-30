@@ -20,6 +20,7 @@ import {
   IconCode,
   IconLeaf,
 } from "@tabler/icons-react";
+import { RxQuestionMark } from "react-icons/rx";
 import Headshot from "../images/Headshot.png";
 import Sparkle from "react-sparkle";
 
@@ -61,6 +62,12 @@ const AvatarFAB = () => {
 
   const menuItems = [
     {
+      icon: IconBook,
+      label: "Fun Fact",
+      description:
+        "I have a dog that looks like a cow and a cat that looks like a lynx!",
+    },
+    {
       icon: IconBrandGithub,
       label: "GitHub",
       link: "https://github.com/Jlc758",
@@ -78,12 +85,7 @@ const AvatarFAB = () => {
       link: "mailto:janelle.chafe@gmail.com",
       description: "Reach out to collaborate anytime!",
     },
-    {
-      icon: IconBook,
-      label: "Fun Fact",
-      description:
-        "I have a dog that looks like a cow and a cat that looks like a lynx!",
-    },
+
     {
       icon: IconCode,
       label: "Skills",
@@ -93,6 +95,12 @@ const AvatarFAB = () => {
       icon: IconLeaf,
       label: "Interests",
       description: "AI, sustainable tech, and digital storytelling",
+    },
+    {
+      icon: RxQuestionMark,
+      label: "Walkthrough",
+      description:
+        "Watch the walkthrough to learn about the features of BookNook!",
     },
   ];
 
@@ -129,6 +137,7 @@ const AvatarFAB = () => {
                   }
                   position="right"
                   withArrow
+                  zIndex={1000}
                 >
                   <ActionIcon
                     size="lg"
