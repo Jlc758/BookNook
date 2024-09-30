@@ -7,6 +7,8 @@ import useShelf from "../hooks/useShelf";
 import useModal from "../hooks/useModal";
 import useBookActions from "../hooks/useBookActions";
 
+localStorage.clear();
+
 const ResultsDisplay = React.memo(({ books }) => {
   const { shelves, addToShelf, removeFromShelf } = useShelf();
   const {
