@@ -25,7 +25,6 @@ function useOpenAI(userInput) {
 
       const openai = new OpenAI({
         apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-        dangerouslyAllowBrowser: true,
       });
 
       const expandInput = (input) => {
