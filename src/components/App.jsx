@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import "../css/index.css";
@@ -11,18 +11,6 @@ import SearchProvider from "../context/SearchContext";
 import ShelfProvider from "../context/ShelfContext";
 import AvatarFAB from "./AvatarFAB";
 import { useState, useEffect } from "react";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { path: "/", element: <LandingPage /> },
-      { path: "search", element: <SearchOptions /> },
-      { path: "shelves", element: <Shelves /> },
-    ],
-  },
-]);
 
 const App = () => {
   const [colorScheme, setColorScheme] = useState(Theme.colorScheme);
@@ -43,8 +31,16 @@ const App = () => {
       <ModalsProvider>
         <SearchProvider>
           <ShelfProvider>
-            <RouterProvider router={router} />
             <AvatarFAB />
+            <HashRouter>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<LandingPage />} />
+                  <Route path="search" element={<SearchOptions />} />
+                  <Route path="shelves" element={<Shelves />} />
+                </Route>
+              </Routes>
+            </HashRouter>
           </ShelfProvider>
         </SearchProvider>
       </ModalsProvider>
