@@ -101,7 +101,7 @@ ChipGroup.propTypes = {
   disabled: PropTypes.bool,
 };
 
-const SelectSearch = ({ apiKey }) => {
+const SelectSearch = ({ apiKey, googleAPIKey }) => {
   const [books, setBooks] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedRating, setSelectedRating] = useState("");
@@ -289,6 +289,7 @@ const SelectSearch = ({ apiKey }) => {
 
       <SelectionQuery
         apiKey={apiKey}
+        googleAPIKey={googleAPIKey}
         criteria={searchCriteria}
         setBooks={setBooks}
         setIsLoading={setIsLoading}
@@ -316,6 +317,7 @@ const SelectSearch = ({ apiKey }) => {
 
 SelectSearch.propTypes = {
   apiKey: PropTypes.string.isRequired,
+  googleAPIKey: PropTypes.string.isRequired,
 };
 
 export default SelectSearch;

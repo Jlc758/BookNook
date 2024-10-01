@@ -8,15 +8,13 @@ import LoadingAnimation from "../components/LoadingAnimation";
 import { RxMagicWand } from "react-icons/rx";
 import Sparkle from "react-sparkle";
 
-const NatLangSearch = () => {
+const NatLangSearch = ({ googleAPIKey }) => {
   const { searchText, setSearchText } = useSearch();
   const [userInput, setUserInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
   const [books, setBooks] = useState([]);
 
   const { keywords, loading, error } = useOpenAI(debouncedInput);
-
-  const googleAPIKey = "AIzaSyCxYIJMd88bE8_DBPWaUSaL633NlHks8jc";
 
   useEffect(() => {
     // Update userInput with searchText only if searchText is not empty
@@ -67,11 +65,13 @@ const NatLangSearch = () => {
 
   const SentencesLabel = (
     <div className="SentenceLabel">
-      <p className="Sentence">
+      <div className="Sentence">
         Your words, our magic
-        <MagicWand />
-      </p>
-      <p className="Sentence"> Speak your mind to find your next read!</p>
+        <span>
+          <MagicWand />
+        </span>
+      </div>
+      <div className="Sentence"> Speak your mind to find your next read!</div>
     </div>
   );
 
@@ -105,7 +105,7 @@ const NatLangSearch = () => {
         {keywords && (
           <GeneralQuery
             keywords={keywords}
-            apiKey={googleAPIKey}
+            googleAPIKey={googleAPIKey}
             setBooks={setBooks}
           />
         )}

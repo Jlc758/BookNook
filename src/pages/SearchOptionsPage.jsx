@@ -1,12 +1,15 @@
 import { Tabs } from "@mantine/core";
 import NatLangSearch from "./NatLangSearch";
 import SelectSearch from "./SelectSearch";
+import { APIButton } from "../components/APIKeyManager";
 
-const SearchOptionsPage = () => {
-  const apiKey = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
-
+const SearchOptionsPage = ({ apiKey, googleAPIKey, setApiKey }) => {
   return (
     <div className="MainContent SearchOptionsPage">
+      <div>
+        <APIButton className="APIButton" setAppApiKey={setApiKey} />
+      </div>
+
       <Tabs variant="outline" defaultValue="vibes">
         <Tabs.List grow>
           <Tabs.Tab value="vibes">Summon by Sentences</Tabs.Tab>
@@ -14,7 +17,7 @@ const SearchOptionsPage = () => {
         </Tabs.List>
 
         <Tabs.Panel value="vibes">
-          <NatLangSearch apiKey={apiKey} />
+          <NatLangSearch googleAPIKey={googleAPIKey} apiKey={apiKey} />
         </Tabs.Panel>
 
         <Tabs.Panel
@@ -27,7 +30,7 @@ const SearchOptionsPage = () => {
             alignContent: "center",
           }}
         >
-          <SelectSearch apiKey={apiKey} />
+          <SelectSearch googleAPIKey={googleAPIKey} apiKey={apiKey} />
         </Tabs.Panel>
       </Tabs>
     </div>

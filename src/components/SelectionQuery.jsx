@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import propTypes from "prop-types";
 
-const SelectionQuery = ({ apiKey, criteria, setBooks, setIsLoading }) => {
+const SelectionQuery = ({ googleAPIKey, criteria, setBooks, setIsLoading }) => {
   const prevCriteriaRef = useRef();
 
   useEffect(() => {
@@ -82,7 +82,7 @@ const SelectionQuery = ({ apiKey, criteria, setBooks, setIsLoading }) => {
 
       let query = `${baseUrl}${queryParts.join(
         "&"
-      )}&orderBy=relevance&maxResults=40&key=${apiKey}`;
+      )}&orderBy=relevance&maxResults=40&key=${googleAPIKey}`;
 
       console.log("Google Books Query: ", query);
 
@@ -129,13 +129,13 @@ const SelectionQuery = ({ apiKey, criteria, setBooks, setIsLoading }) => {
 
     handleSearch();
     prevCriteriaRef.current = criteria;
-  }, [apiKey, criteria, setBooks, setIsLoading]);
+  }, [criteria, setBooks, setIsLoading, googleAPIKey]);
 
   return null; // No UI to render
 };
 
 SelectionQuery.propTypes = {
-  apiKey: propTypes.string.isRequired,
+  googleAPIKey: propTypes.string.isRequired,
   criteria: propTypes.shape({
     selectedGenres: propTypes.arrayOf(propTypes.string),
     selectedRating: propTypes.string,
