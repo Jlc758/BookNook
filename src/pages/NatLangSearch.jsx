@@ -16,7 +16,7 @@ const NatLangSearch = () => {
 
   const { keywords, loading, error } = useOpenAI(debouncedInput);
 
-  const googleAPIKey = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
+  const googleAPIKey = "AIzaSyCxYIJMd88bE8_DBPWaUSaL633NlHks8jc";
 
   useEffect(() => {
     // Update userInput with searchText only if searchText is not empty

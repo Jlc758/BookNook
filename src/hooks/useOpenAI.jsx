@@ -11,20 +11,20 @@ import {
 } from "../context/searchCriteria";
 import { z } from "zod";
 
-function useOpenAI(userInput) {
+function useOpenAI(userInput, apiKey) {
   const [keywords, setKeywords] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!userInput) return;
+    if (!userInput || !apiKey) return;
 
     const fetchKeywords = async () => {
       setLoading(true);
       setError(null);
 
       const openai = new OpenAI({
-        apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+        apiKey: apiKey,
         dangerouslyAllowBrowser: true,
       });
 
@@ -232,7 +232,7 @@ function useOpenAI(userInput) {
     };
 
     fetchKeywords();
-  }, [userInput]);
+  }, [userInput, apiKey]);
 
   return { keywords, loading, error };
 }
