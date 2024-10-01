@@ -1,8 +1,8 @@
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Title, TextInput, Checkbox, Group, Text } from "@mantine/core";
 import Placeholder from "../components/Placeholder";
 import useSearch from "../hooks/useSearch";
-import { useEffect } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { FcKindle } from "react-icons/fc";
 import { FaBook } from "react-icons/fa";
@@ -13,11 +13,28 @@ import ProgressBar from "../components/ProgressBar";
 import WelcomeModal from "../components/WelcomeModal";
 
 const LandingPage = () => {
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const { searchText, setSearchText } = useSearch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { shelves } = useShelf(); // Use ShelfContext
+  const { shelves } = useShelf();
   const CurrentReadBook = shelves.CurrentRead[0];
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisitedBefore");
+    if (!hasVisited) {
+      setShowWelcomeModal(true);
+    }
+  }, []);
+
+  const handleCloseWelcomeModal = () => {
+    setShowWelcomeModal(false);
+    localStorage.setItem("hasVisitedBefore", "true");
+  };
+
+  useEffect(() => {
+    setSearchText("");
+  }, [location, setSearchText]);
 
   const ReadingFormatOptions = () => {
     return (
@@ -123,7 +140,10 @@ const LandingPage = () => {
 
   return (
     <div className="MainContent">
-      <WelcomeModal />
+      <WelcomeModal
+        opened={showWelcomeModal}
+        onClose={handleCloseWelcomeModal}
+      />
 
       <div className="main">
         <div className="hero">

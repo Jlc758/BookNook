@@ -1,6 +1,5 @@
 import { Modal, Button, Text } from "@mantine/core";
 import { RxMagicWand } from "react-icons/rx";
-import { useEffect } from "react";
 
 const LoomVideo = () => {
   return (
@@ -27,14 +26,6 @@ const LoomVideo = () => {
 };
 
 const WelcomeModal = ({ opened, onClose }) => {
-  useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisitedBefore");
-    if (!hasVisited) {
-      onClose(); // Only show modal when it is opened externally for the first time
-      localStorage.setItem("hasVisitedBefore", "true");
-    }
-  }, [onClose]);
-
   return (
     <Modal
       opened={opened}
