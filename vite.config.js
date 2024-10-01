@@ -17,7 +17,7 @@ export default defineConfig({
       brotliSize: true,
     }),
   ],
-  base: "/", // Changed from "/BookNook/" to "/"
+  base: "/BookNook/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

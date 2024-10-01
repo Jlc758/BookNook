@@ -1,5 +1,6 @@
 {
   "name": "booknook",
+  "homepage": "https://jlc758.github.io/BookNook",
   "private": true,
   "version": "0.0.0",
   "type": "module",
