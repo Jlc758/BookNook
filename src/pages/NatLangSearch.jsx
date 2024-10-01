@@ -3,25 +3,16 @@ import useOpenAI from "../hooks/useOpenAI";
 import GeneralQuery from "../components/GeneralQuery";
 import { Space, Textarea } from "@mantine/core";
 import ResultsDisplay from "../components/ResultsDisplay";
-import useSearch from "../hooks/useSearch";
 import LoadingAnimation from "../components/LoadingAnimation";
 import { RxMagicWand } from "react-icons/rx";
 import Sparkle from "react-sparkle";
 
-const NatLangSearch = ({ googleAPIKey }) => {
-  const { searchText, setSearchText } = useSearch();
+const NatLangSearch = ({ googleAPIKey, apiKey }) => {
   const [userInput, setUserInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
   const [books, setBooks] = useState([]);
 
-  const { keywords, loading, error } = useOpenAI(debouncedInput);
-
-  useEffect(() => {
-    // Update userInput with searchText only if searchText is not empty
-    if (searchText) {
-      setUserInput(searchText);
-    }
-  }, [searchText]);
+  const { keywords, loading, error } = useOpenAI(debouncedInput, apiKey);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -32,6 +23,8 @@ const NatLangSearch = ({ googleAPIKey }) => {
       clearTimeout(handler);
     };
   }, [userInput]);
+
+  console.log("NatLangSearch - googleAPIKey:", googleAPIKey); // Debug log
 
   const MagicWand = () => {
     return (
@@ -46,8 +39,8 @@ const NatLangSearch = ({ googleAPIKey }) => {
         <div
           style={{
             position: "relative",
-            top: "-30px", // Adjust this value to move it up
-            right: "-10px", // Adjust this value to move it right
+            top: "-30px",
+            right: "-10px",
             overflow: "visible",
           }}
         >
@@ -78,7 +71,6 @@ const NatLangSearch = ({ googleAPIKey }) => {
   return (
     <div className="NatLangSearch">
       <Space h="md" />
-
       <div className="SentencesWrapper">
         {SentencesLabel}
         <Textarea
@@ -88,13 +80,9 @@ const NatLangSearch = ({ googleAPIKey }) => {
           autosize="true"
           minRows={2}
           placeholder="enter search query"
-          onChange={(e) => {
-            setUserInput(e.target.value);
-            setSearchText(e.target.value);
-          }}
+          onChange={(e) => setUserInput(e.target.value)}
         />
       </div>
-
       <div className="searchContent">
         {loading && (
           <div>

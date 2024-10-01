@@ -1,19 +1,43 @@
+import { useState, useEffect } from "react";
 import { Tabs } from "@mantine/core";
 import NatLangSearch from "./NatLangSearch";
 import SelectSearch from "./SelectSearch";
-import { APIButton } from "../components/APIKeyManager";
+import { APIKeyManager } from "../components/APIKeyManager";
 
-const SearchOptionsPage = ({ apiKey, googleAPIKey, setApiKey }) => {
+const SearchOptionsPage = ({ apiKey, setApiKey, googleAPIKey }) => {
+  const [shouldOpenModal, setShouldOpenModal] = useState(!apiKey);
+
+  useEffect(() => {
+    if (!apiKey) {
+      setShouldOpenModal(true);
+    }
+  }, [apiKey]);
+
+  console.log("SearchOptionsPage - googleAPIKey:", googleAPIKey); // Debug log
+
+  const handleTabClick = () => {
+    if (!apiKey) {
+      setShouldOpenModal(true);
+    }
+  };
+
   return (
     <div className="MainContent SearchOptionsPage">
       <div>
-        <APIButton className="APIButton" setAppApiKey={setApiKey} />
+        <APIKeyManager
+          setAppApiKey={setApiKey}
+          initialIsOpen={shouldOpenModal}
+        />
       </div>
 
       <Tabs variant="outline" defaultValue="vibes">
         <Tabs.List grow>
-          <Tabs.Tab value="vibes">Summon by Sentences</Tabs.Tab>
-          <Tabs.Tab value="criteria">Summon by Selection</Tabs.Tab>
+          <Tabs.Tab value="vibes" onClick={handleTabClick}>
+            Summon by Sentences
+          </Tabs.Tab>
+          <Tabs.Tab value="criteria" onClick={handleTabClick}>
+            Summon by Selection
+          </Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="vibes">

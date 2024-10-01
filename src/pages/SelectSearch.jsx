@@ -172,6 +172,8 @@ const SelectSearch = ({ apiKey, googleAPIKey }) => {
     selectedFantasyTrope,
   ]);
 
+  console.log("SelectSearch - googleAPIKey:", googleAPIKey); // Debug log
+
   return (
     <Container size="xl">
       <Paper

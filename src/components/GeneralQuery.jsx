@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import propTypes from "prop-types";
 
-const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
+const GeneralQuery = ({ googleAPIKey, keywords, setBooks }) => {
   const baseUrl = "https://www.googleapis.com/books/v1/volumes?q=";
 
   useEffect(() => {
-    if (!keywords) return;
+    if (!keywords || !googleAPIKey) return;
 
     const fetchBooks = async (query) => {
       try {
@@ -23,37 +23,17 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
 
     const handleSearch = async () => {
       try {
-        const {
-          title,
-          author,
-          mainCategory,
-          pageCount,
-          keywords: additionalKeywords,
-        } = keywords || {};
+        const { title, mainCategory, keywords: additionalKeywords } = keywords;
 
         let queryParts = [];
 
         if (title) queryParts.push(`intitle:"${encodeURIComponent(title)}"`);
-        if (author) queryParts.push(`inauthor:"${encodeURIComponent(author)}"`);
         if (mainCategory)
           queryParts.push(`subject:"${encodeURIComponent(mainCategory)}"`);
 
         // Process additional keywords
-        if (additionalKeywords) {
-          let keywordArray;
-          if (Array.isArray(additionalKeywords)) {
-            keywordArray = additionalKeywords;
-          } else if (typeof additionalKeywords === "string") {
-            keywordArray = additionalKeywords.split(",").map((k) => k.trim());
-          } else {
-            console.error(
-              "Unexpected type for additionalKeywords:",
-              typeof additionalKeywords
-            );
-            keywordArray = [];
-          }
-
-          const uniqueKeywords = keywordArray.filter(
+        if (additionalKeywords && additionalKeywords.length > 0) {
+          const uniqueKeywords = additionalKeywords.filter(
             (keyword) =>
               keyword.toLowerCase() !== mainCategory?.toLowerCase() &&
               !keyword
@@ -77,7 +57,7 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
 
         let query = `${baseUrl}${queryParts.join(
           ""
-        )}&orderBy=relevance&maxResults=40&key=${apiKey}`;
+        )}&orderBy=relevance&maxResults=40&key=${googleAPIKey}`;
 
         console.log("Google Books Query: ", query);
 
@@ -91,27 +71,7 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
           return;
         }
 
-        const filteredBooks = books.filter((book) => {
-          const bookPageCount = book.volumeInfo?.pageCount;
-          if (!bookPageCount || bookPageCount <= 0) return false;
-
-          const minPageCount = pageCount?.min ?? null;
-          const maxPageCount = pageCount?.max ?? null;
-
-          // This logic works for all cases:
-          // - "less than X pages": only maxPageCount is set
-          // - "more than X pages": only minPageCount is set
-          // - "around X pages": both minPageCount and maxPageCount are set
-          // - exact page count: minPageCount equals maxPageCount
-          if (minPageCount !== null && bookPageCount < minPageCount)
-            return false;
-          if (maxPageCount !== null && bookPageCount > maxPageCount)
-            return false;
-
-          return true;
-        });
-
-        setBooks(filteredBooks);
+        setBooks(books);
       } catch (error) {
         console.error("Error fetching data: ", error);
         setBooks([]);
@@ -119,7 +79,7 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
     };
 
     handleSearch();
-  }, [apiKey, keywords, setBooks]);
+  }, [googleAPIKey, keywords, setBooks]);
 
   return null; // No UI to render
 };
@@ -127,18 +87,10 @@ const GeneralQuery = ({ apiKey, keywords, setBooks }) => {
 GeneralQuery.propTypes = {
   keywords: propTypes.shape({
     title: propTypes.string,
-    author: propTypes.string,
     mainCategory: propTypes.string,
-    pageCount: propTypes.shape({
-      min: propTypes.number,
-      max: propTypes.number,
-    }),
-    keywords: propTypes.oneOfType([
-      propTypes.string,
-      propTypes.arrayOf(propTypes.string),
-    ]),
+    keywords: propTypes.arrayOf(propTypes.string),
   }),
-  apiKey: propTypes.string.isRequired,
+  googleAPIKey: propTypes.string.isRequired,
   setBooks: propTypes.func.isRequired,
 };
 

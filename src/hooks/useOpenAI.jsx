@@ -17,7 +17,11 @@ function useOpenAI(userInput, apiKey) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!userInput || !apiKey) return;
+    if (!userInput || !apiKey) {
+      setKeywords(null);
+      setError(null);
+      return;
+    }
 
     const fetchKeywords = async () => {
       setLoading(true);

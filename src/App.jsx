@@ -5,7 +5,7 @@ import { ModalsProvider } from "@mantine/modals";
 import "./css/index.css";
 import Layout from "./context/Layout";
 import LandingPage from "./pages/LandingPage";
-import SearchOptions from "./pages/SearchOptionsPage";
+import SearchOptionsPage from "./pages/SearchOptionsPage";
 import Shelves from "./pages/Shelves";
 import Theme from "./css/theme";
 import SearchProvider from "./context/SearchContext";
@@ -30,6 +30,8 @@ const App = () => {
     }
   }, []);
 
+  console.log("App - googleAPIKey:", googleAPIKey); // Debug log
+
   return (
     <MantineProvider
       theme={{ ...Theme, colorScheme }}
@@ -41,17 +43,17 @@ const App = () => {
           <ShelfProvider>
             <AvatarFAB />
             <HashRouter>
-              <Navigation setAppApiKey={setApiKey} />
+              <Navigation />
               <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route index element={<LandingPage />} />
                   <Route
                     path="search"
                     element={
-                      <SearchOptions
+                      <SearchOptionsPage
                         apiKey={apiKey}
+                        setApiKey={setApiKey}
                         googleAPIKey={googleAPIKey}
-                        setAppApiKey={setApiKey}
                       />
                     }
                   />

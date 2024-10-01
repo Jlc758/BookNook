@@ -1,49 +1,46 @@
 import { useState, useEffect } from "react";
 import { TextInput, Button, Modal, Text } from "@mantine/core";
 
-export const APIButton = ({ setAppApiKey }) => {
+export const APIButton = ({ onClick }) => {
+  return (
+    <Button onClick={onClick} color="var(--mantine-color-gray-6)">
+      API Key
+    </Button>
+  );
+};
+
+export const APIKeyManager = ({ setAppApiKey, initialIsOpen = false }) => {
+  const [isOpen, setIsOpen] = useState(initialIsOpen);
   const [apiKey, setApiKey] = useState("");
-  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
 
   useEffect(() => {
     const savedApiKey = localStorage.getItem("openaiAPIKey");
     if (savedApiKey) {
       setApiKey(savedApiKey);
-      if (typeof setAppApiKey === "function") {
-        setAppApiKey(savedApiKey);
-      }
+      setAppApiKey(savedApiKey);
     }
-  }, []);
+  }, [setAppApiKey]);
 
   const handleApiKeySubmit = (e) => {
     e.preventDefault();
     localStorage.setItem("openaiAPIKey", apiKey);
-    if (typeof setAppApiKey === "function") {
-      setAppApiKey(apiKey);
-      console.log("openAI", apiKey);
-    }
-    setIsApiKeyModalOpen(false);
+    setAppApiKey(apiKey);
+    setIsOpen(false);
   };
 
   return (
     <>
-      <div>
-        <Button
-          onClick={() => {
-            setIsApiKeyModalOpen(true);
-          }}
-          color="var(--mantine-color-gray-6)"
-        >
-          API Key
-        </Button>
-      </div>
+      <APIButton onClick={() => setIsOpen(true)} />
 
       <Modal
-        opened={isApiKeyModalOpen}
-        onClose={() => setIsApiKeyModalOpen(false)}
+        opened={isOpen}
+        onClose={() => setIsOpen(false)}
         title="Manage API Key"
       >
         <form onSubmit={handleApiKeySubmit}>
+          <Text size="sm" mb="xs">
+            Enter your OpenAI API Key:
+          </Text>
           <TextInput
             type="password"
             value={apiKey}
@@ -51,55 +48,12 @@ export const APIButton = ({ setAppApiKey }) => {
             placeholder="Enter your OpenAI API Key"
             required
           />
-          <Button
-            type="submit"
-            fullWidth
-            mt="sm"
-            onClick={() => setIsApiKeyModalOpen(false)}
-          >
+          <Button type="submit" fullWidth mt="sm">
             Save API Key
           </Button>
         </form>
       </Modal>
     </>
-  );
-};
-
-const APIKeyManager = ({ isOpen, onClose, onSave }) => {
-  const [apiKey, setApiKey] = useState("");
-
-  useEffect(() => {
-    const savedApiKey = localStorage.getItem("openaiAPIKey");
-    if (savedApiKey) {
-      setApiKey(savedApiKey);
-    }
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    localStorage.setItem("openaiAPIKey", apiKey);
-    onSave(apiKey);
-    onClose();
-  };
-
-  return (
-    <Modal opened={isOpen} onClose={onClose} title="Manage API Key">
-      <form onSubmit={handleSubmit}>
-        <Text size="sm" mb="xs">
-          Enter your OpenAI API Key:
-        </Text>
-        <TextInput
-          type="password"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          placeholder="Enter your OpenAI API Key"
-          required
-        />
-        <Button type="submit" fullWidth mt="sm">
-          Save API Key
-        </Button>
-      </form>
-    </Modal>
   );
 };
 
