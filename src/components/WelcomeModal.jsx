@@ -1,6 +1,30 @@
-import { useEffect } from "react";
 import { Modal, Button, Text } from "@mantine/core";
 import { RxMagicWand } from "react-icons/rx";
+import { useEffect } from "react";
+
+const LoomVideo = () => {
+  return (
+    <div
+      style={{
+        position: "relative",
+        paddingBottom: "62.7172195892575%",
+        height: 0,
+      }}
+    >
+      <iframe
+        src="https://www.loom.com/embed/2410175b04db4de1b7bbb5dac7e0c316?sid=36f6a262-2267-4fed-baa7-198b3d8073e1"
+        allowFullScreen
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
+      />
+    </div>
+  );
+};
 
 const WelcomeModal = ({ opened, onClose }) => {
   useEffect(() => {
@@ -42,14 +66,7 @@ const WelcomeModal = ({ opened, onClose }) => {
           marginBottom: "1rem",
         }}
       >
-        <iframe
-          width="100%"
-          height="100%"
-          src="https://www.youtube.com/embed/YOUR_VIDEO_ID" // Replace with your video URL
-          title="Welcome Video"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
+        <LoomVideo />
       </div>
       <Text align="center" mb="md">
         Welcome to BookNook - a reading tracking app! This video will give you a
