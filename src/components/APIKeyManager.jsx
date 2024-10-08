@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { TextInput, Button, Modal, Text } from "@mantine/core";
+import { TextInput, Button, Modal, Text, Space } from "@mantine/core";
 
 export const APIButton = ({ onClick }) => {
   return (
@@ -39,7 +39,14 @@ export const APIKeyManager = ({ setAppApiKey, initialIsOpen = false }) => {
       >
         <form onSubmit={handleApiKeySubmit}>
           <Text size="sm" mb="xs">
-            Enter your OpenAI API Key:
+            If you would like to utilize the AI-integrated search feature
+            (Summon by Sentences), you will need an OpenAI API Key to proceed.
+            <Space h="md" />
+            If you do not have an OpenAI API Key, click{" "}
+            <a href="https://platform.openai.com/api-keys">here</a> to set one
+            up, or you can use the Summon by Selection tab to search without
+            AI-integration.
+            <Space h="lg" />
           </Text>
           <TextInput
             type="password"
